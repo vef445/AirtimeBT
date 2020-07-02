@@ -1,0 +1,543 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FC24AC5FF800FEF75A /* ChartView.swift */; };
+		C10C540224AC5FF800FEF75A /* ChartDataSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */; };
+		C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */; };
+		C10C540424AC5FF800FEF75A /* ChartViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */; };
+		C10C540524AC5FF800FEF75A /* ChartableMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540024AC5FF800FEF75A /* ChartableMetric.swift */; };
+		C10C540B24AC600900FEF75A /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540724AC600900FEF75A /* Track.swift */; };
+		C10C540C24AC600900FEF75A /* FlightMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540824AC600900FEF75A /* FlightMetric.swift */; };
+		C10C540D24AC600900FEF75A /* UserDataPointSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540924AC600900FEF75A /* UserDataPointSelection.swift */; };
+		C10C540E24AC600900FEF75A /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540A24AC600900FEF75A /* DataPoint.swift */; };
+		C10C541124AC602800FEF75A /* DataPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541024AC602800FEF75A /* DataPointView.swift */; };
+		C10C541524AC603000FEF75A /* LoadFileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541324AC603000FEF75A /* LoadFileButton.swift */; };
+		C10C541624AC603000FEF75A /* TrackFilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541424AC603000FEF75A /* TrackFilePickerView.swift */; };
+		C10C541824AC603A00FEF75A /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541724AC603A00FEF75A /* LoadingView.swift */; };
+		C10C541A24AC604F00FEF75A /* MainProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541924AC604F00FEF75A /* MainProcessor.swift */; };
+		C10C541F24AC605800FEF75A /* MapBoundryProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541C24AC605800FEF75A /* MapBoundryProcessor.swift */; };
+		C10C542024AC605800FEF75A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541D24AC605800FEF75A /* MapView.swift */; };
+		C10C542124AC605800FEF75A /* MapViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C541E24AC605800FEF75A /* MapViewProcessor.swift */; };
+		C10C542424AC606400FEF75A /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542324AC606400FEF75A /* Conversions.swift */; };
+		C10C542924AC606B00FEF75A /* VPartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542624AC606B00FEF75A /* VPartition.swift */; };
+		C10C542A24AC606B00FEF75A /* DragState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542724AC606B00FEF75A /* DragState.swift */; };
+		C10C542B24AC606B00FEF75A /* HPartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542824AC606B00FEF75A /* HPartition.swift */; };
+		C10C542E24AC60A800FEF75A /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = C10C542D24AC60A800FEF75A /* Charts */; };
+		C10C543124AC60BA00FEF75A /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = C10C543024AC60BA00FEF75A /* CSV */; };
+		C10C543D24AC627000FEF75A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C10C543C24AC627000FEF75A /* LaunchScreen.storyboard */; };
+		C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5124AC5929008004AF /* AppDelegate.swift */; };
+		C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5324AC5929008004AF /* SceneDelegate.swift */; };
+		C1E60A5724AC5929008004AF /* AirtimeInfinite.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5524AC5929008004AF /* AirtimeInfinite.xcdatamodeld */; };
+		C1E60A5924AC5929008004AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5824AC5929008004AF /* ContentView.swift */; };
+		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
+		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C10C53FC24AC5FF800FEF75A /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartDataSelection.swift; sourceTree = "<group>"; };
+		C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartFrame.swift; sourceTree = "<group>"; };
+		C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewProcessor.swift; sourceTree = "<group>"; };
+		C10C540024AC5FF800FEF75A /* ChartableMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartableMetric.swift; sourceTree = "<group>"; };
+		C10C540724AC600900FEF75A /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		C10C540824AC600900FEF75A /* FlightMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightMetric.swift; sourceTree = "<group>"; };
+		C10C540924AC600900FEF75A /* UserDataPointSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataPointSelection.swift; sourceTree = "<group>"; };
+		C10C540A24AC600900FEF75A /* DataPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
+		C10C541024AC602800FEF75A /* DataPointView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPointView.swift; sourceTree = "<group>"; };
+		C10C541324AC603000FEF75A /* LoadFileButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadFileButton.swift; sourceTree = "<group>"; };
+		C10C541424AC603000FEF75A /* TrackFilePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackFilePickerView.swift; sourceTree = "<group>"; };
+		C10C541724AC603A00FEF75A /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		C10C541924AC604F00FEF75A /* MainProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainProcessor.swift; sourceTree = "<group>"; };
+		C10C541C24AC605800FEF75A /* MapBoundryProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapBoundryProcessor.swift; sourceTree = "<group>"; };
+		C10C541D24AC605800FEF75A /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		C10C541E24AC605800FEF75A /* MapViewProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewProcessor.swift; sourceTree = "<group>"; };
+		C10C542324AC606400FEF75A /* Conversions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
+		C10C542624AC606B00FEF75A /* VPartition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPartition.swift; sourceTree = "<group>"; };
+		C10C542724AC606B00FEF75A /* DragState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragState.swift; sourceTree = "<group>"; };
+		C10C542824AC606B00FEF75A /* HPartition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HPartition.swift; sourceTree = "<group>"; };
+		C10C543C24AC627000FEF75A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C1E60A4E24AC5929008004AF /* Airtime: Infinite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Airtime: Infinite.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1E60A5124AC5929008004AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C1E60A5324AC5929008004AF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		C1E60A5624AC5929008004AF /* AirtimeInfinite.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AirtimeInfinite.xcdatamodel; sourceTree = "<group>"; };
+		C1E60A5824AC5929008004AF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C1E60A5A24AC592A008004AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C1E60A4B24AC5929008004AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10C542E24AC60A800FEF75A /* Charts in Frameworks */,
+				C10C543124AC60BA00FEF75A /* CSV in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C10C53FB24AC5FF800FEF75A /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				C10C53FC24AC5FF800FEF75A /* ChartView.swift */,
+				C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */,
+				C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */,
+				C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */,
+				C10C540024AC5FF800FEF75A /* ChartableMetric.swift */,
+			);
+			path = Chart;
+			sourceTree = "<group>";
+		};
+		C10C540624AC600900FEF75A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				C10C540724AC600900FEF75A /* Track.swift */,
+				C10C540824AC600900FEF75A /* FlightMetric.swift */,
+				C10C540924AC600900FEF75A /* UserDataPointSelection.swift */,
+				C10C540A24AC600900FEF75A /* DataPoint.swift */,
+			);
+			name = Data;
+			path = AirtimeInfinite/Data;
+			sourceTree = SOURCE_ROOT;
+		};
+		C10C540F24AC602800FEF75A /* DataView */ = {
+			isa = PBXGroup;
+			children = (
+				C10C541024AC602800FEF75A /* DataPointView.swift */,
+			);
+			path = DataView;
+			sourceTree = "<group>";
+		};
+		C10C541224AC603000FEF75A /* DocumentPicker */ = {
+			isa = PBXGroup;
+			children = (
+				C10C541324AC603000FEF75A /* LoadFileButton.swift */,
+				C10C541424AC603000FEF75A /* TrackFilePickerView.swift */,
+			);
+			path = DocumentPicker;
+			sourceTree = "<group>";
+		};
+		C10C541B24AC605800FEF75A /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				C10C541C24AC605800FEF75A /* MapBoundryProcessor.swift */,
+				C10C541D24AC605800FEF75A /* MapView.swift */,
+				C10C541E24AC605800FEF75A /* MapViewProcessor.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		C10C542224AC606400FEF75A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				C10C542324AC606400FEF75A /* Conversions.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		C10C542524AC606B00FEF75A /* ViewPartitions */ = {
+			isa = PBXGroup;
+			children = (
+				C10C542624AC606B00FEF75A /* VPartition.swift */,
+				C10C542724AC606B00FEF75A /* DragState.swift */,
+				C10C542824AC606B00FEF75A /* HPartition.swift */,
+			);
+			name = ViewPartitions;
+			path = AirtimeInfinite/ViewPartitions;
+			sourceTree = SOURCE_ROOT;
+		};
+		C1E60A4524AC5929008004AF = {
+			isa = PBXGroup;
+			children = (
+				C1E60A5024AC5929008004AF /* AirtimeInfinite */,
+				C1E60A4F24AC5929008004AF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C1E60A4F24AC5929008004AF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1E60A4E24AC5929008004AF /* Airtime: Infinite.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C1E60A5024AC5929008004AF /* AirtimeInfinite */ = {
+			isa = PBXGroup;
+			children = (
+				C10C53FB24AC5FF800FEF75A /* Chart */,
+				C10C540624AC600900FEF75A /* Data */,
+				C10C540F24AC602800FEF75A /* DataView */,
+				C10C541224AC603000FEF75A /* DocumentPicker */,
+				C10C541B24AC605800FEF75A /* Map */,
+				C10C542224AC606400FEF75A /* Util */,
+				C10C542524AC606B00FEF75A /* ViewPartitions */,
+				C1E60A5124AC5929008004AF /* AppDelegate.swift */,
+				C1E60A5824AC5929008004AF /* ContentView.swift */,
+				C10C541724AC603A00FEF75A /* LoadingView.swift */,
+				C10C541924AC604F00FEF75A /* MainProcessor.swift */,
+				C1E60A5324AC5929008004AF /* SceneDelegate.swift */,
+				C10C543C24AC627000FEF75A /* LaunchScreen.storyboard */,
+				C1E60A5A24AC592A008004AF /* Assets.xcassets */,
+				C1E60A6224AC592A008004AF /* Info.plist */,
+				C1E60A5524AC5929008004AF /* AirtimeInfinite.xcdatamodeld */,
+				C1E60A5C24AC592A008004AF /* Preview Content */,
+			);
+			path = AirtimeInfinite;
+			sourceTree = "<group>";
+		};
+		C1E60A5C24AC592A008004AF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C1E60A4D24AC5929008004AF /* AirtimeInfinite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "AirtimeInfinite" */;
+			buildPhases = (
+				C1E60A4A24AC5929008004AF /* Sources */,
+				C1E60A4B24AC5929008004AF /* Frameworks */,
+				C1E60A4C24AC5929008004AF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirtimeInfinite;
+			packageProductDependencies = (
+				C10C542D24AC60A800FEF75A /* Charts */,
+				C10C543024AC60BA00FEF75A /* CSV */,
+			);
+			productName = AirtimeInfinite;
+			productReference = C1E60A4E24AC5929008004AF /* Airtime: Infinite.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C1E60A4624AC5929008004AF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "Jordan Gould";
+				TargetAttributes = {
+					C1E60A4D24AC5929008004AF = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "AirtimeInfinite" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C1E60A4524AC5929008004AF;
+			packageReferences = (
+				C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */,
+				C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */,
+			);
+			productRefGroup = C1E60A4F24AC5929008004AF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C1E60A4D24AC5929008004AF /* AirtimeInfinite */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C1E60A4C24AC5929008004AF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10C543D24AC627000FEF75A /* LaunchScreen.storyboard in Resources */,
+				C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */,
+				C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C1E60A4A24AC5929008004AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10C540E24AC600900FEF75A /* DataPoint.swift in Sources */,
+				C10C542A24AC606B00FEF75A /* DragState.swift in Sources */,
+				C10C541A24AC604F00FEF75A /* MainProcessor.swift in Sources */,
+				C10C540C24AC600900FEF75A /* FlightMetric.swift in Sources */,
+				C10C541624AC603000FEF75A /* TrackFilePickerView.swift in Sources */,
+				C10C540424AC5FF800FEF75A /* ChartViewProcessor.swift in Sources */,
+				C10C542124AC605800FEF75A /* MapViewProcessor.swift in Sources */,
+				C10C541824AC603A00FEF75A /* LoadingView.swift in Sources */,
+				C10C542B24AC606B00FEF75A /* HPartition.swift in Sources */,
+				C10C540B24AC600900FEF75A /* Track.swift in Sources */,
+				C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */,
+				C10C541524AC603000FEF75A /* LoadFileButton.swift in Sources */,
+				C10C541F24AC605800FEF75A /* MapBoundryProcessor.swift in Sources */,
+				C10C542424AC606400FEF75A /* Conversions.swift in Sources */,
+				C10C541124AC602800FEF75A /* DataPointView.swift in Sources */,
+				C10C540D24AC600900FEF75A /* UserDataPointSelection.swift in Sources */,
+				C1E60A5724AC5929008004AF /* AirtimeInfinite.xcdatamodeld in Sources */,
+				C1E60A5924AC5929008004AF /* ContentView.swift in Sources */,
+				C10C540524AC5FF800FEF75A /* ChartableMetric.swift in Sources */,
+				C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */,
+				C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */,
+				C10C542024AC605800FEF75A /* MapView.swift in Sources */,
+				C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */,
+				C10C540224AC5FF800FEF75A /* ChartDataSelection.swift in Sources */,
+				C10C542924AC606B00FEF75A /* VPartition.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C1E60A6324AC592A008004AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C1E60A6424AC592A008004AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C1E60A6624AC592A008004AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
+				DEVELOPMENT_TEAM = 8VV4Q237CK;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordangould.AirtimeInfinite;
+				PRODUCT_NAME = "Airtime: Infinite";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1E60A6724AC592A008004AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
+				DEVELOPMENT_TEAM = 8VV4Q237CK;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jordangould.AirtimeInfinite;
+				PRODUCT_NAME = "Airtime: Infinite";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "AirtimeInfinite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1E60A6324AC592A008004AF /* Debug */,
+				C1E60A6424AC592A008004AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "AirtimeInfinite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1E60A6624AC592A008004AF /* Debug */,
+				C1E60A6724AC592A008004AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.0;
+			};
+		};
+		C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yaslab/CSV.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C10C542D24AC60A800FEF75A /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+		C10C543024AC60BA00FEF75A /* CSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */;
+			productName = CSV;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		C1E60A5524AC5929008004AF /* AirtimeInfinite.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C1E60A5624AC5929008004AF /* AirtimeInfinite.xcdatamodel */,
+			);
+			currentVersion = C1E60A5624AC5929008004AF /* AirtimeInfinite.xcdatamodel */;
+			path = AirtimeInfinite.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = C1E60A4624AC5929008004AF /* Project object */;
+}
