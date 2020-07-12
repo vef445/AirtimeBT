@@ -16,12 +16,27 @@ struct ChartFrame: View {
     
     @State private var pinSelection = false
     
+    let support_url = "https://jordangould.github.io/AirtimeInfiniteDocs/"
+    
     var body: some View{
         ZStack {
             ChartView()
             HStack{
                 Spacer()
                 VStack{
+                    
+                    /// Link to docs button
+                    Button(action: {
+                        let urlComponents = URLComponents (string: self.support_url)!
+                        UIApplication.shared.open (urlComponents.url!)
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal, 35)
+                    .padding(.top, 25)
                     
                     /// Unit selection button
                     Button(action: {
@@ -34,7 +49,7 @@ struct ChartFrame: View {
                             .foregroundColor(.blue)
                     }
                     .padding(.horizontal, 35)
-                    .padding(.top, 25)
+                    .padding(.top, 10)
                     
                     /// Data selection button
                     Button(action: {
@@ -69,7 +84,6 @@ struct ChartFrame: View {
                     }
                     .padding(.horizontal, 35)
                     .padding(.top, 10)
-                    
                     
                     Spacer()
                 }
