@@ -77,5 +77,7 @@ struct ChartView: UIViewRepresentable {
         chartView.leftAxis.drawGridLinesEnabled = false
         chartView.xAxis.labelPosition = XAxis.LabelPosition.bottom
         chartView.legend.enabled = false
+        
+        main.chartViewProcessor.updateAutoScaleAxis()
     }
 }

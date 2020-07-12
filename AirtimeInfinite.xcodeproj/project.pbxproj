@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FC24AC5FF800FEF75A /* ChartView.swift */; };
-		C10C540224AC5FF800FEF75A /* ChartDataSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */; };
+		C10C540224AC5FF800FEF75A /* ChartSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FD24AC5FF800FEF75A /* ChartSettingsView.swift */; };
 		C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */; };
 		C10C540424AC5FF800FEF75A /* ChartViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */; };
 		C10C540524AC5FF800FEF75A /* ChartableMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C540024AC5FF800FEF75A /* ChartableMetric.swift */; };
@@ -41,7 +41,7 @@
 
 /* Begin PBXFileReference section */
 		C10C53FC24AC5FF800FEF75A /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
-		C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartDataSelection.swift; sourceTree = "<group>"; };
+		C10C53FD24AC5FF800FEF75A /* ChartSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSettingsView.swift; sourceTree = "<group>"; };
 		C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartFrame.swift; sourceTree = "<group>"; };
 		C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewProcessor.swift; sourceTree = "<group>"; };
 		C10C540024AC5FF800FEF75A /* ChartableMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartableMetric.swift; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				C10C53FC24AC5FF800FEF75A /* ChartView.swift */,
-				C10C53FD24AC5FF800FEF75A /* ChartDataSelection.swift */,
+				C10C53FD24AC5FF800FEF75A /* ChartSettingsView.swift */,
 				C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */,
 				C10C53FF24AC5FF800FEF75A /* ChartViewProcessor.swift */,
 				C10C540024AC5FF800FEF75A /* ChartableMetric.swift */,
@@ -305,7 +305,7 @@
 				C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */,
 				C10C542024AC605800FEF75A /* MapView.swift in Sources */,
 				C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */,
-				C10C540224AC5FF800FEF75A /* ChartDataSelection.swift in Sources */,
+				C10C540224AC5FF800FEF75A /* ChartSettingsView.swift in Sources */,
 				C10C542924AC606B00FEF75A /* VPartition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

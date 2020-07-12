@@ -27,8 +27,18 @@ class ChartViewProcessor: ObservableObject {
                          FlightMetric.hDist]
 
     @Published var chartableMetrics: [ChartableMetric] = []
+    @Published var autoScaleEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(autoScaleEnabled, forKey: "autoScaleEnabled")
+        }
+    }
     
     init() {
+        if UserDefaults.standard.object(forKey: "autoScaleEnabled") != nil {
+            self.autoScaleEnabled = UserDefaults.standard.bool(forKey: "autoScaleEnabled")
+        } else {
+            self.autoScaleEnabled = true
+        }
         lineChartView = LineChartView()
         initChartableMetrics()
     }
@@ -143,6 +153,23 @@ class ChartViewProcessor: ObservableObject {
         dataSet.highlightColor = .systemRed
         
         return dataSet
+    }
+    
+    /**
+    Allows the user to toggle autoscaling of the y-axis
+    
+    - Parameters:
+       - enabled:will y-axis autoscale?
+    */
+    func updateAutoScaleAxis() {
+        if autoScaleEnabled {
+            lineChartView.leftAxis.labelPosition = .insideChart
+            lineChartView.rightAxis.labelPosition = .insideChart
+        } else {
+            lineChartView.leftAxis.labelPosition = .outsideChart
+            lineChartView.rightAxis.labelPosition = .outsideChart
+        }
+        lineChartView.autoScaleMinMaxEnabled = autoScaleEnabled
     }
     
     /**

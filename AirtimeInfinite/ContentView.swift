@@ -73,8 +73,8 @@ struct ContentView: View {
                             }
                         }
                         /// Chart data selection menu
-                        ChartDataSelectionView(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
-                            .environmentObject(self.main.chartViewProcessor)
+                        ChartSettingsView(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
+                            .environmentObject(self.main)
                             .background(Color(.secondarySystemBackground))
                             .edgesIgnoringSafeArea(.all)
                             .cornerRadius(20)

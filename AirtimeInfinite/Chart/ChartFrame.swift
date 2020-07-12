@@ -35,33 +35,20 @@ struct ChartFrame: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.gray)
                     }
-                    .padding(.horizontal, 35)
+                    .padding(.horizontal, 40)
                     .padding(.top, 25)
                     
-                    /// Unit selection button
-                    Button(action: {
-                        self.main.useImperialUnits.toggle()
-                        self.main.chartViewProcessor.reloadTrack()
-                    }) {
-                        Image(self.main.useImperialUnits ? "flag" :  "globe")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.blue)
-                    }
-                    .padding(.horizontal, 35)
-                    .padding(.top, 10)
-                    
-                    /// Data selection button
+                    /// Chart Settings button
                     Button(action: {
                         self.showingMetricSelectionMenu = true
                     }) {
-                        Image("line-chart")
+                        Image(systemName: "gear")
                         .resizable()
                         .frame(width: 30, height: 30)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.gray)
                     }
-                    .padding(.horizontal, 35)
-                    .padding(.top, 7)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
                     
                     /// Selected measurement point button
                     Button(action: {
@@ -82,7 +69,7 @@ struct ChartFrame: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(self.pinSelection ? .blue : .gray)
                     }
-                    .padding(.horizontal, 35)
+                    .padding(.horizontal, 40)
                     .padding(.top, 10)
                     
                     Spacer()

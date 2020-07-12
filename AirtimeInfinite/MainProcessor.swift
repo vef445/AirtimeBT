@@ -33,6 +33,7 @@ class MainProcessor: ObservableObject {
     
     var anyCancellableHighlight: AnyCancellable? = nil
     var anyCancellableMeasure: AnyCancellable? = nil
+    var anyCancellableChart: AnyCancellable? = nil
 
     /// Initialize the main views with no data
     init() {
@@ -55,6 +56,9 @@ class MainProcessor: ObservableObject {
             self.objectWillChange.send()
         }
         anyCancellableMeasure = selectedMeasurePoint.objectWillChange.sink { (_) in
+            self.objectWillChange.send()
+        }
+        anyCancellableChart = chartViewProcessor.objectWillChange.sink { (_) in
             self.objectWillChange.send()
         }
     }
