@@ -27,7 +27,7 @@ struct ChartSettingsView: View {
             
             VStack(spacing: 0) {
                 Divider()
-                ForEach(main.chartViewProcessor.chartableMetrics.indices){ i in
+                ForEach(main.chartViewProcessor.chartableMetrics.indices, id: \.self){ i in
                     VStack(spacing: 0) {
                         Toggle(isOn: self.$main.chartViewProcessor.chartableMetrics[i].isSelected){
                             Text(self.main.chartViewProcessor.chartableMetrics[i].attributes.title)
