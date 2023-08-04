@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import Charts
+import DGCharts
 
 /// View representing the actual chart object
 struct ChartView: UIViewRepresentable {

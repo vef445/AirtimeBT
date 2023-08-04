@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import Charts
+import DGCharts
 
 /// Data handler for the Chart view
 class ChartViewProcessor: ObservableObject {

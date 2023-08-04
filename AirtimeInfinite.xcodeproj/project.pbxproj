@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F3B62D02A7DAE0100C65A1C /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 9F3B62CF2A7DAE0100C65A1C /* DGCharts */; };
 		C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FC24AC5FF800FEF75A /* ChartView.swift */; };
 		C10C540224AC5FF800FEF75A /* ChartSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FD24AC5FF800FEF75A /* ChartSettingsView.swift */; };
 		C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */; };
@@ -28,7 +29,6 @@
 		C10C542924AC606B00FEF75A /* VPartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542624AC606B00FEF75A /* VPartition.swift */; };
 		C10C542A24AC606B00FEF75A /* DragState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542724AC606B00FEF75A /* DragState.swift */; };
 		C10C542B24AC606B00FEF75A /* HPartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C542824AC606B00FEF75A /* HPartition.swift */; };
-		C10C542E24AC60A800FEF75A /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = C10C542D24AC60A800FEF75A /* Charts */; };
 		C10C543124AC60BA00FEF75A /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = C10C543024AC60BA00FEF75A /* CSV */; };
 		C10C543D24AC627000FEF75A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C10C543C24AC627000FEF75A /* LaunchScreen.storyboard */; };
 		C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5124AC5929008004AF /* AppDelegate.swift */; };
@@ -77,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C10C542E24AC60A800FEF75A /* Charts in Frameworks */,
+				9F3B62D02A7DAE0100C65A1C /* DGCharts in Frameworks */,
 				C10C543124AC60BA00FEF75A /* CSV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,6 +85,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F3B62CE2A7DAE0100C65A1C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C10C53FB24AC5FF800FEF75A /* Chart */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +167,7 @@
 			children = (
 				C1E60A5024AC5929008004AF /* AirtimeInfinite */,
 				C1E60A4F24AC5929008004AF /* Products */,
+				9F3B62CE2A7DAE0100C65A1C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -220,8 +228,8 @@
 			);
 			name = AirtimeInfinite;
 			packageProductDependencies = (
-				C10C542D24AC60A800FEF75A /* Charts */,
 				C10C543024AC60BA00FEF75A /* CSV */,
+				9F3B62CF2A7DAE0100C65A1C /* DGCharts */,
 			);
 			productName = AirtimeInfinite;
 			productReference = C1E60A4E24AC5929008004AF /* Airtime: Infinite.app */;
@@ -502,7 +510,7 @@
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.5.0;
+				minimumVersion = 5.0.0;
 			};
 		};
 		C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */ = {
@@ -516,10 +524,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C10C542D24AC60A800FEF75A /* Charts */ = {
+		9F3B62CF2A7DAE0100C65A1C /* DGCharts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = Charts;
+			productName = DGCharts;
 		};
 		C10C543024AC60BA00FEF75A /* CSV */ = {
 			isa = XCSwiftPackageProductDependency;

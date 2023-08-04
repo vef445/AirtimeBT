@@ -1,25 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Charts",
-        "repositoryURL": "https://github.com/danielgindi/Charts",
-        "state": {
-          "branch": null,
-          "revision": "7ac4a05e83d279bac305a472af9128c2a0eca3d7",
-          "version": "3.5.0"
-        }
-      },
-      {
-        "package": "CSV.swift",
-        "repositoryURL": "https://github.com/yaslab/CSV.swift",
-        "state": {
-          "branch": null,
-          "revision": "81d2874c51db364d7e1d71b0d99018a294c87ac1",
-          "version": "2.4.3"
-        }
+  "pins" : [
+    {
+      "identity" : "charts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielgindi/Charts",
+      "state" : {
+        "revision" : "0a229f8c914b0ec93798cee058cf75b339297513",
+        "version" : "5.0.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "csv.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yaslab/CSV.swift",
+      "state" : {
+        "revision" : "81d2874c51db364d7e1d71b0d99018a294c87ac1",
+        "version" : "2.4.3"
+      }
+    }
+  ],
+  "version" : 2
 }
