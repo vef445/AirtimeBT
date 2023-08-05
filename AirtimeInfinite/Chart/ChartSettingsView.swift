@@ -15,73 +15,76 @@ struct ChartSettingsView: View {
     @Binding var showingMetricSelectionMenu: Bool
     
     var body: some View {
-        VStack() {
-            
-            HStack() {
-                Text("Display Data")
-                    .font(.system(.title))
-                    .padding(.top)
-                    .padding(.leading)
-                Spacer()
-            }
-            
-            VStack(spacing: 0) {
-                Divider()
-                ForEach(main.chartViewProcessor.chartableMetrics.indices, id: \.self){ i in
+        VStack(){
+            ScrollView() {
+                VStack() {
+                    
+                    HStack() {
+                        Text("Display Data")
+                            .font(.system(.title))
+                            .padding(.top)
+                            .padding(.leading)
+                        Spacer()
+                    }
+                    
                     VStack(spacing: 0) {
-                        Toggle(isOn: self.$main.chartViewProcessor.chartableMetrics[i].isSelected){
-                            Text(self.main.chartViewProcessor.chartableMetrics[i].attributes.title)
+                        Divider()
+                        ForEach(main.chartViewProcessor.chartableMetrics.indices, id: \.self){ i in
+                            VStack(spacing: 0) {
+                                Toggle(isOn: self.$main.chartViewProcessor.chartableMetrics[i].isSelected){
+                                    Text(self.main.chartViewProcessor.chartableMetrics[i].attributes.title)
+                                }
+                                .toggleStyle(CheckmarkToggleStyle())
+                                .frame(height: 40)
+                                Divider()
+                                    .frame(height: 1)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    HStack() {
+                        Text("Settings")
+                            .font(.system(.title))
+                            .padding(.top)
+                            .padding(.leading)
+                        Spacer()
+                    }
+                    
+                    VStack(spacing: 0) {
+                        Divider()
+                            .frame(height: 1)
+                            .padding(.horizontal)
+                        Toggle(isOn: $main.chartViewProcessor.autoScaleEnabled){
+                            Text("AutoScale Y-Axis")
                         }
                         .toggleStyle(CheckmarkToggleStyle())
+                        .padding(.horizontal)
                         .frame(height: 40)
                         Divider()
                             .frame(height: 1)
+                            .padding(.horizontal)
+                        Toggle(isOn: $main.useImperialUnits){
+                            Text("Imperial Units")
+                        }
+                        .toggleStyle(CheckmarkToggleStyle())
+                        .padding(.horizontal)
+                        .frame(height: 40)
+                        Divider()
+                            .frame(height: 1)
+                            .padding(.horizontal)
+                        Toggle(isOn: $main.showAcceleration){
+                            Text("Display Acceleration Data")
+                        }
+                        .toggleStyle(CheckmarkToggleStyle())
+                        .padding(.horizontal)
+                        .frame(height: 40)
+                        Divider()
+                            .frame(height: 1)
+                            .padding(.horizontal)
                     }
                 }
             }
-            .padding(.horizontal)
-            
-            HStack() {
-                Text("Settings")
-                    .font(.system(.title))
-                    .padding(.top)
-                    .padding(.leading)
-                Spacer()
-            }
-            
-            VStack(spacing: 0) {
-                Divider()
-                    .frame(height: 1)
-                    .padding(.horizontal)
-                Toggle(isOn: $main.chartViewProcessor.autoScaleEnabled){
-                    Text("AutoScale Y-Axis")
-                }
-                    .toggleStyle(CheckmarkToggleStyle())
-                    .padding(.horizontal)
-                    .frame(height: 40)
-                Divider()
-                    .frame(height: 1)
-                    .padding(.horizontal)
-                Toggle(isOn: $main.useImperialUnits){
-                    Text("Imperial Units")
-                }
-                    .toggleStyle(CheckmarkToggleStyle())
-                    .padding(.horizontal)
-                    .frame(height: 40)
-                Divider()
-                    .frame(height: 1)
-                    .padding(.horizontal)
-                Toggle(isOn: $main.showAcceleration){
-                    Text("Display Acceleration Data")
-                }
-                    .toggleStyle(CheckmarkToggleStyle())
-                    .padding(.horizontal)
-                    .frame(height: 40)
-                Divider()
-                    .frame(height: 1)
-                    .padding(.horizontal)
-            }
-            
             Button(action: {
                 self.showingMetricSelectionMenu = false
                 self.main.chartViewProcessor.updateAutoScaleAxis()
@@ -91,6 +94,12 @@ struct ChartSettingsView: View {
             }
             .padding()
         }
+        .frame(
+            height: min(
+                UIScreen.main.bounds.height - 100,
+                650 // TODO: Update this to be dynamic
+            )
+        )
     }
 }
 
