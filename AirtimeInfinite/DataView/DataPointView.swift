@@ -49,13 +49,15 @@ struct DataPointView: View {
                     Divider().frame(height: 5)
                     DataPointRow(flightStats: multiRow2).frame(height: 40)
                 }
+                .padding(.bottom, -20)
             } else {
                 HStack {
                     DataPointRow(flightStats: singleRow).frame(height: 40)
                 }
             }
             if showAcceleration {
-                HStack {
+                VStack {
+                    Divider()
                     DataPointRow(flightStats: accelRow).frame(height: 40)
                 }
             }
