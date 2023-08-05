@@ -56,6 +56,11 @@ class ChartViewProcessor: ObservableObject {
         
         var dataSets: [LineChartDataSet] = []
         
+        // If nothing selected to display, default to first available (likely altitude)
+        if chartableMetrics.filter({ $0.isSelected}).count == 0 {
+            self.chartableMetrics[0].isSelected = true
+        }
+        
         /// Only load data selected by the user
         for data in self.chartableMetrics {
             if data.isSelected{
