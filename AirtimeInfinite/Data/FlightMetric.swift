@@ -9,7 +9,8 @@
 import SwiftUI
 
 /// Flight metric attributes
-enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
+enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist,
+                         accelVertical, accelParallel, accelPerp, accelTotal
     
     /// Label used in small windows / abbreviations
     var shortLabel: String {
@@ -22,6 +23,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return "Dive"
         case .glide: return "Glide"
         case .hDist: return "hDist"
+        case .accelVertical: return "accV"
+        case .accelParallel: return "accH"
+        case .accelPerp: return "accPerp"
+        case .accelTotal: return "accT"
         }
     }
     
@@ -36,6 +41,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return "Dive Angle"
         case .glide: return "Glide Ratio"
         case .hDist: return "Horizontal Distance"
+        case .accelVertical: return "Vertical Acceleration"
+        case .accelParallel: return "Parallel Acceleration"
+        case .accelPerp: return "Perpendicular Acceleration"
+        case .accelTotal: return "Total Acceleration"
         }
     }
     
@@ -50,6 +59,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return "deg"
         case .glide: return "h/v"
         case .hDist: return "ft"
+        case .accelVertical: return "ft/s/s"
+        case .accelParallel: return "ft/s/s"
+        case .accelPerp: return "ft/s/s"
+        case .accelTotal: return "ft/s/s"
         }
     }
     
@@ -63,6 +76,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return "deg"
         case .glide: return "h/v"
         case .hDist: return "m"
+        case .accelVertical: return "ft/s/s"
+        case .accelParallel: return "ft/s/s"
+        case .accelPerp: return "ft/s/s"
+        case .accelTotal: return "ft/s/s"
         }
     }
     
@@ -77,6 +94,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return .systemPink
         case .glide: return .cyan
         case .hDist: return .label
+        case .accelVertical: return .systemPurple
+        case .accelParallel: return .systemOrange
+        case .accelPerp: return .systemTeal
+        case .accelTotal: return .systemBrown
         }
     }
     
@@ -91,6 +112,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return true
         case .glide: return true
         case .hDist: return false
+        case .accelVertical: return true
+        case .accelParallel: return true
+        case .accelPerp: return true
+        case .accelTotal: return true
         }
     }
     
@@ -105,6 +130,10 @@ enum FlightMetric { case time, hVel, vVel, tVel, alt, dive, glide, hDist
         case .dive: return false
         case .glide: return false
         case .hDist: return false
+        case .accelVertical: return false
+        case .accelParallel: return false
+        case .accelPerp: return false
+        case .accelTotal: return false
         }
     }
 }

@@ -37,7 +37,8 @@ struct ContentView: View {
                         if geo.size.height > geo.size.width {
                             /// Vertical main view
                             VStack {
-                                DataPointView(isMultiRow: !self.isPad)
+                                DataPointView(isMultiRow: !self.isPad,
+                                              showAcceleration: self.main.showAcceleration)
                                     .padding(.horizontal, 10)
                                     .padding(.top, 5)
                                     .padding(.bottom, 10)
@@ -52,7 +53,8 @@ struct ContentView: View {
                         } else {
                             /// Horizontal main view
                             VStack {
-                                DataPointView(isMultiRow: false)
+                                DataPointView(isMultiRow: false,
+                                              showAcceleration: self.main.showAcceleration)
                                     .padding(.horizontal, 10)
                                     .padding(.top, 5)
                                     .frame(height: 45)

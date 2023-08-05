@@ -71,6 +71,15 @@ struct ChartSettingsView: View {
                 Divider()
                     .frame(height: 1)
                     .padding(.horizontal)
+                Toggle(isOn: $main.showAcceleration){
+                    Text("Display Acceleration Data")
+                }
+                    .toggleStyle(CheckmarkToggleStyle())
+                    .padding(.horizontal)
+                    .frame(height: 40)
+                Divider()
+                    .frame(height: 1)
+                    .padding(.horizontal)
             }
             
             Button(action: {

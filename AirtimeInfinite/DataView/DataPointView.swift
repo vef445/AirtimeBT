@@ -13,6 +13,7 @@ struct DataPointView: View {
 
     @EnvironmentObject var main: MainProcessor
     var isMultiRow: Bool
+    var showAcceleration: Bool
     
     let multiRow1 = [FlightMetric.time,
                      FlightMetric.hVel,
@@ -23,6 +24,12 @@ struct DataPointView: View {
                      FlightMetric.dive,
                      FlightMetric.glide,
                      FlightMetric.hDist]
+    
+    let accelRow = [FlightMetric.accelVertical,
+                    FlightMetric.accelParallel,
+                    FlightMetric.accelPerp,
+                    FlightMetric.accelTotal
+                    ]
     
     /// Reorder for single view to keep altitude on the left
     let singleRow = [FlightMetric.time,
@@ -45,6 +52,11 @@ struct DataPointView: View {
             } else {
                 HStack {
                     DataPointRow(flightStats: singleRow).frame(height: 40)
+                }
+            }
+            if showAcceleration {
+                HStack {
+                    DataPointRow(flightStats: accelRow).frame(height: 40)
                 }
             }
         }
@@ -99,6 +111,18 @@ struct DataPointCell: View {
         case .hDist: return main.useImperialUnits ?
             main.highlightedPoint.point?.distance2D.metersToFeet :
             main.highlightedPoint.point?.distance2D
+        case .accelVertical: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelVert.metersToFeet :
+            main.highlightedPoint.point?.accelVert
+        case .accelParallel: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelParallel.metersToFeet :
+            main.highlightedPoint.point?.accelParallel
+        case .accelPerp: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelPerp.metersToFeet :
+            main.highlightedPoint.point?.accelPerp
+        case .accelTotal: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelTotal.metersToFeet :
+            main.highlightedPoint.point?.accelTotal
         }
     }
     
@@ -122,6 +146,18 @@ struct DataPointCell: View {
         case .hDist: return main.useImperialUnits ?
             main.selectedMeasurePoint.point?.distance2D.metersToFeet :
             main.selectedMeasurePoint.point?.distance2D
+        case .accelVertical: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelVert.metersToFeet :
+            main.highlightedPoint.point?.accelVert
+        case .accelParallel: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelParallel.metersToFeet :
+            main.highlightedPoint.point?.accelParallel
+        case .accelPerp: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelPerp.metersToFeet :
+            main.highlightedPoint.point?.accelPerp
+        case .accelTotal: return main.useImperialUnits ?
+            main.highlightedPoint.point?.accelTotal.metersToFeet :
+            main.highlightedPoint.point?.accelTotal
         }
     }
     

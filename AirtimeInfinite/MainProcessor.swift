@@ -31,6 +31,12 @@ class MainProcessor: ObservableObject {
         }
     }
     
+    @Published var showAcceleration: Bool {
+        didSet {
+            UserDefaults.standard.set(showAcceleration, forKey: "showAcceleration")
+        }
+    }
+    
     var anyCancellableHighlight: AnyCancellable? = nil
     var anyCancellableMeasure: AnyCancellable? = nil
     var anyCancellableChart: AnyCancellable? = nil
@@ -49,6 +55,12 @@ class MainProcessor: ObservableObject {
             self.useImperialUnits = UserDefaults.standard.bool(forKey: "measurementUnits")
         } else {
             self.useImperialUnits = true
+        }
+        
+        if UserDefaults.standard.object(forKey: "showAcceleration") != nil {
+            self.showAcceleration = UserDefaults.standard.bool(forKey: "showAcceleration")
+        } else {
+            self.showAcceleration = false
         }
         
         /// Allow for nested observable selection objects

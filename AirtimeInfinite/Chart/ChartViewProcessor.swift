@@ -24,7 +24,11 @@ class ChartViewProcessor: ObservableObject {
                          FlightMetric.tVel,
                          FlightMetric.dive,
                          FlightMetric.glide,
-                         FlightMetric.hDist]
+                         FlightMetric.hDist,
+                         FlightMetric.accelVertical,
+                         FlightMetric.accelParallel,
+                         FlightMetric.accelPerp,
+                         FlightMetric.accelTotal]
 
     @Published var chartableMetrics: [ChartableMetric] = []
     @Published var autoScaleEnabled: Bool {
@@ -130,6 +134,14 @@ class ChartViewProcessor: ObservableObject {
         
         chartableMetrics.first(where: { $0.attributes == .hDist })?.valueList =
             track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.distance2D.metersToFeet : $0.distance2D }
+        chartableMetrics.first(where: { $0.attributes == .accelVertical })?.valueList =
+            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelVert.metersToFeet : $0.accelVert }
+        chartableMetrics.first(where: { $0.attributes == .accelParallel })?.valueList =
+            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelParallel.metersToFeet : $0.accelParallel }
+        chartableMetrics.first(where: { $0.attributes == .accelPerp })?.valueList =
+            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelPerp.metersToFeet : $0.accelPerp }
+        chartableMetrics.first(where: { $0.attributes == .accelTotal })?.valueList =
+            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelTotal.metersToFeet : $0.accelTotal }
     }
     
     /**
@@ -142,10 +154,10 @@ class ChartViewProcessor: ObservableObject {
      - Returns: LineChartDataSet
      */
     func buildDataSetForNumericProperty(propertyData: [Double], label: String) -> LineChartDataSet {
-        var values: [ChartDataEntry] = []
-        
-        for i in 0..<track.xRange.count {
-            values.append(ChartDataEntry(x: Double(track.xRange[i]), y: Double(propertyData[i])))
+            var values: [ChartDataEntry] = []
+            
+            for i in 0..<track.xRange.count {
+                values.append(ChartDataEntry(x: Double(track.xRange[i]), y: Double(propertyData[i])))
         }
         
         let dataSet = LineChartDataSet(entries: values, label: label)
