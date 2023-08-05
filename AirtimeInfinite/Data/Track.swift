@@ -147,7 +147,8 @@ class Track: ObservableObject {
             let dp1: DataPoint = trackData[i - 1]
             let dp2: DataPoint = trackData[i]
             
-            /// Get interpolation coefficient
+            /// Get interpolation coefficient, skip if vertical speed unchanged
+            guard dp2.velD - dp1.velD != 0 else { continue }
             let a = (Self.gravity - dp1.velD) / (dp2.velD - dp1.velD)
             
             /// Check vertical speed
