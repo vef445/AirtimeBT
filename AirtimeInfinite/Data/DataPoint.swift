@@ -13,6 +13,7 @@ import SwiftUI
 class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {    
     
     /// CSV Track File Vars
+    let GNSS: Optional<String>
     let time: String
     let lat: Double
     let lon: Double
@@ -23,9 +24,9 @@ class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {
     let hAcc: Double
     let vAcc: Double
     let sAcc: Double
-    let heading: Double
-    let cAcc: Double
-    let gpsFix: Int
+    let heading: Optional<Double>
+    let cAcc: Optional<Double>
+    let gpsFix: Optional<Int>
     let numSV: Int
     
     /// These need to be lazy to not be expected by the CSV decoder, could likely use optional instead

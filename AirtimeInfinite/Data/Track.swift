@@ -36,12 +36,27 @@ class Track: ObservableObject {
      - Throws: TrackError.noReadableTrackfileData  or access error if file cannot be accessed or parsed
      */
     func importURL(url: URL) throws {
-        let rawTrackFileData = try String(contentsOf: url)
+        var rawTrackFileData = try String(contentsOf: url)
+        
+        // Remove the FS2 header before processing, if exists
+        if rawTrackFileData.starts(with: "$FLYS") {
+            if let range = rawTrackFileData.range(of: "$COL,") {
+                rawTrackFileData = String(rawTrackFileData[range.upperBound...])
+            }
+        }
+        
         var tempTrackData = [DataPoint]()
         
         let reader = try CSVReader(string: rawTrackFileData, hasHeaderRow: true)
         let decoder = CSVRowDecoder()
+        
+        // Skip the unit row
         reader.next()
+        // Skip an extra row for FS2
+        if reader.headerRow![0] == "GNSS" {
+            reader.next()
+        }
+        
         while reader.next() != nil {
             let row = try decoder.decode(DataPoint.self, from: reader)
             tempTrackData.append(row)
