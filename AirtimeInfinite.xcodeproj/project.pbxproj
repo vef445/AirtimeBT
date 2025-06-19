@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,6 +37,10 @@
 		C1E60A5924AC5929008004AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5824AC5929008004AF /* ContentView.swift */; };
 		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
+		F0C563412E0329750048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563402E0329750048CB47 /* FlySightCore */; };
+		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
+		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
+		F0C7FC1A2E0326FD00ECB53D /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C7FC192E0326FD00ECB53D /* FlySightCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,7 +82,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F3B62D02A7DAE0100C65A1C /* DGCharts in Frameworks */,
+				F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */,
+				F0C563442E0332200048CB47 /* FlySightCore in Frameworks */,
+				F0C7FC1A2E0326FD00ECB53D /* FlySightCore in Frameworks */,
 				C10C543124AC60BA00FEF75A /* CSV in Frameworks */,
+				F0C563412E0329750048CB47 /* FlySightCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +238,10 @@
 			packageProductDependencies = (
 				C10C543024AC60BA00FEF75A /* CSV */,
 				9F3B62CF2A7DAE0100C65A1C /* DGCharts */,
+				F0C7FC192E0326FD00ECB53D /* FlySightCore */,
+				F0C563402E0329750048CB47 /* FlySightCore */,
+				F0C563432E0332200048CB47 /* FlySightCore */,
+				F0C563462E0332E60048CB47 /* FlySightCore */,
 			);
 			productName = AirtimeInfinite;
 			productReference = C1E60A4E24AC5929008004AF /* Airtime: Infinite.app */;
@@ -243,7 +255,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = "Jordan Gould";
 				TargetAttributes = {
 					C1E60A4D24AC5929008004AF = {
@@ -263,6 +275,7 @@
 			packageReferences = (
 				C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */,
 				C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */,
+				F0C563452E0332E60048CB47 /* XCLocalSwiftPackageReference "FlySightCore" */,
 			);
 			productRefGroup = C1E60A4F24AC5929008004AF /* Products */;
 			projectDirPath = "";
@@ -326,6 +339,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -359,6 +373,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -387,6 +402,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -420,6 +436,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -443,21 +460,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
-				DEVELOPMENT_TEAM = 8VV4Q237CK;
+				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite";
+				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite BT";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordangould.AirtimeInfinite;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeInfinite;
 				PRODUCT_NAME = "Airtime: Infinite";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -468,21 +488,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
-				DEVELOPMENT_TEAM = 8VV4Q237CK;
+				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite";
+				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite BT";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordangould.AirtimeInfinite;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeInfinite;
 				PRODUCT_NAME = "Airtime: Infinite";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -510,6 +533,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F0C563452E0332E60048CB47 /* XCLocalSwiftPackageReference "FlySightCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = FlySightCore;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		C10C542C24AC60A800FEF75A /* XCRemoteSwiftPackageReference "Charts" */ = {
@@ -540,6 +570,22 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */;
 			productName = CSV;
+		};
+		F0C563402E0329750048CB47 /* FlySightCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlySightCore;
+		};
+		F0C563432E0332200048CB47 /* FlySightCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlySightCore;
+		};
+		F0C563462E0332E60048CB47 /* FlySightCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlySightCore;
+		};
+		F0C7FC192E0326FD00ECB53D /* FlySightCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlySightCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 
