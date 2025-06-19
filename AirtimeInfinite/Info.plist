@@ -37,8 +37,12 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Can this app use Bluetooth?</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Can this app communicate with Bluetooth peripherals?</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Jordan Gould</string>
+	<string>Jordan Gould (main app) &amp; Guillaume Vigneron (BT Support)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
