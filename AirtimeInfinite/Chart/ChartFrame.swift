@@ -15,13 +15,18 @@ struct ChartFrame: View {
     @Binding var showingMetricSelectionMenu: Bool
     
     @State private var pinSelection = false
+    @State private var showChart = false
     
     let support_url = "https://jordangould.github.io/AirtimeInfiniteDocs/"
     
-    var body: some View{
+    var body: some View {
         ZStack {
-            ChartView()
-            HStack{
+            if showChart {
+                ChartView()
+            } else {
+                Color.clear
+            }
+            HStack {
                 Spacer()
                 VStack{
                     
@@ -76,5 +81,10 @@ struct ChartFrame: View {
                 }
             }
         }
-    }
-}
+        .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showChart = true
+                    }
+                }
+            }
+        }

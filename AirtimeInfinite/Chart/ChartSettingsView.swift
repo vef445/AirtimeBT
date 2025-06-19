@@ -82,6 +82,15 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
+                        Toggle(isOn: $main.useBluetooth){
+                            Text("Connect via Bluetooth")
+                        }
+                        .toggleStyle(CheckmarkToggleStyle())
+                        .padding(.horizontal)
+                        .frame(height: 40)
+                        Divider()
+                            .frame(height: 1)
+                            .padding(.horizontal)
                     }
                 }
             }
