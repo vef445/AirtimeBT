@@ -8,11 +8,14 @@
 
 import Combine
 import SwiftUI
+import FlySightCore
 
 /// Primary data handler/processor
 class MainProcessor: ObservableObject {
     
     static let instance = MainProcessor()
+    
+    let bluetoothManager = FlySightCore.BluetoothManager()
     
     var mapViewProcessor: MapViewProcessor
     var chartViewProcessor: ChartViewProcessor
@@ -21,7 +24,7 @@ class MainProcessor: ObservableObject {
     
     @Published var highlightedPoint: UserDataPointSelection
     @Published var selectedMeasurePoint: MeasurementPointSelection
-    
+
     @Published var trackLoadError = false
     @Published var isLoading = false
     
@@ -34,6 +37,12 @@ class MainProcessor: ObservableObject {
     @Published var showAcceleration: Bool {
         didSet {
             UserDefaults.standard.set(showAcceleration, forKey: "showAcceleration")
+        }
+    }
+    
+    @Published var useBluetooth: Bool {
+        didSet {
+            UserDefaults.standard.set(useBluetooth, forKey: "useBluetooth")
         }
     }
     
@@ -62,6 +71,11 @@ class MainProcessor: ObservableObject {
         } else {
             self.showAcceleration = false
         }
+        if UserDefaults.standard.object(forKey: "useBluetooth") != nil {
+                self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
+            } else {
+                self.useBluetooth = false
+            }
         
         /// Allow for nested observable selection objects
         anyCancellableHighlight = highlightedPoint.objectWillChange.sink { (_) in
@@ -85,17 +99,19 @@ class MainProcessor: ObservableObject {
     func loadTrack(trackURL: URL) {
         isLoading = true
         DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let fileAccessAllowed = trackURL.startAccessingSecurityScopedResource()
-                if fileAccessAllowed {
-                    try self.track.importURL(url: trackURL)
-                    trackURL.stopAccessingSecurityScopedResource()
-                } else {
-                    DispatchQueue.main.async {
-                        self.trackLoadError = true
-                        self.isLoading = false
-                    }
-                    return
+                do {
+                    if trackURL.startAccessingSecurityScopedResource() {
+                        defer { trackURL.stopAccessingSecurityScopedResource() }
+                        try self.track.importURL(url: trackURL)
+                    } else if trackURL.isFileURL {
+                        // Possibly Bluetooth file, try to import directly
+                        try self.track.importURL(url: trackURL)
+                    } else {
+                        DispatchQueue.main.async {
+                            self.trackLoadError = true
+                            self.isLoading = false
+                        }
+                        return
                 }
             } catch {
                 DispatchQueue.main.async {

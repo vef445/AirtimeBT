@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-/// Primary view displaying all data visualiztion views 
+/// Primary view displaying all data visualiztion views
 struct ContentView: View {
     
     @State var isShowingPicker = false
@@ -28,7 +28,7 @@ struct ContentView: View {
                 Color.gray
                     .opacity((self.showingMetricSelectionMenu || self.main.isLoading) ? 0.5 : 0.0)
                     .edgesIgnoringSafeArea(.all)
-                    .animation(.default)
+                    .animation(.linear, value: showingMetricSelectionMenu || main.isLoading)
                 
                 ///
                 LoadingView(isShowing: self.$main.isLoading){
@@ -66,14 +66,18 @@ struct ContentView: View {
                                     .edgesIgnoringSafeArea(.bottom)
                             }
                         }
-                        /// Load file button
+                        /// Load file  button
                         VStack {
                             Spacer()
                             HStack {
                                 Spacer()
-                                LoadFileButton()
+                                VStack(spacing: 2) {
+                                    UnifiedLoadButton()                                    
+                                }
                             }
                         }
+
+                        
                         /// Chart data selection menu
                         ChartSettingsView(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
                             .environmentObject(self.main)
@@ -84,7 +88,7 @@ struct ContentView: View {
                             .frame(width: 300, height: 300, alignment: .center)
                             .padding()
                             .offset(x: 0, y: self.showingMetricSelectionMenu ? 0 : 1000)
-                            .animation(.default)
+                            .animation(.linear, value: self.showingMetricSelectionMenu)
                     }
                 }
             }

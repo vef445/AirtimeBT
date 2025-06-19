@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MobileCoreServices
+import UniformTypeIdentifiers
 
 /// Document picker that returns the file URL of a user selected track file
 struct TrackFilePickerView: UIViewControllerRepresentable {
@@ -17,11 +18,10 @@ struct TrackFilePickerView: UIViewControllerRepresentable {
     @EnvironmentObject var main: MainProcessor
     
     func makeUIViewController(
-        context: UIViewControllerRepresentableContext<TrackFilePickerView>) ->
-        UIViewController {
-        /// We are looking for CSVs only
-        let documentPicker = UIDocumentPickerViewController(
-            documentTypes: [kUTTypeCommaSeparatedText as String], in: .open)
+        context: UIViewControllerRepresentableContext<TrackFilePickerView>) -> UIViewController {
+        let csvType = UTType.commaSeparatedText
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [csvType])
+        
         documentPicker.delegate = context.coordinator
         return documentPicker
     }

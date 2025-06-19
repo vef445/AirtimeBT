@@ -81,9 +81,10 @@ public struct HPart<Left, Right, Handle> where Left: View, Right: View, Handle: 
             .foregroundColor(.gray)
             .frame(width: handleSize.width, height: handleSize.height, alignment: .center)
             .offset(x: currentOffset, y: 0)
-            .animation(.linear)
+            .animation(.linear, value: currentOffset)
             .gesture(longPressDrag)
     }
+    
     
     
     
@@ -94,11 +95,11 @@ public struct HPart<Left, Right, Handle> where Left: View, Right: View, Handle: 
             HStack {
                 self.left
                     .frame(width: self.paddingFactor*(self.pctSplit*proxy.frame(in: .local).width) + self.currentOffset)
-                .animation(.linear)
+                    .animation(.linear, value: currentOffset)
                 Divider()
                 self.right
                     .frame(width: self.paddingFactor*((1-self.pctSplit)*proxy.frame(in: .local).width) - self.currentOffset)
-                    .animation(.linear)
+                    .animation(.linear, value: currentOffset)
             }.overlay(self.generateHandle(), alignment: .center)
         }
     }

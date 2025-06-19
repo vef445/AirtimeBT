@@ -35,7 +35,7 @@ struct ChartView: UIViewRepresentable {
             self.parent = parent
         }
         
-        /// Update the datapoint on the map and data view when user touches 
+        /// Update the datapoint on the map and data view when user touches
         public func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
             parent.main.highlightedPoint.setPointFromSecondsProperty(seconds: entry.x)
             if let hPoint = parent.main.highlightedPoint.point {
@@ -67,7 +67,7 @@ struct ChartView: UIViewRepresentable {
     /// Initialize the preferred chart settings (e.g. Description, axis settings, etc.)
     func prepareChart() {
         let chartView = main.chartViewProcessor.lineChartView
-        chartView.noDataText = "Press + to load a track."
+        chartView.noDataText = "Please load a track."
         chartView.noDataFont = NSUIFont.systemFont(ofSize: 20)
         chartView.rightAxis.enabled = true
         chartView.xAxis.enabled = true
