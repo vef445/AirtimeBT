@@ -1,6 +1,26 @@
 <img src="./Images/logo.png" align="left"
      alt="Logo" width="60" height="68">
-# Airtime: Infinite
+# Airtime: Infinite BT
+
+Please first read the original documentation below (original source here: https://github.com/jordangould/AirtimeInfinite)
+
+All credits go to its original author Jordan Gould https://github.com/jordangould
+
+What I've done to the original app:
+
+updated deprecated code
+added a "Connect via Bluetooth" setting
+changed the behavior of the "Load file" button depending on the previous setting
+added a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
+Bluetooth functionality is only available on Flysight2. This app will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
+
+Instructions: To start using the Bluetooth connection on your Flysight2, you need to set it in pairing mode. To do so, when the Flysight2 is on standby (led off), double press its button. The led should now flash slowly. Initiate the connection from the Airtime:Infinite BT app.
+
+You're good to go!
+
+More detailed instructions to come soon
+
+*****************************************************************************
 
 First time using **Airtime: Infinite**? "Too much power" warning? Skip to [Connecting Your FlySight](#connecting-your-flysight) to get started.
 
