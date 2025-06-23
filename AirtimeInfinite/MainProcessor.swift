@@ -50,6 +50,26 @@ class MainProcessor: ObservableObject {
     var anyCancellableMeasure: AnyCancellable? = nil
     var anyCancellableChart: AnyCancellable? = nil
 
+    /// Tracks the last connected Bluetooth peripheral UUID
+    var lastConnectedPeripheralID: UUID? {
+        get {
+            if let idString = UserDefaults.standard.string(forKey: "LastPeripheralID") {
+                return UUID(uuidString: idString)
+            }
+            return nil
+        }
+        set {
+            if let newValue = newValue {
+                UserDefaults.standard.set(newValue.uuidString, forKey: "LastPeripheralID")
+            }
+        }
+    }
+
+    /// Indicates whether a track file is loaded
+    var trackLoaded: Bool {
+        return !track.trackData.isEmpty
+    }
+
     /// Initialize the main views with no data
     init() {
         highlightedPoint = UserDataPointSelection()
@@ -71,11 +91,12 @@ class MainProcessor: ObservableObject {
         } else {
             self.showAcceleration = false
         }
+        
         if UserDefaults.standard.object(forKey: "useBluetooth") != nil {
-                self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
-            } else {
-                self.useBluetooth = false
-            }
+            self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
+        } else {
+            self.useBluetooth = false
+        }
         
         /// Allow for nested observable selection objects
         anyCancellableHighlight = highlightedPoint.objectWillChange.sink { (_) in
@@ -99,19 +120,19 @@ class MainProcessor: ObservableObject {
     func loadTrack(trackURL: URL) {
         isLoading = true
         DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    if trackURL.startAccessingSecurityScopedResource() {
-                        defer { trackURL.stopAccessingSecurityScopedResource() }
-                        try self.track.importURL(url: trackURL)
-                    } else if trackURL.isFileURL {
-                        // Possibly Bluetooth file, try to import directly
-                        try self.track.importURL(url: trackURL)
-                    } else {
-                        DispatchQueue.main.async {
-                            self.trackLoadError = true
-                            self.isLoading = false
-                        }
-                        return
+            do {
+                if trackURL.startAccessingSecurityScopedResource() {
+                    defer { trackURL.stopAccessingSecurityScopedResource() }
+                    try self.track.importURL(url: trackURL)
+                } else if trackURL.isFileURL {
+                    // Possibly Bluetooth file, try to import directly
+                    try self.track.importURL(url: trackURL)
+                } else {
+                    DispatchQueue.main.async {
+                        self.trackLoadError = true
+                        self.isLoading = false
+                    }
+                    return
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -132,6 +153,5 @@ class MainProcessor: ObservableObject {
                 self.isLoading = false
             }
         }
-     }
+    }
 }
-

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,6 +37,7 @@
 		C1E60A5924AC5929008004AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5824AC5929008004AF /* ContentView.swift */; };
 		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
+		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
 		F0C563412E0329750048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563402E0329750048CB47 /* FlySightCore */; };
 		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
 		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
@@ -74,6 +75,7 @@
 		C1E60A5A24AC592A008004AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 		C10C541224AC603000FEF75A /* DocumentPicker */ = {
 			isa = PBXGroup;
 			children = (
+				F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */,
 				C10C541324AC603000FEF75A /* LoadFileButton.swift */,
 				C10C541424AC603000FEF75A /* TrackFilePickerView.swift */,
 			);
@@ -256,7 +259,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 1620;
-				ORGANIZATIONNAME = "Jordan Gould";
+				ORGANIZATIONNAME = "Guillaume Vigneron";
 				TargetAttributes = {
 					C1E60A4D24AC5929008004AF = {
 						CreatedOnToolsVersion = 11.5;
@@ -264,7 +267,6 @@
 				};
 			};
 			buildConfigurationList = C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "AirtimeInfinite" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -277,6 +279,7 @@
 				C10C542F24AC60BA00FEF75A /* XCRemoteSwiftPackageReference "CSV" */,
 				F0C563452E0332E60048CB47 /* XCLocalSwiftPackageReference "FlySightCore" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = C1E60A4F24AC5929008004AF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -306,6 +309,7 @@
 			files = (
 				C10C540E24AC600900FEF75A /* DataPoint.swift in Sources */,
 				C10C542A24AC606B00FEF75A /* DragState.swift in Sources */,
+				F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */,
 				C10C541A24AC604F00FEF75A /* MainProcessor.swift in Sources */,
 				C10C540C24AC600900FEF75A /* FlightMetric.swift in Sources */,
 				C10C541624AC603000FEF75A /* TrackFilePickerView.swift in Sources */,
