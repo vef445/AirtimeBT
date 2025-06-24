@@ -427,7 +427,7 @@ struct ScrollingText: View {
         guard textWidth > containerWidth else { return }
 
         timer?.invalidate()
-        let animationDuration = Double(textWidth / 30)
+        _ = Double(textWidth / 30)
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
             withAnimation(.linear(duration: 0.03)) {

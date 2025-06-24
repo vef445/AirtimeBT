@@ -38,11 +38,11 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Can this app use Bluetooth?</string>
+	<string>Can this app communicate with Flysight peripherals via Bluetooth? This app can only connect to Flysight devices and can only download files from your Flysight.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Can this app communicate with Bluetooth peripherals?</string>
+	<string>Can this app communicate with Flysight peripherals via Bluetooth? This app can only connect to Flysight devices and can only download files from your Flysight.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Jordan Gould (main app) &amp; Guillaume Vigneron (BT Support)</string>
+	<string>Guillaume Vigneron</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

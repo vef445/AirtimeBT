@@ -15,7 +15,7 @@ class ChartViewProcessor: ObservableObject {
     /// Primary view object from the Charts library
     var lineChartView: LineChartView
     
-    /// 
+    ///
     var track: Track = Track()
     
     let flightMetrics = [FlightMetric.alt,

@@ -471,7 +471,7 @@
 				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite BT";
+				INFOPLIST_KEY_CFBundleDisplayName = "Airtime:Infinite BT";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -499,7 +499,7 @@
 				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AirtimeInfinite/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Airtime: Infinite BT";
+				INFOPLIST_KEY_CFBundleDisplayName = "Airtime:Infinite BT";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (

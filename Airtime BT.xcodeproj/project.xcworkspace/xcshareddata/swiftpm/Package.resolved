@@ -1,12 +1,13 @@
 {
+  "originHash" : "75f8e760f01106846cabb891a160e2006579618a6c21b63addc35d0189d8a30e",
   "pins" : [
     {
       "identity" : "charts",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielgindi/Charts",
       "state" : {
-        "revision" : "0a229f8c914b0ec93798cee058cf75b339297513",
-        "version" : "5.0.0"
+        "revision" : "dd9c72e3d7e751e769971092a6bd72d39198ae63",
+        "version" : "5.1.0"
       }
     },
     {
@@ -19,5 +20,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

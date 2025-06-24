@@ -25,10 +25,20 @@ class UserDataPointSelection: ObservableObject {
             where: { $0.secondsFromStart == seconds })
     }
     
+    /// Clears the current selected point
+    func clear() {
+        self.point = nil
+    }
 }
 
-/// Holds base point chosen by the user for measurements 
+/// Holds base point chosen by the user for measurements
 class MeasurementPointSelection: UserDataPointSelection {
     
     @Published var isActive = false
+    
+    /// Clears the selected point and deactivates the measurement point
+    override func clear() {
+        super.clear()
+        self.isActive = false
+    }
 }
