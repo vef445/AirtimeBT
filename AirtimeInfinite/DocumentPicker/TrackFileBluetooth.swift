@@ -1,6 +1,6 @@
 //
 //  TrackFileBluetooth.swift
-//  AirtimeInfinite
+//  AirtimeBT
 //
 //  Created by Guillaume Vigneron on 23/06/2025.
 //  Copyright © 2025 Guillaume Vigneron. All rights reserved.

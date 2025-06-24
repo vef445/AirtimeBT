@@ -1,6 +1,6 @@
 //
 //  MapBoundryProcessor.swift
-//  AirtimeInfinite
+//  AirtimeBT
 //
 //  Created by Jordan Gould on 6/18/20.
 //  Copyright © 2020 Jordan Gould. All rights reserved.

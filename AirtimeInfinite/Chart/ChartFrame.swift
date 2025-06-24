@@ -1,6 +1,6 @@
 //
 //  ChartFrame.swift
-//  AirtimeInfinite
+//  AirtimeBT
 //
 //  Created by Jordan Gould on 6/18/20.
 //  Copyright © 2020 Jordan Gould. All rights reserved.
@@ -17,7 +17,7 @@ struct ChartFrame: View {
     @State private var pinSelection = false
     @State private var showChart = false
     
-    let support_url = "https://jordangould.github.io/AirtimeInfiniteDocs/"
+    let support_url = "https://github.com/vef445/AirtimeBT"
     
     var body: some View {
         ZStack {
