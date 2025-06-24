@@ -13,7 +13,7 @@ What I've changed to the original app:
 - changed the behavior of the "Load file" button depending on the previous setting
 - added a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
 - Bluetooth functionality is only available on Flysight2. This app will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
-
+ 
 
 ## Bluetooth Instructions
 
