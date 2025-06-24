@@ -6,19 +6,26 @@ Please first read the original documentation below (original source here: https:
 
 All credits go to its original author Jordan Gould https://github.com/jordangould
 
-What I've done to the original app:
+What I've changed to the original app:
 
-updated deprecated code
-added a "Connect via Bluetooth" setting
-changed the behavior of the "Load file" button depending on the previous setting
-added a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
-Bluetooth functionality is only available on Flysight2. This app will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
+- updated deprecated code
+- added a "Connect via Bluetooth" setting
+- changed the behavior of the "Load file" button depending on the previous setting
+- added a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
+- Bluetooth functionality is only available on Flysight2. This app will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
 
-Instructions: To start using the Bluetooth connection on your Flysight2, you need to set it in pairing mode. To do so, when the Flysight2 is on standby (led off), double press its button. The led should now flash slowly. Initiate the connection from the Airtime:Infinite BT app.
+
+## Bluetooth Instructions
+
+To start using the Bluetooth connection on your Flysight2, you need to:
+1. Update your device with the latest available offical firmware following the instructions available here: https://flysight.ca/firmware/
+2. In the Airtime:Infinite BT app settings, tick the "Use Bluetooth connection" parameter.
+3. Set your Flysight in pairing mode. To do so, when the device is off (led off), double press its button. The led should now flash slowly.
+5. Back to the app, press the + button to connect to your Flysight2, select your device in the dropdown menu and tap "Connect". Your phone will ask confirmation of the Bluetooth pairing on the first use.
 
 You're good to go!
 
-More detailed instructions to come soon
+
 
 *****************************************************************************
 
