@@ -1,4 +1,4 @@
-<img src="./Images/logo.png" align="left"
+<img src="./Images/logo2.png" align="left"
      alt="Logo" width="60" height="68">
 # Airtime: Infinite BT
 
