@@ -225,9 +225,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C1E60A4D24AC5929008004AF /* AirtimeInfinite */ = {
+		C1E60A4D24AC5929008004AF /* Airtime BT */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "AirtimeInfinite" */;
+			buildConfigurationList = C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "Airtime BT" */;
 			buildPhases = (
 				C1E60A4A24AC5929008004AF /* Sources */,
 				C1E60A4B24AC5929008004AF /* Frameworks */,
@@ -237,7 +237,7 @@
 			);
 			dependencies = (
 			);
-			name = AirtimeInfinite;
+			name = "Airtime BT";
 			packageProductDependencies = (
 				C10C543024AC60BA00FEF75A /* CSV */,
 				9F3B62CF2A7DAE0100C65A1C /* DGCharts */,
@@ -266,7 +266,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "AirtimeInfinite" */;
+			buildConfigurationList = C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "Airtime BT" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -284,7 +284,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C1E60A4D24AC5929008004AF /* AirtimeInfinite */,
+				C1E60A4D24AC5929008004AF /* Airtime BT */,
 			);
 		};
 /* End PBXProject section */
@@ -518,7 +518,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "AirtimeInfinite" */ = {
+		C1E60A4924AC5929008004AF /* Build configuration list for PBXProject "Airtime BT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C1E60A6324AC592A008004AF /* Debug */,
@@ -527,7 +527,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "AirtimeInfinite" */ = {
+		C1E60A6524AC592A008004AF /* Build configuration list for PBXNativeTarget "Airtime BT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C1E60A6624AC592A008004AF /* Debug */,

@@ -17,8 +17,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C1E60A4D24AC5929008004AF"
                BuildableName = "Airtime: Infinite.app"
-               BlueprintName = "AirtimeInfinite"
-               ReferencedContainer = "container:AirtimeInfinite.xcodeproj">
+               BlueprintName = "Airtime BT"
+               ReferencedContainer = "container:Airtime BT.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,8 +46,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1E60A4D24AC5929008004AF"
             BuildableName = "Airtime: Infinite.app"
-            BlueprintName = "AirtimeInfinite"
-            ReferencedContainer = "container:AirtimeInfinite.xcodeproj">
+            BlueprintName = "Airtime BT"
+            ReferencedContainer = "container:Airtime BT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1E60A4D24AC5929008004AF"
             BuildableName = "Airtime: Infinite.app"
-            BlueprintName = "AirtimeInfinite"
-            ReferencedContainer = "container:AirtimeInfinite.xcodeproj">
+            BlueprintName = "Airtime BT"
+            ReferencedContainer = "container:Airtime BT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
