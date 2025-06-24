@@ -1,6 +1,6 @@
 <img src="./Images/logo.png" align="left"
      alt="Logo" width="60" height="68">
-# Airtime: Infinite BT
+# Airtime BT
 
 Please first read the original documentation below (original source here: https://github.com/jordangould/AirtimeInfinite)
 
@@ -19,7 +19,7 @@ What I've changed to the original app:
 
 To start using the Bluetooth connection on your Flysight2, you need to:
 1. Update your device with the latest available offical firmware following the instructions available here: https://flysight.ca/firmware/
-2. In the Airtime:Infinite BT app settings, tick the "Use Bluetooth connection" parameter.
+2. In the Airtime BT app settings, tick the "Use Bluetooth connection" parameter.
 3. Set your Flysight in pairing mode. To do so, when the device is off (led off), double press its button. The led should now flash slowly.
 5. Back to the app, press the + button to connect to your Flysight2, select your device in the dropdown menu and tap "Connect". Your phone will ask confirmation of the Bluetooth pairing on the first use.
 
