@@ -7,9 +7,9 @@ Airtime BT is a revision of the app Airtime:Infinite. Its main purpose is to all
 What I've changed to the original app:
 - updated deprecated code
 - added Bluetooth support, which features:
- * a new "Connect via Bluetooth" setting
- * a changed behavior of the "Load file" button depending on the previous setting
- * a bluetooth connection page, together with a file selection and bluetooth file downloading capabilties  
+   * a new "Connect via Bluetooth" setting
+   * a changed behavior of the "Load file" button depending on the previous setting
+   * a bluetooth connection page, together with a file selection and bluetooth file downloading capabilties  
 
 Bluetooth functionality is only available with a Flysight2. Airtime BT will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite  
  
