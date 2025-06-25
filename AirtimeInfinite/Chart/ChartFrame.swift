@@ -105,6 +105,20 @@ struct ChartFrame: View {
                     .padding(.top, 10)
                     .accessibilityLabel("Restore full chart")
                     
+                    Button(action: {
+                        main.chartViewProcessor.shareTrack()
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.gray)
+                    }
+                    .disabled(main.chartViewProcessor.track.trackData.isEmpty)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
+                    .accessibilityLabel("Share your track")
+                    
                     Spacer()
                 }
             }

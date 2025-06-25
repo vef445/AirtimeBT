@@ -13,6 +13,8 @@ import FlySightCore
 /// Primary data handler/processor
 class MainProcessor: ObservableObject {
     
+    private(set) var trackURL: URL? = nil
+    
     static let instance = MainProcessor()
     
     let bluetoothManager = FlySightCore.BluetoothManager()
@@ -118,6 +120,7 @@ class MainProcessor: ObservableObject {
        - trackURL: File path to be loaded
     */
     func loadTrack(trackURL: URL) {
+        
         isLoading = true
         DispatchQueue.global(qos: .userInitiated).async {
             do {
@@ -143,6 +146,7 @@ class MainProcessor: ObservableObject {
             }
             
             DispatchQueue.main.async {
+                self.trackURL = trackURL
                 self.chartViewProcessor.loadTrack(track: self.track)
                 self.chartViewProcessor.resetChart()
                 

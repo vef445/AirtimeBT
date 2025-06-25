@@ -255,8 +255,6 @@ class ChartViewProcessor: ObservableObject {
         lineChartView.fitScreen()
     }
 
-
-
     func restoreOriginalTrack() {
         guard let original = originalTrack else { return }
         self.track = original
@@ -264,6 +262,46 @@ class ChartViewProcessor: ObservableObject {
         reloadTrack()
         updateAutoScaleAxis()
         lineChartView.notifyDataSetChanged()
+    }
+    
+    func shareTrack() {
+        guard let originalURL = MainProcessor.instance.trackURL else { return }
+
+        let tempDir = FileManager.default.temporaryDirectory
+        let tempURL = tempDir.appendingPathComponent(originalURL.lastPathComponent)
+
+        print("Original URL: \(originalURL.path)")
+        print("Temp URL: \(tempURL.path)")
+
+        do {
+            // Remove existing temp file if any
+            if FileManager.default.fileExists(atPath: tempURL.path) {
+                try FileManager.default.removeItem(at: tempURL)
+            }
+
+            // Copy original file to temp directory
+            try FileManager.default.copyItem(at: originalURL, to: tempURL)
+
+            // Verify copied file exists
+            guard FileManager.default.fileExists(atPath: tempURL.path) else {
+                print("Copied file does not exist at temp location.")
+                return
+            }
+
+            let itemProvider = NSItemProvider(contentsOf: tempURL)!
+            itemProvider.registerFileRepresentation(forTypeIdentifier: "public.comma-separated-values-text", fileOptions: [], visibility: .all) { completion in
+                completion(tempURL, true, nil)
+                return nil
+            }
+
+            let activityVC = UIActivityViewController(activityItems: [itemProvider], applicationActivities: nil)
+            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let root = scene.windows.first?.rootViewController {
+                root.present(activityVC, animated: true, completion: nil)
+            }
+        } catch {
+            print("Error preparing file for sharing:", error)
+        }
     }
 
 }
