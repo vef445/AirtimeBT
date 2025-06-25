@@ -5,6 +5,8 @@
 Airtime BT is a revision of the app Airtime:Infinite. Its main purpose is to allow skydivers to access and analyze the data stored on their Flysight device.  
 
 What I've changed to the original app:
+
+[version 1.1]
 - updated deprecated code
 - added Bluetooth support, which features:
    * a new "Connect via Bluetooth" setting
