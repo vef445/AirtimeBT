@@ -20,7 +20,7 @@ To start using the Bluetooth connection on your Flysight2, you need to:
 1. Update your device with the latest available offical firmware following the instructions available here: https://flysight.ca/firmware/
 2. In the Airtime BT app settings, tick the "Use Bluetooth connection" parameter.
 3. Set your Flysight in pairing mode. To do so, when the device is off (led off), double press its button. The led should now flash slowly.
-5. Back to the app, press the + button to connect to your Flysight2, select your device in the dropdown menu and tap "Connect". Your phone will ask confirmation of the Bluetooth pairing on the first use.
+5. Back to the app, press the + button to connect to your Flysight2, select your device in the dropdown menu and tap "Connect". If there are multiple Flysight devices around you, the one in pairing mode will be listed with a white circle next to its name. Your phone will ask confirmation of the Bluetooth pairing on the first use.
   
   
 You're good to go!
