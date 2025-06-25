@@ -2,17 +2,16 @@
      alt="Logo" width="60" height="68">
 # Airtime BT
 
-Please first read the original documentation below (original source here: https://github.com/jordangould/AirtimeInfinite)
-
-All credits go to its original author Jordan Gould https://github.com/jordangould
+Airtime BT is a revision of the app Airtime:Infinite. Its main purpose is to allow skydivers to access and analyze the data stored on their Flysight device.
 
 What I've changed to the original app:
-
 - updated deprecated code
-- added a "Connect via Bluetooth" setting
-- changed the behavior of the "Load file" button depending on the previous setting
-- added a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
-- Bluetooth functionality is only available on Flysight2. This app will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
+- added Bluetoot support, which features:
+ * a new "Connect via Bluetooth" setting
+ * a changed behavior of the "Load file" button depending on the previous setting
+ * a bluetooth connection page, together with a file selection and bluetooth file downloading capabiltiies
+
+Bluetooth functionality is only available with a Flysight2. Airtime BT will still work with the original Flysight using a cable connection as described here: https://github.com/jordangould/AirtimeInfinite
  
 
 ## Bluetooth Instructions
@@ -25,6 +24,9 @@ To start using the Bluetooth connection on your Flysight2, you need to:
 
 You're good to go!
 
+
+Documentation of the Airtime:Infinite below, which may help you if you intend to use a wired connection to the Flysight (original source here: https://github.com/jordangould/AirtimeInfinite)
+All credits go to its original author Jordan Gould https://github.com/jordangould
 
 
 *****************************************************************************
