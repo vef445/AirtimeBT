@@ -1,7 +1,7 @@
 <img src="./Images/logo.png" align="left"
      alt="Logo" width="60" height="68">
 # Airtime BT
-
+  
 Airtime BT is a revision of the app Airtime:Infinite. Its main purpose is to allow skydivers to access and analyze the data stored on their Flysight device.  
 
 What I've changed to the original app:
