@@ -15,8 +15,17 @@ class ChartViewProcessor: ObservableObject {
     /// Primary view object from the Charts library
     var lineChartView: LineChartView
     
+    /// Track if the view is cut
+    var isCut: Bool {
+        return originalTrack != nil
+    }
+
+    
     ///
     var track: Track = Track()
+    
+    /// Keeps a backup of the full track in case user cuts to a zoomed range
+    private var originalTrack: Track? = nil
     
     let flightMetrics = [FlightMetric.alt,
                          FlightMetric.hVel,
@@ -208,5 +217,70 @@ class ChartViewProcessor: ObservableObject {
         lineChartView.xAxis.removeAllLimitLines()
         /// Force refresh
         lineChartView.animate(yAxisDuration: 0.00000001)
+    }
+    
+    func cutToVisibleRange() {
+        guard lineChartView.data != nil else { return }
+
+        if originalTrack == nil {
+            originalTrack = track.copy()
+        }
+
+        let visibleMinX = lineChartView.lowestVisibleX
+        let visibleMaxX = lineChartView.highestVisibleX
+
+        let sourceTrack = originalTrack ?? track
+
+        let filteredTrackData = sourceTrack.trackData.filter { dp in
+            dp.secondsFromStart >= visibleMinX && dp.secondsFromStart <= visibleMaxX
+        }
+
+        guard !filteredTrackData.isEmpty else { return }
+
+        let cutTrack = Track()
+        cutTrack.trackData = filteredTrackData
+        cutTrack.xRange = filteredTrackData.map { $0.secondsFromStart }
+
+        self.track = cutTrack
+        for i in 0..<chartableMetrics.count {
+            chartableMetrics[i].valueList = []
+        }
+        self.loadChartableMetrics()
+
+
+        reloadTrack()
+        updateAutoScaleAxis()
+        lineChartView.notifyDataSetChanged()
+
+        lineChartView.fitScreen()
+    }
+
+
+
+    func restoreOriginalTrack() {
+        guard let original = originalTrack else { return }
+        self.track = original
+        originalTrack = nil
+        reloadTrack()
+        updateAutoScaleAxis()
+        lineChartView.notifyDataSetChanged()
+    }
+
+}
+
+/// Extension to add copy method to Track
+extension Track {
+    func copy() -> Track {
+        let newTrack = Track()
+        
+        // Deep copy the DataPoint array using DataPoint.copy()
+        newTrack.trackData = self.trackData.map { $0.copy() }
+        
+        // Copy other properties (assuming xRange is [Double])
+        newTrack.xRange = self.xRange
+        
+        // Copy any other properties if needed
+        
+        return newTrack
     }
 }

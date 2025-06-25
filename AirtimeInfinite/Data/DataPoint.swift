@@ -1,6 +1,6 @@
 //
 //  DataPoint.swift
-//  AirtimeBT
+//  AirtimeInfinite
 //
 //  Created by Jordan Gould on 6/18/20.
 //  Copyright © 2020 Jordan Gould. All rights reserved.
@@ -10,7 +10,7 @@ import MapKit
 import SwiftUI
 
 /// Model for a single data point within a track
-class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {    
+class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {
     
     /// CSV Track File Vars
     let GNSS: Optional<String>
@@ -52,6 +52,41 @@ class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {
     lazy var accelTotal: Double = 0
     
     lazy var distance2D: Double = 0
+    
+    init(
+        GNSS: String?,
+        time: String,
+        lat: Double,
+        lon: Double,
+        hMSL: Double,
+        velN: Double,
+        velE: Double,
+        velD: Double,
+        hAcc: Double,
+        vAcc: Double,
+        sAcc: Double,
+        heading: Double?,
+        cAcc: Double?,
+        gpsFix: Int?,
+        numSV: Int
+    ) {
+        self.GNSS = GNSS
+        self.time = time
+        self.lat = lat
+        self.lon = lon
+        self.hMSL = hMSL
+        self.velN = velN
+        self.velE = velE
+        self.velD = velD
+        self.hAcc = hAcc
+        self.vAcc = vAcc
+        self.sAcc = sAcc
+        self.heading = heading
+        self.cAcc = cAcc
+        self.gpsFix = gpsFix
+        self.numSV = numSV
+    }
+
     
     /**
      Converts a FlySight time string into a Swift Date object
@@ -144,6 +179,46 @@ class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {
         calcGlideRatio()
         calcDiveAngle()
     }
-    
+}
+extension DataPoint {
+    func copy() -> DataPoint {
+        let copy = DataPoint(
+            GNSS: self.GNSS,
+            time: self.time,
+            lat: self.lat,
+            lon: self.lon,
+            hMSL: self.hMSL,
+            velN: self.velN,
+            velE: self.velE,
+            velD: self.velD,
+            hAcc: self.hAcc,
+            vAcc: self.vAcc,
+            sAcc: self.sAcc,
+            heading: self.heading,
+            cAcc: self.cAcc,
+            gpsFix: self.gpsFix,
+            numSV: self.numSV
+        )
+        
+        // Copy all the lazy properties
+        copy.secondsSinceEpoch = self.secondsSinceEpoch
+        copy.secondsFromStart = self.secondsFromStart
+        copy.secondsFromExit = self.secondsFromExit
+        copy.altitude = self.altitude
+        copy.coordinate = self.coordinate
+        copy.horizontalSpeed = self.horizontalSpeed
+        copy.totalSpeed = self.totalSpeed
+        copy.glideRatio = self.glideRatio
+        copy.diveAngle = self.diveAngle
+        copy.accelN = self.accelN
+        copy.accelE = self.accelE
+        copy.accelParallel = self.accelParallel
+        copy.accelPerp = self.accelPerp
+        copy.accelVert = self.accelVert
+        copy.accelTotal = self.accelTotal
+        copy.distance2D = self.distance2D
+        
+        return copy
+    }
 }
 

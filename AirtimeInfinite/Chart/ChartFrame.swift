@@ -55,7 +55,7 @@ struct ChartFrame: View {
                     .padding(.horizontal, 40)
                     .padding(.top, 10)
                     
-                    /// Selected measurement point button
+                    /// Selected measurement point button (ruler)
                     Button(action: {
                         self.pinSelection.toggle()
                         self.main.selectedMeasurePoint.isActive = self.pinSelection
@@ -77,14 +77,42 @@ struct ChartFrame: View {
                     .padding(.horizontal, 40)
                     .padding(.top, 10)
                     
+                    // MARK: — New Buttons Added Below the Ruler Button
+                    
+                    Button(action: {
+                        main.chartViewProcessor.cutToVisibleRange()
+                    }) {
+                        Image(systemName: "scissors")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(main.chartViewProcessor.isCut ? .blue : .gray)
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
+                    .accessibilityLabel("Cut to zoomed range")
+                    
+                    Button(action: {
+                        main.chartViewProcessor.restoreOriginalTrack()
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
+                    .accessibilityLabel("Restore full chart")
+                    
                     Spacer()
                 }
             }
         }
         .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showChart = true
-                    }
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                showChart = true
             }
         }
+    }
+}
