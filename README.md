@@ -6,7 +6,7 @@ Airtime BT is a revision of the app Airtime:Infinite. Its main purpose is to all
 
 What I've changed to the original app:
 - updated deprecated code
-- added Bluetoot support, which features:
+- added Bluetooth support, which features:
  * a new "Connect via Bluetooth" setting
  * a changed behavior of the "Load file" button depending on the previous setting
  * a bluetooth connection page, together with a file selection and bluetooth file downloading capabilties  
