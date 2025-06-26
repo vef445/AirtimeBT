@@ -9,86 +9,115 @@
 import SwiftUI
 
 /// Primary view displaying all data visualiztion views
+import SwiftUI
+
+/// Primary view displaying all data visualiztion views
 struct ContentView: View {
     
+    @State private var showChartToolbar = true
     @State var isShowingPicker = false
     @State var showingMetricSelectionMenu = false
     @State var orientation = UIDevice.current.orientation
+    @State private var buttonsVisible = true
+    @State private var showUnits = false
+    @State private var showValues = true
+
     
     @EnvironmentObject var main: MainProcessor
     
-    /// More screen space available, can reduce stat size
     let isPad = UIDevice.current.userInterfaceIdiom == .pad
     
     var body: some View {
-        
         GeometryReader { geo in
-            ZStack {
-                /// Fade background when chart menu is open
+            ZStack(alignment: .bottomTrailing) {
+                /// Dim background when needed
                 Color.gray
                     .opacity((self.showingMetricSelectionMenu || self.main.isLoading) ? 0.5 : 0.0)
                     .edgesIgnoringSafeArea(.all)
                     .animation(.linear, value: showingMetricSelectionMenu || main.isLoading)
                 
-                ///
-                LoadingView(isShowing: self.$main.isLoading){
-                    /// Main stack
+                LoadingView(isShowing: self.$main.isLoading) {
                     ZStack {
                         if geo.size.height > geo.size.width {
-                            /// Vertical main view
+                            // Portrait
                             VStack {
-                                DataPointView(isMultiRow: !self.isPad,
-                                              showAcceleration: self.main.showAcceleration)
+                                DataPointView(showValues: $showValues,
+                                              isMultiRow: !isPad,
+                                              showAcceleration: main.showAcceleration)
                                     .padding(.horizontal, 10)
                                     .padding(.top, 5)
-                                    .padding(.bottom, 10)
-                                    /// If we're on an iPad, size metric display for a single row while vertical
-                                    .frame(height: self.isPad ? 45 : 90)
+                                    .frame(height: isPad ? 45 : 90)
+                                    .gesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged { _ in
+                                                showUnits = true
+                                            }
+                                            .onEnded { _ in
+                                                showUnits = false
+                                            }
+                                    )
+                                
                                 VPart(top: {
-                                    ChartFrame(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
+                                    ChartFrame(
+                                        showingMetricSelectionMenu: $showingMetricSelectionMenu,
+                                        showChartToolbar: $showChartToolbar,
+                                        buttonsVisible: $buttonsVisible
+                                    )
+
                                 }) {
                                     MapView()
-                                }.edgesIgnoringSafeArea(.bottom)
+                                }
+                                .edgesIgnoringSafeArea(.bottom)
                             }
                         } else {
-                            /// Horizontal main view
+                            // Landscape
                             VStack {
-                                DataPointView(isMultiRow: false,
-                                              showAcceleration: self.main.showAcceleration)
-                                    .padding(.horizontal, 10)
-                                    .padding(.top, 5)
+                                DataPointView(showValues: $showValues,
+                                              isMultiRow: false,
+                                              showAcceleration: main.showAcceleration)
+                                    .padding(.horizontal, 4)
                                     .frame(height: 45)
+                                
                                 HPart(left: {
-                                    ChartFrame(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
+                                    ChartFrame(
+                                        showingMetricSelectionMenu: $showingMetricSelectionMenu,
+                                        showChartToolbar: $showChartToolbar,
+                                        buttonsVisible: $buttonsVisible
+                                    )
                                 }) {
                                     MapView()
-                                }.edgesIgnoringSafeArea(.trailing)
-                                    .edgesIgnoringSafeArea(.bottom)
-                            }
-                        }
-                        /// Load file  button
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                VStack(spacing: 2) {
-                                    UnifiedLoadButton()                                    
                                 }
+                                .edgesIgnoringSafeArea(.trailing)
+                                .edgesIgnoringSafeArea(.bottom)
                             }
                         }
-
                         
-                        /// Chart data selection menu
-                        ChartSettingsView(showingMetricSelectionMenu: self.$showingMetricSelectionMenu)
-                            .environmentObject(self.main)
+                        // Chart settings menu
+                        ChartSettingsView(showingMetricSelectionMenu: $showingMetricSelectionMenu)
+                            .environmentObject(main)
                             .background(Color(.secondarySystemBackground))
                             .edgesIgnoringSafeArea(.all)
                             .cornerRadius(20)
                             .shadow(radius: 20)
-                            .frame(width: 300, height: 300, alignment: .center)
+                            .frame(width: 300, height: 300)
                             .padding()
-                            .offset(x: 0, y: self.showingMetricSelectionMenu ? 0 : 1000)
-                            .animation(.linear, value: self.showingMetricSelectionMenu)
+                            .offset(y: showingMetricSelectionMenu ? 0 : 1000)
+                            .animation(.linear, value: showingMetricSelectionMenu)
+                    }
+                }
+                
+                /// 👇 Load & Menu Button
+                UnifiedLoadButtonGroup(showChartToolbar: self.$showChartToolbar)
+                    .environmentObject(main)
+                    .padding(.trailing, geo.size.width > geo.size.height ? 0 : 20) // smaller gap in landscape, bigger in portrait
+                    .padding(.bottom, 12)
+                    .ignoresSafeArea(.container, edges: geo.size.width > geo.size.height ? .trailing : [])
+            }
+            .onChange(of: main.trackLoadedSuccessfully) { loaded in
+                if loaded {
+                    showChartToolbar = false
+                    DispatchQueue.main.async {
+                        main.trackLoadedSuccessfully = false
                     }
                 }
             }

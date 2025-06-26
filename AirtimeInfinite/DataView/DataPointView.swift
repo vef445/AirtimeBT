@@ -12,6 +12,8 @@ import SwiftUI
 struct DataPointView: View {
 
     @EnvironmentObject var main: MainProcessor
+    @Binding var showValues: Bool
+    
     var isMultiRow: Bool
     var showAcceleration: Bool
     
@@ -42,43 +44,55 @@ struct DataPointView: View {
                      FlightMetric.hDist]
     
     var body: some View {
-        Group{
-            if isMultiRow {
-                VStack {
-                    DataPointRow(flightStats: multiRow1).frame(height: 40)
-                    Divider().frame(height: 5)
-                    DataPointRow(flightStats: multiRow2).frame(height: 40)
+            Group {
+                if isMultiRow {
+                    VStack {
+                        DataPointRow(flightStats: multiRow1, showValues: $showValues)
+                            .frame(height: 40)
+                        Divider().frame(height: 5)
+                        DataPointRow(flightStats: multiRow2, showValues: $showValues)
+                            .frame(height: 40)
+                    }
+                    .padding(.bottom, -20)
+                } else {
+                    HStack {
+                        DataPointRow(flightStats: singleRow, showValues: $showValues)
+                            .frame(height: 40)
+                    }
                 }
-                .padding(.bottom, -20)
-            } else {
-                HStack {
-                    DataPointRow(flightStats: singleRow).frame(height: 40)
+                if showAcceleration {
+                    VStack {
+                        Divider()
+                        DataPointRow(flightStats: accelRow, showValues: $showValues)
+                            .frame(height: 40)
+                    }
                 }
             }
-            if showAcceleration {
-                VStack {
-                    Divider()
-                    DataPointRow(flightStats: accelRow).frame(height: 40)
-                }
-            }
+            .contentShape(Rectangle()) // Make whole area tappable / gesture sensitive
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        if showValues {  // only update if needed, to avoid repeated sets
+                            showValues = false  // show units on press down
+                        }
+                    }
+                    .onEnded { _ in
+                        showValues = true   // show values again on release
+                    }
+            )
         }
     }
-    
-    mutating func updateOrientation(isVertical:Bool){
-        self.isMultiRow = isVertical
-    }
-}
 
 struct DataPointRow: View {
-    
     let flightStats: [FlightMetric]
+    @Binding var showValues: Bool
     
     var body: some View {
         HStack(alignment: .center) {
             Divider()
             ForEach(flightStats, id: \.self) { stat in
-                HStack() {
-                    DataPointCell(stat: stat)
+                HStack {
+                    DataPointCell(stat: stat, showValue: $showValues)
                     Divider()
                 }
             }
@@ -86,13 +100,13 @@ struct DataPointRow: View {
     }
 }
 
+
 /// View holding a single stat at a selected datapoint
 struct DataPointCell: View {
-    
     var stat: FlightMetric
     @EnvironmentObject var main: MainProcessor
-    
-    /// Get the actual value at a given time vs in enum, done this way to handle observable objects
+    @Binding var showValue: Bool
+
     var highlightedValue: Double? {
         switch stat {
         case .time: return main.highlightedPoint.point?.secondsFromExit
@@ -127,7 +141,7 @@ struct DataPointCell: View {
             main.highlightedPoint.point?.accelTotal
         }
     }
-    
+
     var measurementBaseValue: Double? {
         switch stat {
         case .time: return main.selectedMeasurePoint.point?.secondsFromExit
@@ -149,36 +163,53 @@ struct DataPointCell: View {
             main.selectedMeasurePoint.point?.distance2D.metersToFeet :
             main.selectedMeasurePoint.point?.distance2D
         case .accelVertical: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelVert.metersToFeet :
-            main.highlightedPoint.point?.accelVert
+            main.selectedMeasurePoint.point?.accelVert.metersToFeet :
+            main.selectedMeasurePoint.point?.accelVert
         case .accelParallel: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelParallel.metersToFeet :
-            main.highlightedPoint.point?.accelParallel
+            main.selectedMeasurePoint.point?.accelParallel.metersToFeet :
+            main.selectedMeasurePoint.point?.accelParallel
         case .accelPerp: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelPerp.metersToFeet :
-            main.highlightedPoint.point?.accelPerp
+            main.selectedMeasurePoint.point?.accelPerp.metersToFeet :
+            main.selectedMeasurePoint.point?.accelPerp
         case .accelTotal: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelTotal.metersToFeet :
-            main.highlightedPoint.point?.accelTotal
+            main.selectedMeasurePoint.point?.accelTotal.metersToFeet :
+            main.selectedMeasurePoint.point?.accelTotal
         }
     }
-    
+
+    var unitString: String {
+        main.useImperialUnits ? stat.imperialUnit : stat.metricUnit
+    }
+
     var body: some View {
-        GeometryReader { g in
-            VStack {
-                Text("\(self.stat.shortLabel) (\(self.main.useImperialUnits ? self.stat.imperialUnit : self.stat.metricUnit))")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                /// If we are measuring from a value, display the delta to highlighted, otherwise just display highlighted
-                Text("\(self.main.selectedMeasurePoint.isActive ? (self.highlightedValue ?? 0) - (self.measurementBaseValue ?? 0) : (self.highlightedValue ?? 0), specifier: "%.2f")")
-                    .foregroundColor(Color(self.stat.color))
-                    /// Guessing font size based on space avail
-                    .font(.system(size: g.size.height / 4 + 10))
-                    .lineLimit(1)
-                    .allowsTightening(true)
-                    .minimumScaleFactor(0.4)
+            GeometryReader { g in
+                VStack {
+                    Text(stat.shortLabel)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+
+                    let value = main.selectedMeasurePoint.isActive
+                        ? (highlightedValue ?? 0) - (measurementBaseValue ?? 0)
+                        : (highlightedValue ?? 0)
+
+                    if showValue {
+                        Text(String(format: "%.2f", value))
+                            .foregroundColor(Color(stat.color))
+                            .font(.system(size: g.size.height / 4 + 10))
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.4)
+                    } else {
+                        Text(unitString)
+                            .foregroundColor(Color(stat.color))
+                            .font(.system(size: g.size.height / 4 + 10))
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                            .minimumScaleFactor(0.4)
+                    }
+                }
+                .frame(minWidth: 0, maxWidth: .infinity)
             }
-            .frame(minWidth: 0, maxWidth: .infinity)
         }
     }
-}
+

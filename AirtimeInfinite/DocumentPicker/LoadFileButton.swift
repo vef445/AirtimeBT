@@ -11,19 +11,40 @@ import FlySightCore
 
 struct LoadButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            Image(systemName: "plus")
-                .font(.system(size: 20))
-        }
-        .padding()
-        .foregroundColor(.black)
-        .background(Color.gray)
-        .cornerRadius(10)
-        .frame(minWidth: 60, maxWidth: 60, minHeight: 60, maxHeight: 60)
+        configuration.label
+            .frame(width: 60, height: 60) // Ensures label takes full space
+            .background(Color.gray.opacity(0.8))
+            .foregroundColor(.primary)
+            .font(.system(size: 36, weight: .bold)) // Larger and bolder
+            .clipShape(Circle())
+            .contentShape(Circle()) // Helps with interaction and layout
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
+struct MenuButton: View {
+    @Binding var showChartToolbar: Bool
+    @State private var isShowingMenu = false
+
+    var body: some View {
+        Button(action: {
+            // Toggle the toolbar visibility
+            showChartToolbar.toggle()
+            // Optional: you can also toggle isShowingMenu for other UI
+            isShowingMenu.toggle()
+        }) {
+            Image(systemName: "line.horizontal.3") // Hamburger menu icon
+                .font(.system(size: 24, weight: .bold))
+        }
+        //.padding()
+        .buttonStyle(LoadButtonStyle())
+    }
+}
+
+
 struct UnifiedLoadButton: View {
+    @Binding var showChartToolbar: Bool
     @State private var isShowingModal = false
     @EnvironmentObject var main: MainProcessor
 
@@ -31,10 +52,10 @@ struct UnifiedLoadButton: View {
         Button(action: {
             isShowingModal.toggle()
         }) {
-            Text("+")
-                .font(Font.system(size: 28, design: .default))
+            Image(systemName: "plus")
+                .font(.system(size: 24, weight: .bold))
         }
-        .padding()
+        //.padding()
         .buttonStyle(LoadButtonStyle())
         .sheet(isPresented: $isShowingModal) {
             if main.useBluetooth {
@@ -57,6 +78,30 @@ struct UnifiedLoadButton: View {
         }
     }
 }
+
+struct UnifiedLoadButtonGroup: View {
+    @Binding var showChartToolbar: Bool
+
+    var body: some View {
+        Spacer()
+        VStack(spacing: 10) {
+            MenuButton(showChartToolbar: $showChartToolbar)
+            UnifiedLoadButton(showChartToolbar: $showChartToolbar)
+        }
+    }
+}
+
+struct UnifiedLoadButtonGroup_Previews: PreviewProvider {
+    @State static var toolbarVisible = true
+    
+    static var previews: some View {
+        UnifiedLoadButtonGroup(showChartToolbar: $toolbarVisible)
+            .environmentObject(MainProcessor())
+            .previewLayout(.sizeThatFits)
+            .padding()
+    }
+}
+
 
 struct BaseModalWrapper<Content: View>: View {
     let content: () -> Content

@@ -26,6 +26,7 @@ class MainProcessor: ObservableObject {
     
     @Published var highlightedPoint: UserDataPointSelection
     @Published var selectedMeasurePoint: MeasurementPointSelection
+    @Published var trackLoadedSuccessfully = false
 
     @Published var trackLoadError = false
     @Published var isLoading = false
@@ -155,6 +156,8 @@ class MainProcessor: ObservableObject {
                 
                 self.highlightedPoint.point = self.track.trackData[self.track.exitIndex]
                 self.isLoading = false
+                
+                self.trackLoadedSuccessfully = true
             }
         }
     }
