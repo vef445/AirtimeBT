@@ -16,6 +16,8 @@ struct PolarView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> CombinedChartView {
         let chartView = CombinedChartView()
+        
+        chartView.backgroundColor = UIColor.systemBackground
 
         // Disable all user interaction
         chartView.pinchZoomEnabled = false
