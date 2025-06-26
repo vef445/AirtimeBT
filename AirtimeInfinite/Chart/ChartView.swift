@@ -9,20 +9,26 @@
 import SwiftUI
 import DGCharts
 
-/// View representing the actual chart object
 struct ChartView: UIViewRepresentable {
     
     @EnvironmentObject var main: MainProcessor
     
     func makeUIView(context: Context) -> LineChartView {
-        main.chartViewProcessor.lineChartView.delegate = context.coordinator
+        let chartView = main.chartViewProcessor.lineChartView
+        chartView.delegate = context.coordinator
         prepareChart()
-        return main.chartViewProcessor.lineChartView
+        // Enable highlight on tap and drag so delegate methods fire properly
+        chartView.highlightPerTapEnabled = true
+        chartView.highlightPerDragEnabled = true
+        return chartView
     }
 
     func updateUIView(_ view: LineChartView, context: Context) {
-        
+        if let highlight = context.coordinator.lastHighlight {
+            view.highlightValue(highlight, callDelegate: false)
+        }
     }
+
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -30,41 +36,59 @@ struct ChartView: UIViewRepresentable {
 
     class Coordinator: NSObject, ChartViewDelegate {
         var parent: ChartView
+        var lastHighlight: Highlight? = nil
 
         init(_ parent: ChartView) {
             self.parent = parent
         }
         
-        /// Update the datapoint on the map and data view when user touches
+        /// Called when user touches a value
         public func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+            lastHighlight = highlight
             parent.main.highlightedPoint.setPointFromSecondsProperty(seconds: entry.x)
+            
             if let hPoint = parent.main.highlightedPoint.point {
                 parent.main.mapViewProcessor.addSelectedDataPoint(dataPoint: hPoint)
-                /// If measuring, update highlight
-                if let mPoint = parent.main.selectedMeasurePoint.point {
-                    if parent.main.selectedMeasurePoint.isActive {
-                        parent.main.mapViewProcessor.addMeasurementOverlay(
-                            startMeasure: hPoint.secondsFromStart,
-                            endMeasure: mPoint.secondsFromStart)
-                    }
+                
+                // Update measurement overlay if active
+                if let mPoint = parent.main.selectedMeasurePoint.point,
+                   parent.main.selectedMeasurePoint.isActive {
+                    parent.main.mapViewProcessor.addMeasurementOverlay(
+                        startMeasure: hPoint.secondsFromStart,
+                        endMeasure: mPoint.secondsFromStart)
                 }
             }
         }
         
-        /// Match the region visible in the map to the visible chart area
+        /// Called when touch ends and no value is selected
+        public func chartValueNothingSelected(_ chartView: ChartViewBase) {
+            // Reapply the last highlight to keep the highlight visible
+            if let last = lastHighlight {
+                chartView.highlightValue(last)
+            }
+            // Otherwise do nothing and keep UI stable
+        }
+
+        /// Called when panning ends, adjust visible map region and highlight point
         public func chartViewDidEndPanning(_ chartView: ChartViewBase) {
-            /// Converted to provide x bounds vars, will always be a subclass of BarLineChartViewBase
             let chart = chartView as! BarLineChartViewBase
+            let seconds = chart.lowestVisibleX
+
+            // Update highlight point on pan end
+            //parent.main.highlightedPoint.setPointFromSecondsProperty(seconds: seconds)
+            
             let track = parent.main.track
-            let trackCoordinates = track.getTrackCoordinatesFromSecondsBounds(firstIndex: chart.lowestVisibleX, lastIndex: chart.highestVisibleX)
-            if !trackCoordinates.isEmpty{
+            let trackCoordinates = track.getTrackCoordinatesFromSecondsBounds(
+                firstIndex: chart.lowestVisibleX,
+                lastIndex: chart.highestVisibleX
+            )
+            
+            if !trackCoordinates.isEmpty {
                 parent.main.mapViewProcessor.setMapRegion(trackCoordinates: trackCoordinates)
             }
         }
     }
     
-    // Future Todo: Show side profile of flight path for BASE?
-    /// Initialize the preferred chart settings (e.g. Description, axis settings, etc.)
     func prepareChart() {
         let chartView = main.chartViewProcessor.lineChartView
         chartView.noDataText = "Please load a track."

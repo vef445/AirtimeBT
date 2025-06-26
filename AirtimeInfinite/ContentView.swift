@@ -21,6 +21,7 @@ struct ContentView: View {
     @State private var buttonsVisible = true
     @State private var showUnits = false
     @State private var showValues = true
+    @State private var showPolarView = false
 
     
     @EnvironmentObject var main: MainProcessor
@@ -61,11 +62,16 @@ struct ContentView: View {
                                     ChartFrame(
                                         showingMetricSelectionMenu: $showingMetricSelectionMenu,
                                         showChartToolbar: $showChartToolbar,
-                                        buttonsVisible: $buttonsVisible
+                                        buttonsVisible: $buttonsVisible,
+                                        showPolarView: $showPolarView
                                     )
 
                                 }) {
-                                    MapView()
+                                    if showPolarView {
+                                                                PolarView()
+                                                            } else {
+                                                                MapView()
+                                                            }
                                 }
                                 .edgesIgnoringSafeArea(.bottom)
                             }
@@ -82,7 +88,8 @@ struct ContentView: View {
                                     ChartFrame(
                                         showingMetricSelectionMenu: $showingMetricSelectionMenu,
                                         showChartToolbar: $showChartToolbar,
-                                        buttonsVisible: $buttonsVisible
+                                        buttonsVisible: $buttonsVisible,
+                                        showPolarView: $showPolarView
                                     )
                                 }) {
                                     MapView()

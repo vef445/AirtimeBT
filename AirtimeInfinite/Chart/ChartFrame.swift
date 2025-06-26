@@ -15,9 +15,11 @@ struct ChartFrame: View {
     @Binding var showingMetricSelectionMenu: Bool
     @Binding var showChartToolbar: Bool
     @Binding var buttonsVisible: Bool
+    @Binding var showPolarView: Bool
     
     @State private var pinSelection = false
     @State private var showChart = false
+
     
     
     let support_url = "https://github.com/vef445/AirtimeBT"
@@ -30,6 +32,9 @@ struct ChartFrame: View {
                 } else {
                     Color.clear
                 }
+                
+                        Spacer()
+
                 HStack {
                     Spacer()
                     VStack(spacing: 12) {
@@ -105,7 +110,18 @@ struct ChartFrame: View {
                         }
                         .disabled(main.chartViewProcessor.track.trackData.isEmpty)
                         .accessibilityLabel("Share your track")
+                    
+                    Button(action: {
+                        showPolarView.toggle()
+                    }) {
+                        Image(systemName: showPolarView ? "map" : "chart.xyaxis.line")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.primary)
                     }
+                    .accessibilityLabel("Toggle chart/map view")
+                }
                     .padding()
                         .background(Color.gray.opacity(0.4))
                         .clipShape(Capsule())
@@ -129,4 +145,3 @@ struct ChartFrame: View {
         }
     }
 }
-

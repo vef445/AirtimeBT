@@ -38,6 +38,7 @@
 		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
 		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
+		F09449E82E0D99A90021667E /* PolarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09449E72E0D99980021667E /* PolarView.swift */; };
 		F0C563412E0329750048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563402E0329750048CB47 /* FlySightCore */; };
 		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
 		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
@@ -76,6 +77,7 @@
 		C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
+		F09449E72E0D99980021667E /* PolarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +195,7 @@
 		C1E60A5024AC5929008004AF /* AirtimeInfinite */ = {
 			isa = PBXGroup;
 			children = (
+				F09449E62E0D99890021667E /* Polar */,
 				C10C53FB24AC5FF800FEF75A /* Chart */,
 				C10C540624AC600900FEF75A /* Data */,
 				C10C540F24AC602800FEF75A /* DataView */,
@@ -220,6 +223,14 @@
 				C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F09449E62E0D99890021667E /* Polar */ = {
+			isa = PBXGroup;
+			children = (
+				F09449E72E0D99980021667E /* PolarView.swift */,
+			);
+			path = Polar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +339,7 @@
 				C1E60A5924AC5929008004AF /* ContentView.swift in Sources */,
 				C10C540524AC5FF800FEF75A /* ChartableMetric.swift in Sources */,
 				C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */,
+				F09449E82E0D99A90021667E /* PolarView.swift in Sources */,
 				C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */,
 				C10C542024AC605800FEF75A /* MapView.swift in Sources */,
 				C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */,
