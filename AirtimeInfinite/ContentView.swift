@@ -92,7 +92,11 @@ struct ContentView: View {
                                         showPolarView: $showPolarView
                                     )
                                 }) {
-                                    MapView()
+                                    if showPolarView {
+                                                                PolarView()
+                                                            } else {
+                                                                MapView()
+                                                            }
                                 }
                                 .edgesIgnoringSafeArea(.trailing)
                                 .edgesIgnoringSafeArea(.bottom)
