@@ -33,6 +33,7 @@ struct FastestDescentSpeedView: View {
         }
         .padding()
         .offset(y: -60)
+        .background(Color(.systemBackground))
     }
 }
 
