@@ -171,5 +171,14 @@ class MainProcessor: ObservableObject {
         func updateVisibleRange(_ range: ClosedRange<Double>) {
             polarViewProcessor.loadTrack(track: self.track, visibleRange: range, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
         }
+    
+    /// Calculates the fastest average speed over 3 seconds above 1700m altitude
+    var fastest3sSpeedAbove1700m: (startTime: Int, maxAvgDescentSpeedkmh: Double, maxAvgDescentSpeedmph: Double)? {
+        return SpeedAnalysis.fastestAverageDescentSpeed(
+            data: track.trackData,
+            windowDuration: 3.0,
+            minAltitude: 1700.0
+        )
     }
+}
 

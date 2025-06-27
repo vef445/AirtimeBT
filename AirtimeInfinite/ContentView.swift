@@ -21,7 +21,14 @@ struct ContentView: View {
     @State private var buttonsVisible = true
     @State private var showUnits = false
     @State private var showValues = true
-    @State private var showPolarView = false
+    
+    enum BottomViewMode {
+        case map
+        case polar
+        case fastestDescent
+    }
+
+    @State private var bottomViewMode: BottomViewMode = .map
 
     
     @EnvironmentObject var main: MainProcessor
@@ -63,20 +70,24 @@ struct ContentView: View {
                                         showingMetricSelectionMenu: $showingMetricSelectionMenu,
                                         showChartToolbar: $showChartToolbar,
                                         buttonsVisible: $buttonsVisible,
-                                        showPolarView: $showPolarView
+                                        bottomViewMode: $bottomViewMode
                                     )
 
                                 }) {
-                                    if showPolarView {
+                                    switch bottomViewMode {
+                                    case .map:
+                                        MapView()
+                                            .transition(.opacity)
+                                    case .polar:
                                         PolarView()
                                             .transition(.opacity)
-                                    } else {
-                                        MapView()
+                                    case .fastestDescent:
+                                        FastestDescentSpeedView()
                                             .transition(.opacity)
                                     }
                                 }
                                 .edgesIgnoringSafeArea(.bottom)
-                                .animation(.easeInOut(duration: 0.6), value: showPolarView)
+                                .animation(.easeInOut(duration: 0.6), value: bottomViewMode)
                             }
                         } else {
                             // Landscape
@@ -92,18 +103,23 @@ struct ContentView: View {
                                         showingMetricSelectionMenu: $showingMetricSelectionMenu,
                                         showChartToolbar: $showChartToolbar,
                                         buttonsVisible: $buttonsVisible,
-                                        showPolarView: $showPolarView
+                                        bottomViewMode: $bottomViewMode
                                     )
                                 }) {
-                                    if showPolarView {
-                                        PolarView()
-                                            .transition(.opacity)
-                                    } else {
+                                    switch bottomViewMode {
+                                    case .map:
                                         MapView()
                                             .transition(.opacity)
+                                    case .polar:
+                                        PolarView()
+                                            .transition(.opacity)
+                                    case .fastestDescent:
+                                        FastestDescentSpeedView()
+                                            .transition(.opacity)
                                     }
+
                                 }
-                                .animation(.easeInOut(duration: 0.6), value: showPolarView)
+                                .animation(.easeInOut(duration: 0.6), value: bottomViewMode)
                                 .edgesIgnoringSafeArea(.trailing)
                                 .edgesIgnoringSafeArea(.bottom)
                             }
@@ -133,11 +149,16 @@ struct ContentView: View {
             .onChange(of: main.trackLoadedSuccessfully) { loaded in
                 if loaded {
                     showChartToolbar = false
+                    
+                    // Test your fastestAverageDescentSpeed here
+                    let trackData = main.track.trackData
+                                        
                     DispatchQueue.main.async {
                         main.trackLoadedSuccessfully = false
                     }
                 }
             }
+
         }
     }
 }

@@ -15,12 +15,21 @@ struct ChartFrame: View {
     @Binding var showingMetricSelectionMenu: Bool
     @Binding var showChartToolbar: Bool
     @Binding var buttonsVisible: Bool
-    @Binding var showPolarView: Bool
+    @Binding var bottomViewMode: ContentView.BottomViewMode
     
     @State private var pinSelection = false
     @State private var showChart = false
 
-    
+    private var iconName: String {
+        switch bottomViewMode {
+        case .map:
+            return "chart.xyaxis.line"
+        case .polar:
+            return "speedometer"
+        case .fastestDescent:
+            return "map"
+        }
+    }
     
     let support_url = "https://github.com/vef445/AirtimeBT"
     
@@ -111,19 +120,27 @@ struct ChartFrame: View {
                         .disabled(main.chartViewProcessor.track.trackData.isEmpty)
                         .accessibilityLabel("Share your track")
                     
-                    Button(action: {
-                        showPolarView.toggle()
-                    }) {
-                        Image(systemName: showPolarView ? "map" : "chart.xyaxis.line")
-                            .resizable()
-                            .scaledToFit()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                            .foregroundColor(.primary)
-                            .padding(.top, 2)
-                            .padding(.bottom, 2)
-                    }
-                    .accessibilityLabel("Toggle chart/map view")
+                        Button(action: {
+                            // Cycle through the three modes in order
+                            switch bottomViewMode {
+                            case .map:
+                                bottomViewMode = .polar
+                            case .polar:
+                                bottomViewMode = .fastestDescent
+                            case .fastestDescent:
+                                bottomViewMode = .map
+                            }
+                        }) {
+                            Image(systemName: iconName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25, height: 25)
+                                .foregroundColor(.primary)
+                                .padding(.top, 2)
+                                .padding(.bottom, 2)
+                        }
+                        .accessibilityLabel("Toggle view mode")
+
                 }
                     .padding()
                         .background(Color.gray.opacity(0.4))

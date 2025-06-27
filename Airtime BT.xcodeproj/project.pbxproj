@@ -40,6 +40,8 @@
 		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
 		F09449E82E0D99A90021667E /* PolarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09449E72E0D99980021667E /* PolarView.swift */; };
 		F0C2C8B62E0E753B0083E759 /* PolarViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */; };
+		F0C2C8B92E0E98790083E759 /* SpeedAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */; };
+		F0C2C8BB2E0EA5060083E759 /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */; };
 		F0C563412E0329750048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563402E0329750048CB47 /* FlySightCore */; };
 		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
 		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
@@ -80,6 +82,8 @@
 		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
 		F09449E72E0D99980021667E /* PolarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarView.swift; sourceTree = "<group>"; };
 		F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarViewProcessor.swift; sourceTree = "<group>"; };
+		F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedAnalysis.swift; sourceTree = "<group>"; };
+		F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,7 @@
 		C1E60A5024AC5929008004AF /* AirtimeInfinite */ = {
 			isa = PBXGroup;
 			children = (
+				F0C2C8B72E0E986E0083E759 /* Speed */,
 				F09449E62E0D99890021667E /* Polar */,
 				C10C53FB24AC5FF800FEF75A /* Chart */,
 				C10C540624AC600900FEF75A /* Data */,
@@ -234,6 +239,15 @@
 				F09449E72E0D99980021667E /* PolarView.swift */,
 			);
 			path = Polar;
+			sourceTree = "<group>";
+		};
+		F0C2C8B72E0E986E0083E759 /* Speed */ = {
+			isa = PBXGroup;
+			children = (
+				F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */,
+				F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */,
+			);
+			path = Speed;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -335,6 +349,7 @@
 				C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */,
 				C10C541524AC603000FEF75A /* LoadFileButton.swift in Sources */,
 				C10C541F24AC605800FEF75A /* MapBoundryProcessor.swift in Sources */,
+				F0C2C8BB2E0EA5060083E759 /* SpeedView.swift in Sources */,
 				C10C542424AC606400FEF75A /* Conversions.swift in Sources */,
 				C10C541124AC602800FEF75A /* DataPointView.swift in Sources */,
 				C10C540D24AC600900FEF75A /* UserDataPointSelection.swift in Sources */,
@@ -347,6 +362,7 @@
 				C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */,
 				C10C542024AC605800FEF75A /* MapView.swift in Sources */,
 				C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */,
+				F0C2C8B92E0E98790083E759 /* SpeedAnalysis.swift in Sources */,
 				C10C540224AC5FF800FEF75A /* ChartSettingsView.swift in Sources */,
 				C10C542924AC606B00FEF75A /* VPartition.swift in Sources */,
 			);
@@ -482,7 +498,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
 				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
@@ -494,7 +510,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -510,7 +526,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AirtimeInfinite/Preview Content\"";
 				DEVELOPMENT_TEAM = 2CLR8KJD9G;
 				ENABLE_PREVIEWS = YES;
@@ -522,7 +538,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
