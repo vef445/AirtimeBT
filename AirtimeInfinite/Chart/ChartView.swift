@@ -71,22 +71,40 @@ struct ChartView: UIViewRepresentable {
 
         /// Called when panning ends, adjust visible map region and highlight point
         public func chartViewDidEndPanning(_ chartView: ChartViewBase) {
-            let chart = chartView as! BarLineChartViewBase
-            let seconds = chart.lowestVisibleX
+            guard let chart = chartView as? BarLineChartViewBase else { return }
 
-            // Update highlight point on pan end
-            //parent.main.highlightedPoint.setPointFromSecondsProperty(seconds: seconds)
-            
-            let track = parent.main.track
-            let trackCoordinates = track.getTrackCoordinatesFromSecondsBounds(
-                firstIndex: chart.lowestVisibleX,
-                lastIndex: chart.highestVisibleX
+            let visibleMinX = chart.lowestVisibleX
+            let visibleMaxX = chart.highestVisibleX
+            let visibleRange = visibleMinX...visibleMaxX
+
+            // Update visible range in main processor, so polar chart updates too
+            DispatchQueue.main.async {
+                self.parent.main.updateVisibleRange(visibleRange)
+            }
+
+            // Existing map update logic:
+            let trackCoordinates = parent.main.track.getTrackCoordinatesFromSecondsBounds(
+                firstIndex: visibleMinX,
+                lastIndex: visibleMaxX
             )
-            
+
             if !trackCoordinates.isEmpty {
                 parent.main.mapViewProcessor.setMapRegion(trackCoordinates: trackCoordinates)
             }
         }
+        
+        public func chartViewDidEndZooming(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
+            guard let chart = chartView as? BarLineChartViewBase else { return }
+
+            let visibleMinX = chart.lowestVisibleX
+            let visibleMaxX = chart.highestVisibleX
+            let visibleRange = visibleMinX...visibleMaxX
+
+            DispatchQueue.main.async {
+                self.parent.main.updateVisibleRange(visibleRange)
+            }
+        }
+
     }
     
     func prepareChart() {

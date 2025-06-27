@@ -68,12 +68,15 @@ struct ContentView: View {
 
                                 }) {
                                     if showPolarView {
-                                                                PolarView()
-                                                            } else {
-                                                                MapView()
-                                                            }
+                                        PolarView()
+                                            .transition(.opacity)
+                                    } else {
+                                        MapView()
+                                            .transition(.opacity)
+                                    }
                                 }
                                 .edgesIgnoringSafeArea(.bottom)
+                                .animation(.easeInOut(duration: 0.6), value: showPolarView)
                             }
                         } else {
                             // Landscape
@@ -93,11 +96,14 @@ struct ContentView: View {
                                     )
                                 }) {
                                     if showPolarView {
-                                                                PolarView()
-                                                            } else {
-                                                                MapView()
-                                                            }
+                                        PolarView()
+                                            .transition(.opacity)
+                                    } else {
+                                        MapView()
+                                            .transition(.opacity)
+                                    }
                                 }
+                                .animation(.easeInOut(duration: 0.6), value: showPolarView)
                                 .edgesIgnoringSafeArea(.trailing)
                                 .edgesIgnoringSafeArea(.bottom)
                             }

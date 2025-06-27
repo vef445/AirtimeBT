@@ -21,13 +21,14 @@ class MainProcessor: ObservableObject {
     
     var mapViewProcessor: MapViewProcessor
     var chartViewProcessor: ChartViewProcessor
+    var polarViewProcessor: PolarViewProcessor
     
     var track: Track
     
     @Published var highlightedPoint: UserDataPointSelection
     @Published var selectedMeasurePoint: MeasurementPointSelection
     @Published var trackLoadedSuccessfully = false
-
+    
     @Published var trackLoadError = false
     @Published var isLoading = false
     
@@ -52,7 +53,7 @@ class MainProcessor: ObservableObject {
     var anyCancellableHighlight: AnyCancellable? = nil
     var anyCancellableMeasure: AnyCancellable? = nil
     var anyCancellableChart: AnyCancellable? = nil
-
+    
     /// Tracks the last connected Bluetooth peripheral UUID
     var lastConnectedPeripheralID: UUID? {
         get {
@@ -67,12 +68,12 @@ class MainProcessor: ObservableObject {
             }
         }
     }
-
+    
     /// Indicates whether a track file is loaded
     var trackLoaded: Bool {
         return !track.trackData.isEmpty
     }
-
+    
     /// Initialize the main views with no data
     init() {
         highlightedPoint = UserDataPointSelection()
@@ -80,6 +81,7 @@ class MainProcessor: ObservableObject {
         
         mapViewProcessor = MapViewProcessor()
         chartViewProcessor = ChartViewProcessor()
+        polarViewProcessor = PolarViewProcessor()
         
         track = Track()
         
@@ -115,13 +117,12 @@ class MainProcessor: ObservableObject {
     
     // TODO: Reset Data View on reload, prevent issues with stale views
     /**
-    Load a track file into all data views
-    
-    - Parameters:
-       - trackURL: File path to be loaded
-    */
+     Load a track file into all data views
+     
+     - Parameters:
+     - trackURL: File path to be loaded
+     */
     func loadTrack(trackURL: URL) {
-        
         isLoading = true
         DispatchQueue.global(qos: .userInitiated).async {
             do {
@@ -129,7 +130,6 @@ class MainProcessor: ObservableObject {
                     defer { trackURL.stopAccessingSecurityScopedResource() }
                     try self.track.importURL(url: trackURL)
                 } else if trackURL.isFileURL {
-                    // Possibly Bluetooth file, try to import directly
                     try self.track.importURL(url: trackURL)
                 } else {
                     DispatchQueue.main.async {
@@ -148,11 +148,16 @@ class MainProcessor: ObservableObject {
             
             DispatchQueue.main.async {
                 self.trackURL = trackURL
+                
+                // Update processors
                 self.chartViewProcessor.loadTrack(track: self.track)
                 self.chartViewProcessor.resetChart()
                 
                 self.mapViewProcessor.clearMap()
                 self.mapViewProcessor.loadTrack(track: self.track)
+                
+                let fullRange = 0.0...(self.track.trackData.last?.secondsFromStart ?? 0.0)
+                self.polarViewProcessor.loadTrack(track: self.track, visibleRange: fullRange, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
                 
                 self.highlightedPoint.point = self.track.trackData[self.track.exitIndex]
                 self.isLoading = false
@@ -161,4 +166,10 @@ class MainProcessor: ObservableObject {
             }
         }
     }
-}
+    
+    /// Call this whenever the visible X range changes (e.g. on zoom or pan)
+        func updateVisibleRange(_ range: ClosedRange<Double>) {
+            polarViewProcessor.loadTrack(track: self.track, visibleRange: range, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
+        }
+    }
+

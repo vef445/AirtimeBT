@@ -80,7 +80,7 @@ struct ChartFrame: View {
                         Button(action: {
                             main.chartViewProcessor.cutToVisibleRange()
                         }) {
-                            Image(systemName: "scissors")
+                            Image(systemName: "lock")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 30, height: 30)
@@ -116,16 +116,19 @@ struct ChartFrame: View {
                     }) {
                         Image(systemName: showPolarView ? "map" : "chart.xyaxis.line")
                             .resizable()
+                            .scaledToFit()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 25, height: 25)
                             .foregroundColor(.primary)
+                            .padding(.top, 2)
+                            .padding(.bottom, 2)
                     }
                     .accessibilityLabel("Toggle chart/map view")
                 }
                     .padding()
                         .background(Color.gray.opacity(0.4))
                         .clipShape(Capsule())
-                        .padding(.top, 25)
+                        .padding(.top, 15)
                         .padding(.trailing, 20)
                         .frame(maxWidth: .infinity, alignment: .trailing) // Keep aligned right
                         .offset(x: buttonsVisible ? 0 : 120) // Slide off by approx button width + padding
