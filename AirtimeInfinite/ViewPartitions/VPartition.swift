@@ -33,7 +33,8 @@ public struct VPart<Top, Bottom, Handle> where Top: View, Bottom: View, Handle: 
     
     /// Amount of time it takes before a gesture is recognized as a longPress, the precursor to the drag.
     var minimumLongPressDuration = 0.05
-    var handleSize: CGSize = CGSize(width: 75, height: 10)
+    var handleSize: CGSize = CGSize(width: 75, height: 15)
+    
     public var pctSplit: CGFloat = 0.5
     var paddingFactor: CGFloat = 1
     

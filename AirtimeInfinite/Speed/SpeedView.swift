@@ -13,27 +13,31 @@ struct FastestDescentSpeedView: View {
     @EnvironmentObject var main: MainProcessor
     
     var body: some View {
-        VStack(spacing: 10) {
-            Text("Fastest Average Descent Speed Over 3sec")
-                .font(.headline)
-            
-            if let result = SpeedAnalysis.fastestAverageDescentSpeed(
-                data: main.track.trackData,
-                windowDuration: 3.0,
-                minAltitude: 1700.0
-            ) {
-                let speedToShow = main.useImperialUnits ? result.maxAvgDescentSpeedmph : result.maxAvgDescentSpeedkmh
-                let unitLabel = main.useImperialUnits ? "mph" : "km/h"
+        ZStack {
+            Color(.systemBackground)
+                .edgesIgnoringSafeArea(.all)  // fill entire container with opaque background
+
+            VStack(spacing: 10) {
+                Text("Fastest Average Descent Speed Over 3sec")
+                    .font(.headline)
                 
-                Text("Start Time: \(result.startTime) sec")
-                Text(String(format: "Speed: %.2f %@", speedToShow, unitLabel))
-            } else {
-                Text("No valid descent speed data")
+                if let result = SpeedAnalysis.fastestAverageDescentSpeed(
+                    data: main.track.trackData,
+                    windowDuration: 3.0,
+                    minAltitude: 1700.0
+                ) {
+                    let speedToShow = main.useImperialUnits ? result.maxAvgDescentSpeedmph : result.maxAvgDescentSpeedkmh
+                    let unitLabel = main.useImperialUnits ? "mph" : "km/h"
+                    
+                    Text("Start Time: \(result.startTime) sec")
+                    Text(String(format: "Speed: %.2f %@", speedToShow, unitLabel))
+                } else {
+                    Text("No valid descent speed data")
+                }
             }
+            .padding()
+            .offset(y: -60)
         }
-        .padding()
-        .offset(y: -60)
-        .background(Color(.systemBackground))
     }
 }
 
