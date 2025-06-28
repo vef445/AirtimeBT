@@ -14,6 +14,8 @@ import CSV
 /// Imports, processes, and holds all data from a track.
 class Track: ObservableObject {
     
+    private var cachedGroundElevation: Double? = nil
+    
     enum TrackError: Error {
         case noReadableTrackfileData
     }
@@ -35,7 +37,7 @@ class Track: ObservableObject {
      
      - Throws: TrackError.noReadableTrackfileData  or access error if file cannot be accessed or parsed
      */
-    func importURL(url: URL) throws {
+    func importURL(url: URL) async throws {
         var rawTrackFileData = try String(contentsOf: url)
         
         // Remove the FS2 header before processing, if exists
@@ -62,14 +64,15 @@ class Track: ObservableObject {
             tempTrackData.append(row)
         }
         
-        try self.initialize(dataPoints: tempTrackData)
-        
+        try await self.initialize(dataPoints: tempTrackData)
+            
         self.xRange = self.trackData.map { $0.secondsFromStart }
     }
     
     /// Resets track data
     func clearTrack() {
         trackData = []
+        cachedGroundElevation = nil
     }
     
     /**
@@ -80,33 +83,32 @@ class Track: ObservableObject {
      
      - Throws: TrackError.noReadableTrackfileData  if there is no data to load
      */
-    func initialize(dataPoints tempTrackData: [DataPoint]) throws {
-        
+    func initialize(dataPoints tempTrackData: [DataPoint]) async throws {
         if tempTrackData.isEmpty {
             throw TrackError.noReadableTrackfileData
         }
         
-        /// Only when we are sure there is data to load, overwrite the current data
         self.trackData = tempTrackData
-        
         let startTimeString = trackData[0].time
         
-        var groundElevation: Double = 0.0
-        
-        /// Lowest point on track, consider changng to last altitude
-        if let lowestElevation = trackData.map({ $0.hMSL }).min() {
-            groundElevation = lowestElevation
+        // Only call getFastestDescentAGL if ground elevation is not cached
+        if cachedGroundElevation == nil {
+            guard let result = await getFastestDescentAGL(data: trackData) else {
+                throw TrackError.noReadableTrackfileData
+            }
+            cachedGroundElevation = result.groundElevation
         }
-        
+
+        // Use cached ground elevation for altitude calculations
+        let groundElevation = cachedGroundElevation!
+
         for point in trackData {
             point.initializeValues()
             point.setTimeInSeconds(startEpochString: startTimeString)
             point.setRealAltitude(groundElevation: groundElevation)
         }
-        initializeAcceleration()
-        initializeExit()
-        calculateDistanceWithStartOffset()
     }
+
     
     /// Calculate acceleration for all points using a moving average velocity slope
     func initializeAcceleration() {

@@ -122,50 +122,51 @@ class MainProcessor: ObservableObject {
      - Parameters:
      - trackURL: File path to be loaded
      */
-    func loadTrack(trackURL: URL) {
-        isLoading = true
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                if trackURL.startAccessingSecurityScopedResource() {
-                    defer { trackURL.stopAccessingSecurityScopedResource() }
-                    try self.track.importURL(url: trackURL)
-                } else if trackURL.isFileURL {
-                    try self.track.importURL(url: trackURL)
-                } else {
-                    DispatchQueue.main.async {
-                        self.trackLoadError = true
-                        self.isLoading = false
-                    }
-                    return
-                }
-            } catch {
-                DispatchQueue.main.async {
+    func loadTrack(trackURL: URL) async {
+        await MainActor.run {
+            self.isLoading = true
+        }
+
+        do {
+            if trackURL.startAccessingSecurityScopedResource() {
+                defer { trackURL.stopAccessingSecurityScopedResource() }
+                try await self.track.importURL(url: trackURL)
+            } else if trackURL.isFileURL {
+                try await self.track.importURL(url: trackURL)
+            } else {
+                await MainActor.run {
                     self.trackLoadError = true
                     self.isLoading = false
                 }
                 return
             }
-            
-            DispatchQueue.main.async {
-                self.trackURL = trackURL
-                
-                // Update processors
-                self.chartViewProcessor.loadTrack(track: self.track)
-                self.chartViewProcessor.resetChart()
-                
-                self.mapViewProcessor.clearMap()
-                self.mapViewProcessor.loadTrack(track: self.track)
-                
-                let fullRange = 0.0...(self.track.trackData.last?.secondsFromStart ?? 0.0)
-                self.polarViewProcessor.loadTrack(track: self.track, visibleRange: fullRange, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
-                
-                self.highlightedPoint.point = self.track.trackData[self.track.exitIndex]
+        } catch {
+            await MainActor.run {
+                self.trackLoadError = true
                 self.isLoading = false
-                
-                self.trackLoadedSuccessfully = true
             }
+            return
+        }
+
+        await MainActor.run {
+            self.trackURL = trackURL
+
+            // Update processors
+            self.chartViewProcessor.loadTrack(track: self.track)
+            self.chartViewProcessor.resetChart()
+
+            self.mapViewProcessor.clearMap()
+            self.mapViewProcessor.loadTrack(track: self.track)
+
+            let fullRange = 0.0...(self.track.trackData.last?.secondsFromStart ?? 0.0)
+            self.polarViewProcessor.loadTrack(track: self.track, visibleRange: fullRange, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
+
+            self.highlightedPoint.point = self.track.trackData[self.track.exitIndex]
+            self.isLoading = false
+            self.trackLoadedSuccessfully = true
         }
     }
+
     
     /// Call this whenever the visible X range changes (e.g. on zoom or pan)
         func updateVisibleRange(_ range: ClosedRange<Double>) {
@@ -173,21 +174,23 @@ class MainProcessor: ObservableObject {
         }
     
     /// Calculates the fastest average speed over 3 seconds within the performance window
-    var fastest3sSpeedInPerformanceWindow: (startTime: Int, maxAvgDescentSpeedkmh: Double, maxAvgDescentSpeedmph: Double, performanceWindowStartAltitude: Double, performanceWindowEndAltitude: Double)? {
-        if let result = SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(
-            data: track.trackData,
-            windowDuration: 3.0
-        ) {
-            return (
-                startTime: result.startTime,
-                maxAvgDescentSpeedkmh: result.maxAvgDescentSpeedkmh,
-                maxAvgDescentSpeedmph: result.maxAvgDescentSpeedmph,
-                performanceWindowStartAltitude: result.performanceWindowStartAltitude,
-                performanceWindowEndAltitude: result.performanceWindowEndAltitude
-            )
-        } else {
+    func fastest3sSpeedInPerformanceWindow() async -> (
+        startTime: Int,
+        maxAvgDescentSpeedkmh: Double,
+        maxAvgDescentSpeedmph: Double,
+        performanceWindowStartAltitude: Double,
+        performanceWindowEndAltitude: Double
+    )? {
+        guard let result = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: track.trackData) else {
             return nil
         }
+        return (
+            startTime: result.startTime,
+            maxAvgDescentSpeedkmh: result.maxAvgDescentSpeedkmh,
+            maxAvgDescentSpeedmph: result.maxAvgDescentSpeedmph,
+            performanceWindowStartAltitude: result.performanceWindowStartAltitude,
+            performanceWindowEndAltitude: result.performanceWindowEndAltitude
+        )
     }
 }
 

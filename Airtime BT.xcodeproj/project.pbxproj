@@ -37,6 +37,7 @@
 		C1E60A5924AC5929008004AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5824AC5929008004AF /* ContentView.swift */; };
 		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
+		F02124BF2E104D6500D9F88A /* LocalElevation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02124BE2E104D5900D9F88A /* LocalElevation.swift */; };
 		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
 		F09449E82E0D99A90021667E /* PolarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09449E72E0D99980021667E /* PolarView.swift */; };
 		F0AB14EE2E0FDE830054E001 /* ChartButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */; };
@@ -80,6 +81,7 @@
 		C1E60A5A24AC592A008004AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F02124BE2E104D5900D9F88A /* LocalElevation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalElevation.swift; sourceTree = "<group>"; };
 		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
 		F09449E72E0D99980021667E /* PolarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarView.swift; sourceTree = "<group>"; };
 		F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartButtonsView.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 		F0C2C8B72E0E986E0083E759 /* Speed */ = {
 			isa = PBXGroup;
 			children = (
+				F02124BE2E104D5900D9F88A /* LocalElevation.swift */,
 				F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */,
 				F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */,
 			);
@@ -339,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C10C540E24AC600900FEF75A /* DataPoint.swift in Sources */,
+				F02124BF2E104D6500D9F88A /* LocalElevation.swift in Sources */,
 				C10C542A24AC606B00FEF75A /* DragState.swift in Sources */,
 				F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */,
 				C10C541A24AC604F00FEF75A /* MainProcessor.swift in Sources */,

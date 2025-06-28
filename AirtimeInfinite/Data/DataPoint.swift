@@ -11,6 +11,7 @@ import SwiftUI
 
 /// Model for a single data point within a track
 class DataPoint: NSObject, Decodable, MKAnnotation, ObservableObject {
+
     
     /// CSV Track File Vars
     let GNSS: Optional<String>

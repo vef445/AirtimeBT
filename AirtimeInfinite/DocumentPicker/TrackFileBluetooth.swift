@@ -285,21 +285,25 @@ struct FileExplorerView: View {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    saveFile(data: data, name: entry.name)
+                    Task {
+                        await saveFile(data: data, name: entry.name)
+                        isDownloading = false
+                    }
                 case .failure(let error):
                     print("Download failed: \(error.localizedDescription)")
+                    isDownloading = false
                 }
-                isDownloading = false
             }
         }
     }
+    
 
-    private func saveFile(data: Data, name: String) {
+    private func saveFile(data: Data, name: String) async {
         guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let fileURL = docDir.appendingPathComponent(name)
         do {
             try data.write(to: fileURL)
-            main.loadTrack(trackURL: fileURL)
+            await main.loadTrack(trackURL: fileURL)
             isPresented = false
         } catch {
             print("Saving failed: \(error.localizedDescription)")

@@ -39,7 +39,9 @@ struct TrackFilePickerView: UIViewControllerRepresentable {
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
-            parent.main.loadTrack(trackURL: url)
+            Task {
+                await parent.main.loadTrack(trackURL: url)
+            }
             self.parent.isPresented = false
         }
     }

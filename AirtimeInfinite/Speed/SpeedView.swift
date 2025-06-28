@@ -5,13 +5,26 @@
 //  Created by Guillaume Vigneron on 27/06/2025.
 //  Copyright © 2025 Guillaume Vigneron. All rights reserved.
 //
-
 import SwiftUI
 import DGCharts
 
 struct FastestDescentSpeedView: View {
     @EnvironmentObject var main: MainProcessor
-    
+    @State private var analysisResult: (
+        startTime: Int,
+        maxAvgDescentSpeedkmh: Double,
+        maxAvgDescentSpeedmph: Double,
+        performanceWindowStartAltitude: Double,
+        performanceWindowEndAltitude: Double,
+        validationWindowStartAltitude: Double,
+        validationWindowEndAltitude: Double,
+        averageSpeedAccuracy: Double,
+        maxSpeedAccuracy: Double,
+        speedAccuracyAlert: Bool,
+        localGroundElevation: Double?,
+        agl: Double?
+    )? = nil
+
     func formatAltitude(_ meters: Double) -> String {
         if main.useImperialUnits {
             let feet = meters * 3.28084
@@ -31,33 +44,25 @@ struct FastestDescentSpeedView: View {
                     .font(.headline)
                     .padding(.top, 6)
 
-                if let result = SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(
-                    data: main.track.trackData,
-                    windowDuration: 3.0
-                ) {
+                if let result = analysisResult {
                     let speedToShow = main.useImperialUnits ? result.maxAvgDescentSpeedmph : result.maxAvgDescentSpeedkmh
                     let unitLabel = main.useImperialUnits ? "mph" : "km/h"
 
                     Group {
                         HStack {
-                            Text("Performance Window Start Altitude:")
+                            Text("Exit altitude:")
                             Spacer()
                             Text(formatAltitude(result.performanceWindowStartAltitude))
                         }
                         HStack {
-                            Text("Performance Window End Altitude:")
-                            Spacer()
-                            Text(formatAltitude(result.performanceWindowEndAltitude))
-                        }
-                        HStack {
-                            Text("Validation Window Start Altitude:")
+                            Text("Validation window starts at:")
                             Spacer()
                             Text(formatAltitude(result.validationWindowStartAltitude))
                         }
                         HStack {
-                            Text("Validation Window End Altitude:")
+                            Text("End scoring window at:")
                             Spacer()
-                            Text(formatAltitude(result.validationWindowEndAltitude))
+                            Text(formatAltitude(result.performanceWindowEndAltitude))
                         }
                     }
                     .font(.subheadline)
@@ -68,7 +73,6 @@ struct FastestDescentSpeedView: View {
                         .font(.system(size: 28, weight: .bold))
                         .padding(.top, 8)
 
-                    // Speed accuracy info:
                     VStack(spacing: 4) {
                         HStack {
                             Text("Average Speed Tracking Error:")
@@ -97,12 +101,30 @@ struct FastestDescentSpeedView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, 6)
 
+                    // New: Display local elevation and AGL if available
+                    if let elevation = result.localGroundElevation {
+                        HStack {
+                            Text("Local Ground Elevation:")
+                            Spacer()
+                            Text(formatAltitude(elevation))
+                        }
+                        .font(.subheadline)
+                        .padding(.top, 6)
+                    }
+
                 } else {
-                    Text("No valid descent speed data")
+                    Text("Loading speed analysis...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
             }
             .padding()
             .offset(y: -60)
+            .onAppear {
+                Task {
+                    analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
+                }
+            }
         }
     }
 }

@@ -8,15 +8,6 @@
 
 import Foundation
 
-/// Finds the fastest average ground speed over a given time window (e.g. 3 seconds),
-/// only considering segments where altitudeAboveGround >= minAltitude for the entire window.
-///
-/// - Parameters:
-///   - data: Array of TrackPoint containing the track data.
-///   - windowDuration: The duration over which to average speed, in seconds.
-///
-/// - Returns: A tuple containing the start time of the fastest window and its average speed,
-///            or nil if no valid window is found.
 struct SpeedAnalysis {
     static func speedAccuracy(vAcc: Double) -> Double {
         return (sqrt(2) * vAcc) / 3.0
@@ -25,7 +16,7 @@ struct SpeedAnalysis {
     static func fastestAverageDescentSpeedInPerformanceWindow(
         data: [DataPoint],
         windowDuration: Double = 3.0
-    ) -> (
+    ) async -> (
         startTime: Int,
         maxAvgDescentSpeedkmh: Double,
         maxAvgDescentSpeedmph: Double,
@@ -35,9 +26,10 @@ struct SpeedAnalysis {
         validationWindowEndAltitude: Double,
         averageSpeedAccuracy: Double,
         maxSpeedAccuracy: Double,
-        speedAccuracyAlert: Bool
+        speedAccuracyAlert: Bool,
+        localGroundElevation: Double?,
+        agl: Double?
     )? {
-
         guard !data.isEmpty else { return nil }
 
         let minTriggerDescentSpeed = 10.0 // m/s
@@ -103,6 +95,13 @@ struct SpeedAnalysis {
 
         if performanceWindow.isEmpty { return nil }
 
+        // Round timestamps in performanceWindow to 0.01
+        let roundedPerformanceWindow = performanceWindow.map { point -> DataPoint in
+            var newPoint = point
+            newPoint.secondsFromStart = (point.secondsFromStart * 100).rounded() / 100
+            return newPoint
+        }
+
         // Calculate validation window altitudes
         let validationWindowStartAltitude = windowEndAltitude + validationWindowHeight
         let validationWindowEndAltitude = windowEndAltitude
@@ -119,42 +118,34 @@ struct SpeedAnalysis {
         let maxSpeedAccuracy = speedAccuracies.max() ?? 0.0
         let speedAccuracyAlert = maxSpeedAccuracy > 3.0
 
-        // 2. Calculate fastest average descent speed within performance window (unchanged)
+        // 2. Calculate fastest average descent speed within performance window using fixed sample interval sliding window
+        let sampleInterval = 0.2 // seconds between data points (adjust if your actual interval differs)
+        let windowPointsCount = Int(windowDuration / sampleInterval)
+
+        guard windowPointsCount > 0, roundedPerformanceWindow.count >= windowPointsCount else {
+            return nil
+        }
+
         var maxAvgDescentSpeed = 0.0
         var maxStartTime = 0.0
 
-        var k = 0
-        while k < performanceWindow.count {
-            let point = performanceWindow[k]
-
-            let windowStartTime = point.secondsFromStart
-            let windowEndTime = windowStartTime + windowDuration
-
-            var l = k
-            var sumDescentSpeed = 0.0
-            var count = 0
-
-            while l < performanceWindow.count && performanceWindow[l].secondsFromStart <= windowEndTime {
-                let currentPoint = performanceWindow[l]
-
-                if currentPoint.velD > 0 {
-                    sumDescentSpeed += currentPoint.velD
-                    count += 1
-                }
-
-                l += 1
-            }
-
-            if count > 0 {
-                let avgDescentSpeed = sumDescentSpeed / Double(count)
-                if avgDescentSpeed > maxAvgDescentSpeed {
-                    maxAvgDescentSpeed = avgDescentSpeed
-                    maxStartTime = windowStartTime
+        for startIndex in 0...(roundedPerformanceWindow.count - windowPointsCount) {
+            let windowPoints = roundedPerformanceWindow[startIndex..<(startIndex + windowPointsCount)]
+            let speeds = windowPoints.compactMap { $0.velD > 0 ? $0.velD : nil }
+            if !speeds.isEmpty {
+                let avgSpeed = speeds.reduce(0, +) / Double(speeds.count)
+                if avgSpeed > maxAvgDescentSpeed {
+                    maxAvgDescentSpeed = avgSpeed
+                    maxStartTime = windowPoints.first!.secondsFromStart
                 }
             }
-
-            k += 1
         }
+        
+        // Fetch elevation data async
+        let elevationResult = await getFastestDescentAGL(data: data)
+
+        let localGroundElevation = elevationResult?.groundElevation
+        let agl = elevationResult?.agl
 
         if maxAvgDescentSpeed > 0 {
             let kmh = maxAvgDescentSpeed * 3.6
@@ -169,7 +160,9 @@ struct SpeedAnalysis {
                 validationWindowEndAltitude,
                 averageSpeedAccuracy,
                 maxSpeedAccuracy,
-                speedAccuracyAlert
+                speedAccuracyAlert,
+                localGroundElevation,
+                agl
             )
         } else {
             return nil
