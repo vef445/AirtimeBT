@@ -172,13 +172,22 @@ class MainProcessor: ObservableObject {
             polarViewProcessor.loadTrack(track: self.track, visibleRange: range, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
         }
     
-    /// Calculates the fastest average speed over 3 seconds above 1700m altitude
-    var fastest3sSpeedAbove1700m: (startTime: Int, maxAvgDescentSpeedkmh: Double, maxAvgDescentSpeedmph: Double)? {
-        return SpeedAnalysis.fastestAverageDescentSpeed(
+    /// Calculates the fastest average speed over 3 seconds within the performance window
+    var fastest3sSpeedInPerformanceWindow: (startTime: Int, maxAvgDescentSpeedkmh: Double, maxAvgDescentSpeedmph: Double, performanceWindowStartAltitude: Double, performanceWindowEndAltitude: Double)? {
+        if let result = SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(
             data: track.trackData,
-            windowDuration: 3.0,
-            minAltitude: 1700.0
-        )
+            windowDuration: 3.0
+        ) {
+            return (
+                startTime: result.startTime,
+                maxAvgDescentSpeedkmh: result.maxAvgDescentSpeedkmh,
+                maxAvgDescentSpeedmph: result.maxAvgDescentSpeedmph,
+                performanceWindowStartAltitude: result.performanceWindowStartAltitude,
+                performanceWindowEndAltitude: result.performanceWindowEndAltitude
+            )
+        } else {
+            return nil
+        }
     }
 }
 

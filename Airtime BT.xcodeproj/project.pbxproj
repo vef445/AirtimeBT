@@ -39,6 +39,7 @@
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
 		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
 		F09449E82E0D99A90021667E /* PolarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09449E72E0D99980021667E /* PolarView.swift */; };
+		F0AB14EE2E0FDE830054E001 /* ChartButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */; };
 		F0C2C8B62E0E753B0083E759 /* PolarViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */; };
 		F0C2C8B92E0E98790083E759 /* SpeedAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */; };
 		F0C2C8BB2E0EA5060083E759 /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */; };
@@ -81,6 +82,7 @@
 		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
 		F09449E72E0D99980021667E /* PolarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarView.swift; sourceTree = "<group>"; };
+		F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartButtonsView.swift; sourceTree = "<group>"; };
 		F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarViewProcessor.swift; sourceTree = "<group>"; };
 		F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedAnalysis.swift; sourceTree = "<group>"; };
 		F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				C10C542224AC606400FEF75A /* Util */,
 				C10C542524AC606B00FEF75A /* ViewPartitions */,
 				C1E60A5124AC5929008004AF /* AppDelegate.swift */,
+				F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */,
 				C1E60A5824AC5929008004AF /* ContentView.swift */,
 				C10C541724AC603A00FEF75A /* LoadingView.swift */,
 				C10C541924AC604F00FEF75A /* MainProcessor.swift */,
@@ -352,6 +355,7 @@
 				F0C2C8BB2E0EA5060083E759 /* SpeedView.swift in Sources */,
 				C10C542424AC606400FEF75A /* Conversions.swift in Sources */,
 				C10C541124AC602800FEF75A /* DataPointView.swift in Sources */,
+				F0AB14EE2E0FDE830054E001 /* ChartButtonsView.swift in Sources */,
 				C10C540D24AC600900FEF75A /* UserDataPointSelection.swift in Sources */,
 				C1E60A5724AC5929008004AF /* AirtimeInfinite.xcdatamodeld in Sources */,
 				C1E60A5924AC5929008004AF /* ContentView.swift in Sources */,

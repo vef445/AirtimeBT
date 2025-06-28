@@ -8,10 +8,6 @@
 
 import SwiftUI
 
-/// Primary view displaying all data visualiztion views
-import SwiftUI
-
-/// Primary view displaying all data visualiztion views
 struct ContentView: View {
     
     @State private var showChartToolbar = true
@@ -21,6 +17,7 @@ struct ContentView: View {
     @State private var buttonsVisible = true
     @State private var showUnits = false
     @State private var showValues = true
+    @State private var leftViewportWidth: CGFloat = 0
     
     enum BottomViewMode {
         case map
@@ -30,7 +27,6 @@ struct ContentView: View {
 
     @State private var bottomViewMode: BottomViewMode = .map
 
-    
     @EnvironmentObject var main: MainProcessor
     
     let isPad = UIDevice.current.userInterfaceIdiom == .pad
@@ -38,17 +34,18 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .bottomTrailing) {
-                /// Dim background when needed
+                
+                // Dim background when needed
                 Color.gray
-                    .opacity((self.showingMetricSelectionMenu || self.main.isLoading) ? 0.5 : 0.0)
+                    .opacity((showingMetricSelectionMenu || main.isLoading) ? 0.5 : 0.0)
                     .edgesIgnoringSafeArea(.all)
                     .animation(.linear, value: showingMetricSelectionMenu || main.isLoading)
                 
-                LoadingView(isShowing: self.$main.isLoading) {
+                LoadingView(isShowing: $main.isLoading) {
                     ZStack {
                         if geo.size.height > geo.size.width {
                             // Portrait
-                            VStack {
+                            VStack(spacing: 0) {
                                 DataPointView(showValues: $showValues,
                                               isMultiRow: !isPad,
                                               showAcceleration: main.showAcceleration)
@@ -57,12 +54,8 @@ struct ContentView: View {
                                     .frame(height: isPad ? 45 : 90)
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
-                                            .onChanged { _ in
-                                                showUnits = true
-                                            }
-                                            .onEnded { _ in
-                                                showUnits = false
-                                            }
+                                            .onChanged { _ in showUnits = true }
+                                            .onEnded { _ in showUnits = false }
                                     )
                                 
                                 VPart(top: {
@@ -72,18 +65,14 @@ struct ContentView: View {
                                         buttonsVisible: $buttonsVisible,
                                         bottomViewMode: $bottomViewMode
                                     )
-
                                 }) {
                                     switch bottomViewMode {
                                     case .map:
                                         MapView()
-                                            .transition(.opacity)
                                     case .polar:
                                         PolarView()
-                                            .transition(.opacity)
                                     case .fastestDescent:
                                         FastestDescentSpeedView()
-                                            .transition(.opacity)
                                     }
                                 }
                                 .edgesIgnoringSafeArea(.bottom)
@@ -91,7 +80,7 @@ struct ContentView: View {
                             }
                         } else {
                             // Landscape
-                            VStack {
+                            VStack(spacing: 0) {
                                 DataPointView(showValues: $showValues,
                                               isMultiRow: false,
                                               showAcceleration: main.showAcceleration)
@@ -105,60 +94,85 @@ struct ContentView: View {
                                         buttonsVisible: $buttonsVisible,
                                         bottomViewMode: $bottomViewMode
                                     )
+                                    .background(
+                                        GeometryReader { proxy in
+                                            Color.clear.preference(key: LeftViewportWidthKey.self, value: proxy.size.width)
+                                        }
+                                    )
                                 }) {
                                     switch bottomViewMode {
                                     case .map:
                                         MapView()
-                                            .transition(.opacity)
                                     case .polar:
                                         PolarView()
-                                            .transition(.opacity)
                                     case .fastestDescent:
                                         FastestDescentSpeedView()
-                                            .transition(.opacity)
                                     }
-
                                 }
+                                .edgesIgnoringSafeArea([.trailing, .bottom])
                                 .animation(.easeInOut(duration: 0.6), value: bottomViewMode)
-                                .edgesIgnoringSafeArea(.trailing)
-                                .edgesIgnoringSafeArea(.bottom)
                             }
                         }
-                        
-                        // Chart settings menu
-                        ChartSettingsView(showingMetricSelectionMenu: $showingMetricSelectionMenu)
-                            .environmentObject(main)
-                            .background(Color(.secondarySystemBackground))
-                            .edgesIgnoringSafeArea(.all)
-                            .cornerRadius(20)
-                            .shadow(radius: 20)
-                            .frame(width: 300, height: 300)
-                            .padding()
-                            .offset(y: showingMetricSelectionMenu ? 0 : 1000)
-                            .animation(.linear, value: showingMetricSelectionMenu)
                     }
                 }
                 
-                /// 👇 Load & Menu Button
-                UnifiedLoadButtonGroup(showChartToolbar: self.$showChartToolbar)
+                // Your existing load/menu button group
+                UnifiedLoadButtonGroup(showChartToolbar: $showChartToolbar)
                     .environmentObject(main)
-                    .padding(.trailing, geo.size.width > geo.size.height ? 0 : 20) // smaller gap in landscape, bigger in portrait
+                    .padding(.trailing, geo.size.width > geo.size.height ? 0 : 20)
                     .padding(.bottom, 12)
                     .ignoresSafeArea(.container, edges: geo.size.width > geo.size.height ? .trailing : [])
+            }
+            // Floating chart settings menu (7 toggles) remains here if you use it:
+            .overlay(
+                Group {
+                    if showingMetricSelectionMenu {
+                        ChartSettingsView(showingMetricSelectionMenu: $showingMetricSelectionMenu)
+                            .environmentObject(main)
+                            .frame(width: 300, height: min(UIScreen.main.bounds.height - 100, 650))
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(20)
+                            .shadow(radius: 10)
+                            .transition(.move(edge: .trailing))
+                            .zIndex(1000)
+                    }
+                }
+            )
+            // NEW: Floating toolbar of 7 action buttons
+            .overlay(
+                GeometryReader { geo in
+                    ChartButtonsView(
+                        buttonsVisible: $buttonsVisible,
+                        showingMetricSelectionMenu: $showingMetricSelectionMenu,
+                        bottomViewMode: $bottomViewMode,
+                        isLandscape: .constant(geo.size.width > geo.size.height)
+                    )
+
+                    .environmentObject(main)
+                    .frame(width: 60)
+                    .position(
+                        x: geo.size.height > geo.size.width
+                            ? geo.size.width - 40
+                            : leftViewportWidth + 30, // Use measured left viewport width + offset
+                        y: geo.size.height > geo.size.width
+                            ? 80 + 200
+                            : (geo.size.height / 2) + 20
+                    )
+                    .zIndex(10)
+                }
+            )
+            // STEP 4: Track left viewport width only in landscape
+            .onPreferenceChange(LeftViewportWidthKey.self) { value in
+                if geo.size.width > geo.size.height {
+                    leftViewportWidth = value
+                }
             }
             .onChange(of: main.trackLoadedSuccessfully) { loaded in
                 if loaded {
                     showChartToolbar = false
-                    
-                    // Test your fastestAverageDescentSpeed here
-                    let trackData = main.track.trackData
-                                        
-                    DispatchQueue.main.async {
-                        main.trackLoadedSuccessfully = false
-                    }
+                    DispatchQueue.main.async { main.trackLoadedSuccessfully = false }
                 }
             }
-
         }
     }
 }
@@ -166,5 +180,12 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(MainProcessor())
+    }
+}
+
+struct LeftViewportWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
