@@ -8,7 +8,6 @@
 
 import MapKit
 import SwiftUI
-
 import CSV
 
 /// Imports, processes, and holds all data from a track.
@@ -20,27 +19,73 @@ class Track: ObservableObject {
         case noReadableTrackfileData
     }
     
-    static let gravity: Double = 9.80665
+    /// Private full data storage
+    private var _fullTrackData = [DataPoint]()
     
-    var trackData = [DataPoint]()
+    /// Backup for original uncut data (for restore)
+    private var _originalFullTrackData: [DataPoint]? = nil
+    
+    /// Public filtered data: only from 5 seconds before exit until end
+    var trackData: [DataPoint] {
+        get {
+            guard !_fullTrackData.isEmpty else { return [] }
+
+            if MainProcessor.instance.autoCutTrack {
+                var workingTrack = _fullTrackData
+
+                // First: Cut before exit
+                if exitIndex.isValidIndex(in: workingTrack) {
+                    let exitTime = workingTrack[exitIndex].secondsFromStart
+                    let cutStartTime = max(0, exitTime - 5)
+                    
+                    // Cut away all before cutStartTime
+                    if let startIndex = workingTrack.firstIndex(where: { $0.secondsFromStart >= cutStartTime }) {
+                        workingTrack = Array(workingTrack[startIndex...])
+                    }
+                }
+
+                // Second: Calculate landing index on the cut track
+                let landingIndex = calculateLandingPointIndex(in: workingTrack)
+                if let landingIndex = landingIndex, landingIndex.isValidIndex(in: workingTrack) {
+                    let landingTime = workingTrack[landingIndex].secondsFromStart
+                    let cutEndTime = landingTime + 5
+
+                    // Cut away everything after cutEndTime
+                    if let endIndex = workingTrack.lastIndex(where: { $0.secondsFromStart <= cutEndTime }) {
+                        workingTrack = Array(workingTrack[...endIndex])
+                    }
+                }
+
+                return workingTrack
+
+            } else {
+                return _fullTrackData
+            }
+        }
+        set {
+            _fullTrackData = newValue
+        }
+    }
+
     
     /// All x values used in TrackData on Charts, cached to quickly update Map
     var xRange: [Double] = []
     
-    /// Inde of the point calculated as the jump exit
+    /// Index of the point calculated as the jump exit
     var exitIndex: Int = 0
+    
+    /// Reset the ground elevation when needed so it will be calculated again when loading a Track
+    func resetGroundElevationCache() {
+        cachedGroundElevation = nil
+    }
     
     /**
      Load a track given the URL of the local file
-     
-     - Parameter url:File URL for selected track
-     
-     - Throws: TrackError.noReadableTrackfileData  or access error if file cannot be accessed or parsed
      */
     func importURL(url: URL) async throws {
         var rawTrackFileData = try String(contentsOf: url)
         
-        // Remove the FS2 header before processing, if exists
+        // Remove FS2 header before processing, if exists
         if rawTrackFileData.starts(with: "$FLYS") {
             if let range = rawTrackFileData.range(of: "$COL,") {
                 rawTrackFileData = String(rawTrackFileData[range.upperBound...])
@@ -65,212 +110,195 @@ class Track: ObservableObject {
         }
         
         try await self.initialize(dataPoints: tempTrackData)
-            
+        
         self.xRange = self.trackData.map { $0.secondsFromStart }
     }
     
     /// Resets track data
     func clearTrack() {
-        trackData = []
+        _fullTrackData = []
         cachedGroundElevation = nil
+        _originalFullTrackData = nil
+    }
+    
+    func calculateExitPointFromData() -> Int? {
+        let minTriggerDescentSpeed = 10.0  // speed in m/s at which we consider freefall started
+        
+        for (index, point) in _fullTrackData.enumerated() {
+            if point.velD >= minTriggerDescentSpeed {
+                return index
+            }
+        }
+        return nil
+    }
+    
+    /// Calculate landing point index on track that is already cut before exit point based on speed and altitude criteria
+    func calculateLandingPointIndex(in track: [DataPoint]) -> Int? {
+        let landingSpeedThreshold: Double = 5.0 / 3.6  // <5 km/h
+        let landingAltitudeThreshold: Double = 20.0    // <20m AGL
+        
+        for (index, point) in track.enumerated() {
+            let totalSpeed = (point.velN * point.velN + point.velE * point.velE + point.velD * point.velD).squareRoot()
+            
+            if totalSpeed < landingSpeedThreshold && point.altitude < landingAltitudeThreshold {
+                return index
+            }
+        }
+        return nil
     }
     
     /**
-     Given a raw array of track data, load and process the track for reading/display
-     
-     - Parameters:
-        - tempTrackData: Raw array of DataPoints
-     
-     - Throws: TrackError.noReadableTrackfileData  if there is no data to load
+     Given raw array of track data, process for reading/display
      */
     func initialize(dataPoints tempTrackData: [DataPoint]) async throws {
         if tempTrackData.isEmpty {
             throw TrackError.noReadableTrackfileData
         }
         
-        self.trackData = tempTrackData
-        let startTimeString = trackData[0].time
+        self._fullTrackData = tempTrackData
+        let startTimeString = _fullTrackData[0].time
         
-        // Only call getFastestDescentAGL if ground elevation is not cached
+        // Only call getFastestDescentAGL if ground elevation not cached
         if cachedGroundElevation == nil {
-            guard let result = await getFastestDescentAGL(data: trackData) else {
+            guard let result = await getFastestDescentAGL(data: _fullTrackData) else {
                 throw TrackError.noReadableTrackfileData
             }
             cachedGroundElevation = result.groundElevation
         }
-
-        // Use cached ground elevation for altitude calculations
+        
         let groundElevation = cachedGroundElevation!
-
-        for point in trackData {
+        
+        for point in _fullTrackData {
             point.initializeValues()
             point.setTimeInSeconds(startEpochString: startTimeString)
             point.setRealAltitude(groundElevation: groundElevation)
         }
+        initializeAcceleration()
+        initializeExit()
+        calculateDistanceWithStartOffset()
     }
-
     
-    /// Calculate acceleration for all points using a moving average velocity slope
+    /// Calculate acceleration using moving average velocity slope
     func initializeAcceleration() {
-        for i in 0..<trackData.count {
-            
-            let dp = trackData[i]
-            
+        for i in 0..<_fullTrackData.count {
+            let dp = _fullTrackData[i]
             let iMin = max(0, i - 3)
-            let iMax = min(trackData.count - 1, i + 3)
+            let iMax = min(_fullTrackData.count - 1, i + 3)
+            let timeDelta = _fullTrackData[iMax].secondsFromStart - _fullTrackData[iMin].secondsFromStart
             
-            let timeDelta = trackData[iMax].secondsFromStart - trackData[iMin].secondsFromStart
+            dp.accelN = (_fullTrackData[iMax].velN - _fullTrackData[iMin].velN) / timeDelta
+            dp.accelE = (_fullTrackData[iMax].velE - _fullTrackData[iMin].velE) / timeDelta
+            dp.accelVert = (_fullTrackData[iMax].velD - _fullTrackData[iMin].velD) / timeDelta
             
-            /// Acceleration
-            dp.accelN = (trackData[iMax].velN - trackData[iMin].velN) / timeDelta
-            dp.accelE = (trackData[iMax].velE - trackData[iMin].velE) / timeDelta
-            dp.accelVert = (trackData[iMax].velD - trackData[iMin].velD) / timeDelta
-            
-            /// Calculate acceleration in direction of flight
             let vh: Double = (dp.velN * dp.velN + dp.velE * dp.velE).squareRoot()
             dp.accelParallel = (dp.accelN * dp.velN + dp.accelE * dp.velE) / vh
-            
-            /// Calculate acceleration perpendicular to flight
             dp.accelPerp = (dp.accelE * dp.velN - dp.accelN * dp.velE) / vh
-            
-            /// Calculate total acceleration
             dp.accelTotal = (dp.accelN * dp.accelN + dp.accelE * dp.accelE + dp.accelVert * dp.accelVert).squareRoot()
         }
     }
     
-    // TODO: Take another pass at this. The exit calc is ever so slightly off.
-    /// Caculate the exit from plane or object
+    /// Calculate exit point
     func initializeExit() {
-        var exitTime: Double = 0
-        
-        var foundExit: Bool = false
-        
-        for i in 1..<trackData.count {
-            let dp1: DataPoint = trackData[i - 1]
-            let dp2: DataPoint = trackData[i]
-            
-            /// Get interpolation coefficient, skip if vertical speed unchanged
-            guard dp2.velD - dp1.velD != 0 else { continue }
-            let a = (Self.gravity - dp1.velD) / (dp2.velD - dp1.velD)
-            
-            /// Check vertical speed
-            if a < 0 || 1 < a { continue }
-            
-            /// Check accuracy
-            let vAcc = dp1.vAcc + a * (dp2.vAcc - dp1.vAcc);
-            guard vAcc <= 10 else { continue }
-            
-            /// Check acceleration
-            let az: Double = dp1.accelVert + a * (dp2.accelVert - dp1.accelVert);
-            guard az >= Self.gravity / 5 else { continue }
-            
-            /// Determine exit
-            let t1 = dp1.secondsSinceEpoch
-            let t2 = dp2.secondsSinceEpoch
-            exitTime = t1 + a * (t2 - t1) - Self.gravity / az
-            exitIndex = i
-            foundExit = true
-            break
-        }
-        if !foundExit {
-            exitTime = trackData[0].secondsSinceEpoch
+        guard let exitIdx = calculateExitPointFromData() else {
+            exitIndex = 0
+            let exitTime = _fullTrackData.first?.secondsSinceEpoch ?? 0
+            for point in _fullTrackData {
+                point.setSecondsFromExit(exitEpochTime: exitTime)
+            }
+            return
         }
         
-        /// Set time from exit for all points
-        for point in trackData {
+        exitIndex = exitIdx
+        let exitTime = _fullTrackData[exitIndex].secondsSinceEpoch
+        
+        for point in _fullTrackData {
             point.setSecondsFromExit(exitEpochTime: exitTime)
         }
     }
     
-    // TODO: Consider adding straight-line distance for better BASE exit stats
-    /// Calculate the total distance traveled at all points from the exit position
+    /// Calculate distance from exit position
     func calculateDistanceWithStartOffset() {
-        
         var dist2D: Double = 0
         
-        for i in 0..<trackData.count {
-            let dp = trackData[i]
-            
-            if i > 0
-            {
-                let dp1 = trackData[i - 1]
-                
-                let dpLocation = CLLocation(
-                    latitude: dp.coordinate.latitude,
-                    longitude: dp.coordinate.longitude)
-                let dp1Location = CLLocation(
-                    latitude: dp1.coordinate.latitude,
-                    longitude: dp1.coordinate.longitude)
-                
+        for i in 0..<_fullTrackData.count {
+            let dp = _fullTrackData[i]
+            if i > 0 {
+                let dp1 = _fullTrackData[i - 1]
+                let dpLocation = CLLocation(latitude: dp.coordinate.latitude, longitude: dp.coordinate.longitude)
+                let dp1Location = CLLocation(latitude: dp1.coordinate.latitude, longitude: dp1.coordinate.longitude)
                 dist2D += dp1Location.distance(from: dpLocation)
             }
-            
             dp.distance2D = dist2D
         }
         
-        /// Offset with exit
-        let exitDistance = trackData[exitIndex].distance2D
-        for i in 0..<trackData.count {
-            trackData[i].distance2D -= exitDistance
+        let exitDistance = _fullTrackData[exitIndex].distance2D
+        for i in 0..<_fullTrackData.count {
+            _fullTrackData[i].distance2D -= exitDistance
         }
-        
-        
     }
     
-    /**
-     Get a list of coordinates from the track
-     
-     - Returns: An arrray of CLLocationCoordinate2D objects
-     */
+    /// Get full coordinates list
     func getCoordinatesList() -> [CLLocationCoordinate2D] {
-        
-        var coordiatesList: [CLLocationCoordinate2D] = []
-        for point in trackData {
-            coordiatesList.append(point.coordinate)
-        }
-        return coordiatesList
+        return trackData.map { $0.coordinate }
     }
     
-    /**
-     Given a min and max time bound, return track data that falls within
-     
-     - Parameters:
-        - firstIndex: Start time in seconds
-        - lastIndex: Ending time in seconds
-     
-     - Returns: A track data array within the selected time bounds
-     */
+    /// Return track data within time bounds
     func getTrackCoordinatesFromSecondsBounds(firstIndex: Double, lastIndex: Double) -> [CLLocationCoordinate2D] {
         var minIndex = nearestIndexToTime(firstIndex)
         var maxIndex = nearestIndexToTime(lastIndex)
-        /// Protect against reverse order ranges
-        if minIndex > maxIndex {
-            let t = minIndex
-            minIndex = maxIndex
-            maxIndex = t
-        }
-        var selectedTrackCoordiantes: [CLLocationCoordinate2D] = []
-        let validIndices = trackData.indices
-        if validIndices.contains(minIndex), validIndices.contains(maxIndex){
-            selectedTrackCoordiantes = Array(trackData[minIndex...maxIndex]).map({ $0.coordinate })
-        }
-        return selectedTrackCoordiantes
+        if minIndex > maxIndex { swap(&minIndex, &maxIndex) }
+        guard minIndex.isValidIndex(in: _fullTrackData), maxIndex.isValidIndex(in: trackData) else { return [] }
+        return Array(trackData[minIndex...maxIndex]).map { $0.coordinate }
     }
     
-    /**
-     Given a time in seconds, get the index of the nearest DataPoint
-     
-     - Parameters:
-        - timeInSeconds: Time from start of track
-     
-     - Returns: Index of closest DataPoint
-     */
+    /// Get nearest index to time
     func nearestIndexToTime(_ timeInSeconds: Double) -> Int {
         var i = 0
-        while xRange[i] < timeInSeconds {
+        while i < xRange.count && xRange[i] < timeInSeconds {
             i += 1
         }
-        return i
+        return min(i, xRange.count - 1)
     }
     
+    /// Safely get exit DataPoint from filtered data
+    func exitDataPointInFilteredData() -> DataPoint? {
+        guard !_fullTrackData.isEmpty, exitIndex.isValidIndex(in: _fullTrackData) else { return nil }
+        let exitTime = _fullTrackData[exitIndex].secondsFromStart
+        let startFilterTime = max(0, exitTime - 5)
+        let filteredStartIndex = _fullTrackData.firstIndex(where: { $0.secondsFromStart >= startFilterTime }) ?? 0
+        let relativeExitIndex = exitIndex - filteredStartIndex
+        let filteredData = self.trackData
+        guard relativeExitIndex >= 0, relativeExitIndex < filteredData.count else { return nil }
+        return filteredData[relativeExitIndex]
+    }
+    
+    // MARK: - Cutting & Restoring Methods
+    
+    /// Cuts the track to the specified start and end time range
+    func cutToTimeRange(startTime: Double, endTime: Double) {
+        guard startTime < endTime else { return }
+        
+        if _originalFullTrackData == nil {
+            _originalFullTrackData = _fullTrackData
+        }
+        
+        let cutData = _fullTrackData.filter { $0.secondsFromStart >= startTime && $0.secondsFromStart <= endTime }
+        _fullTrackData = cutData
+        xRange = _fullTrackData.map { $0.secondsFromStart }
+    }
+    
+    /// Restores the track to its original uncut data
+    func restoreOriginalTrack() {
+        guard let originalData = _originalFullTrackData else { return }
+        _fullTrackData = originalData
+        xRange = _fullTrackData.map { $0.secondsFromStart }
+        _originalFullTrackData = nil
+    }
+}
+
+/// Helper extension
+extension Int {
+    func isValidIndex<T>(in array: [T]) -> Bool {
+        return self >= 0 && self < array.count
+    }
 }

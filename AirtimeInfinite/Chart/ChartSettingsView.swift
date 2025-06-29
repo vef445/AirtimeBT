@@ -15,11 +15,11 @@ struct ChartSettingsView: View {
     @Binding var showingMetricSelectionMenu: Bool
     
     var body: some View {
-        VStack(){
-            ScrollView() {
-                VStack() {
+        VStack {
+            ScrollView {
+                VStack {
                     
-                    HStack() {
+                    HStack {
                         Text("Display Data")
                             .font(.system(.title))
                             .padding(.top)
@@ -29,9 +29,9 @@ struct ChartSettingsView: View {
                     
                     VStack(spacing: 0) {
                         Divider()
-                        ForEach(main.chartViewProcessor.chartableMetrics.indices, id: \.self){ i in
+                        ForEach(main.chartViewProcessor.chartableMetrics.indices, id: \.self) { i in
                             VStack(spacing: 0) {
-                                Toggle(isOn: self.$main.chartViewProcessor.chartableMetrics[i].isSelected){
+                                Toggle(isOn: self.$main.chartViewProcessor.chartableMetrics[i].isSelected) {
                                     Text(self.main.chartViewProcessor.chartableMetrics[i].attributes.title)
                                 }
                                 .toggleStyle(CheckmarkToggleStyle())
@@ -43,7 +43,7 @@ struct ChartSettingsView: View {
                     }
                     .padding(.horizontal)
                     
-                    HStack() {
+                    HStack {
                         Text("Settings")
                             .font(.system(.title))
                             .padding(.top)
@@ -55,7 +55,7 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        Toggle(isOn: $main.chartViewProcessor.autoScaleEnabled){
+                        Toggle(isOn: $main.chartViewProcessor.autoScaleEnabled) {
                             Text("AutoScale Y-Axis")
                         }
                         .toggleStyle(CheckmarkToggleStyle())
@@ -64,7 +64,19 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        Toggle(isOn: $main.useImperialUnits){
+                        
+                        // Bind toggle to local state
+                        Toggle(isOn: $main.autoCutTrack) {
+                            Text("Cut track automatically")
+                        }
+                        .toggleStyle(CheckmarkToggleStyle())
+                        .padding(.horizontal)
+                        .frame(height: 40)
+                        Divider()
+                            .frame(height: 1)
+                            .padding(.horizontal)
+                        
+                        Toggle(isOn: $main.useImperialUnits) {
                             Text("Imperial Units")
                         }
                         .toggleStyle(CheckmarkToggleStyle())
@@ -73,7 +85,8 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        Toggle(isOn: $main.showAcceleration){
+                        
+                        Toggle(isOn: $main.showAcceleration) {
                             Text("Display Acceleration Data")
                         }
                         .toggleStyle(CheckmarkToggleStyle())
@@ -82,7 +95,8 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        Toggle(isOn: $main.useBluetooth){
+                        
+                        Toggle(isOn: $main.useBluetooth) {
                             Text("Connect via Bluetooth")
                         }
                         .toggleStyle(CheckmarkToggleStyle())
@@ -91,9 +105,14 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
+                        // Reload track on change
+                        .onChange(of: main.autoCutTrack) { newValue in
+                            main.fullyReloadTrack()
+                        }
                     }
                 }
             }
+            
             Button(action: {
                 self.showingMetricSelectionMenu = false
                 self.main.chartViewProcessor.updateAutoScaleAxis()
@@ -115,8 +134,8 @@ struct ChartSettingsView: View {
 /// Provides a checkmark when a metric is selected as visible
 struct CheckmarkToggleStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
-        Button(action: { withAnimation { configuration.$isOn.wrappedValue.toggle() }}){
-            HStack{
+        Button(action: { withAnimation { configuration.$isOn.wrappedValue.toggle() } }) {
+            HStack {
                 configuration.label.foregroundColor(.primary)
                 Spacer()
                 if configuration.isOn {
@@ -129,4 +148,3 @@ struct CheckmarkToggleStyle: ToggleStyle {
         .padding(0)
     }
 }
-

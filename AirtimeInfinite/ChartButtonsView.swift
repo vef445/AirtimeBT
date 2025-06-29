@@ -16,14 +16,7 @@ struct ChartButtonsView: View {
     @EnvironmentObject var main: MainProcessor
     
     @State private var pinSelection = false
-    
-    private var iconName: String {
-        switch bottomViewMode {
-        case .map: return "chart.xyaxis.line"
-        case .polar: return "speedometer"
-        case .fastestDescent: return "map"
-        }
-    }
+
     
     let support_url = "https://github.com/vef445/AirtimeBT"
     
@@ -41,12 +34,14 @@ struct ChartButtonsView: View {
             
             Button(action: {
                 showingMetricSelectionMenu = true
+                buttonsVisible = false    // Hide the button stack
             }) {
                 Image(systemName: "gear")
                     .resizable()
                     .frame(width: 30, height: 30)
                     .foregroundColor(.primary)
             }
+
             
             Button(action: {
                 pinSelection.toggle()
@@ -74,7 +69,7 @@ struct ChartButtonsView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 30, height: 30)
-                    .foregroundColor(main.chartViewProcessor.isCut ? .blue : .primary)
+                    .foregroundColor(main.chartViewProcessor.isCutPublished ? .blue : .primary)
             }
             .accessibilityLabel("Cut to zoomed range")
             
@@ -101,22 +96,6 @@ struct ChartButtonsView: View {
             .disabled(main.chartViewProcessor.track.trackData.isEmpty)
             .accessibilityLabel("Share your track")
             
-            Button(action: {
-                // Cycle through modes
-                switch bottomViewMode {
-                case .map: bottomViewMode = .polar
-                case .polar: bottomViewMode = .fastestDescent
-                case .fastestDescent: bottomViewMode = .map
-                }
-            }) {
-                Image(systemName: iconName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 25, height: 25)
-                    .foregroundColor(.primary)
-                    .padding(.vertical, 2)
-            }
-            .accessibilityLabel("Toggle view mode")
         }
         .padding()
         .background(Color.gray.opacity(0.6))
@@ -125,6 +104,6 @@ struct ChartButtonsView: View {
         .padding(.trailing, 20)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .offset(x: buttonsVisible ? 0 : (isLandscape ? -120 : 120))
-        .animation(.easeInOut(duration: 0.8), value: buttonsVisible)
+        .animation(.easeInOut(duration: 0.6), value: buttonsVisible)
     }
 }

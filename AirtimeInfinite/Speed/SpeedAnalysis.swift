@@ -97,10 +97,10 @@ struct SpeedAnalysis {
 
         // Round timestamps in performanceWindow to 0.01
         let roundedPerformanceWindow = performanceWindow.map { point -> DataPoint in
-            var newPoint = point
-            newPoint.secondsFromStart = (point.secondsFromStart * 100).rounded() / 100
-            return newPoint
+            point.secondsFromStart = (point.secondsFromStart * 100).rounded() / 100
+            return point
         }
+
 
         // Calculate validation window altitudes
         let validationWindowStartAltitude = windowEndAltitude + validationWindowHeight

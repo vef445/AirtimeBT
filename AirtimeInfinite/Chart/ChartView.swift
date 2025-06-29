@@ -37,6 +37,7 @@ struct ChartView: UIViewRepresentable {
     class Coordinator: NSObject, ChartViewDelegate {
         var parent: ChartView
         var lastHighlight: Highlight? = nil
+        var previousX: Double? = nil
 
         init(_ parent: ChartView) {
             self.parent = parent
@@ -76,10 +77,11 @@ struct ChartView: UIViewRepresentable {
             let visibleMinX = chart.lowestVisibleX
             let visibleMaxX = chart.highestVisibleX
             let visibleRange = visibleMinX...visibleMaxX
-
+            
             // Update visible range in main processor, so polar chart updates too
             DispatchQueue.main.async {
                 self.parent.main.updateVisibleRange(visibleRange)
+                self.parent.main.isDragging = false
             }
 
             // Existing map update logic:
@@ -119,7 +121,11 @@ struct ChartView: UIViewRepresentable {
         chartView.leftAxis.drawGridLinesEnabled = false
         chartView.xAxis.labelPosition = XAxis.LabelPosition.bottom
         chartView.legend.enabled = false
-        
+        if let data = chartView.data,
+           let firstEntry = data.dataSets.first?.entryForIndex(0) {
+            chartView.xAxis.axisMinimum = firstEntry.x
+        }
+
         main.chartViewProcessor.updateAutoScaleAxis()
     }
 }

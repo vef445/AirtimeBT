@@ -32,6 +32,14 @@ class MainProcessor: ObservableObject {
     @Published var trackLoadError = false
     @Published var isLoading = false
     
+    @Published var autoCutTrack: Bool {
+        didSet {
+            UserDefaults.standard.set(autoCutTrack, forKey: "autoCutTrack")
+        }
+    }
+    
+    @Published var isDragging = false
+
     @Published var useImperialUnits: Bool {
         didSet {
             UserDefaults.standard.set(useImperialUnits, forKey: "measurementUnits")
@@ -103,6 +111,12 @@ class MainProcessor: ObservableObject {
             self.useBluetooth = false
         }
         
+        if UserDefaults.standard.object(forKey: "autoCutTrack") != nil {
+            self.autoCutTrack = UserDefaults.standard.bool(forKey: "autoCutTrack")
+        } else {
+            self.autoCutTrack = true
+        }
+        
         /// Allow for nested observable selection objects
         anyCancellableHighlight = highlightedPoint.objectWillChange.sink { (_) in
             self.objectWillChange.send()
@@ -123,6 +137,7 @@ class MainProcessor: ObservableObject {
      - trackURL: File path to be loaded
      */
     func loadTrack(trackURL: URL) async {
+        track.resetGroundElevationCache()
         await MainActor.run {
             self.isLoading = true
         }
@@ -161,11 +176,30 @@ class MainProcessor: ObservableObject {
             let fullRange = 0.0...(self.track.trackData.last?.secondsFromStart ?? 0.0)
             self.polarViewProcessor.loadTrack(track: self.track, visibleRange: fullRange, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
 
-            self.highlightedPoint.point = self.track.trackData[self.track.exitIndex]
+            if let exitPoint = self.track.exitDataPointInFilteredData() {
+                self.highlightedPoint.point = exitPoint
+            } else {
+                print("Warning: exit point index out of range in filtered data")
+                // Handle fallback here, if needed
+            }
+
             self.isLoading = false
             self.trackLoadedSuccessfully = true
         }
     }
+    
+    /// Reloads the currently loaded track file completely
+    func fullyReloadTrack() {
+        guard let url = self.trackURL else {
+            print("No trackURL available to reload track")
+            return
+        }
+        
+        Task {
+            await self.loadTrack(trackURL: url)
+        }
+    }
+
 
     
     /// Call this whenever the visible X range changes (e.g. on zoom or pan)
@@ -192,5 +226,8 @@ class MainProcessor: ObservableObject {
             performanceWindowEndAltitude: result.performanceWindowEndAltitude
         )
     }
+    
+
 }
+
 

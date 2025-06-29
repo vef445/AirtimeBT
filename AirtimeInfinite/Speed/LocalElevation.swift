@@ -17,6 +17,7 @@ func fetchGroundElevation(lat: Double, lon: Double) async -> Double? {
         if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
            let results = json["results"] as? [[String: Any]],
            let elevation = results.first?["elevation"] as? Double {
+            //print("Retrieved elevation: \(elevation)")
             return elevation
         }
     } catch {

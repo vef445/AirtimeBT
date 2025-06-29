@@ -42,7 +42,6 @@ struct MenuButton: View {
     }
 }
 
-
 struct UnifiedLoadButton: View {
     @Binding var showChartToolbar: Bool
     @State private var isShowingModal = false
@@ -81,27 +80,88 @@ struct UnifiedLoadButton: View {
 
 struct UnifiedLoadButtonGroup: View {
     @Binding var showChartToolbar: Bool
+    @Binding var bottomViewMode: ContentView.BottomViewMode
+    
+    var horizontalLayout: Bool = false
+
+    // Icon changes depending on bottom view mode
+    private var iconName: String {
+        switch bottomViewMode {
+        case .map: return "chart.xyaxis.line"
+        case .polar: return "speedometer"
+        case .fastestDescent: return "map"
+        }
+    }
 
     var body: some View {
-        Spacer()
-        VStack(spacing: 10) {
-            MenuButton(showChartToolbar: $showChartToolbar)
-            UnifiedLoadButton(showChartToolbar: $showChartToolbar)
+        Group {
+            if horizontalLayout {
+                HStack(spacing: 24) {
+
+                    Button(action: {
+                        // Cycle through modes
+                        switch bottomViewMode {
+                        case .map: bottomViewMode = .polar
+                        case .polar: bottomViewMode = .fastestDescent
+                        case .fastestDescent: bottomViewMode = .map
+                        }
+                    }) {
+                        Image(systemName: iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(.primary)
+                            .padding(.vertical, 2)
+                    }
+                    .buttonStyle(LoadButtonStyle())
+                    .accessibilityLabel("Toggle view mode")
+
+                    UnifiedLoadButton(showChartToolbar: $showChartToolbar)
+                    
+                    MenuButton(showChartToolbar: $showChartToolbar)
+                }
+            } else {
+                VStack(spacing: 10) {
+                    MenuButton(showChartToolbar: $showChartToolbar)
+
+                    Button(action: {
+                        // Cycle through modes
+                        switch bottomViewMode {
+                        case .map: bottomViewMode = .polar
+                        case .polar: bottomViewMode = .fastestDescent
+                        case .fastestDescent: bottomViewMode = .map
+                        }
+                    }) {
+                        Image(systemName: iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(.primary)
+                            .padding(.vertical, 2)
+                    }
+                    .buttonStyle(LoadButtonStyle())
+                    .accessibilityLabel("Toggle view mode")
+
+                    UnifiedLoadButton(showChartToolbar: $showChartToolbar)
+                }
+            }
         }
     }
 }
 
 struct UnifiedLoadButtonGroup_Previews: PreviewProvider {
     @State static var toolbarVisible = true
-    
+    @State static var bottomViewMode: ContentView.BottomViewMode = .map
+
     static var previews: some View {
-        UnifiedLoadButtonGroup(showChartToolbar: $toolbarVisible)
+        UnifiedLoadButtonGroup(showChartToolbar: $toolbarVisible,
+                               bottomViewMode: $bottomViewMode,
+                               horizontalLayout: true)
             .environmentObject(MainProcessor())
             .previewLayout(.sizeThatFits)
             .padding()
     }
 }
-
 
 struct BaseModalWrapper<Content: View>: View {
     let content: () -> Content

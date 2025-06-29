@@ -38,7 +38,8 @@ class ChartViewProcessor: ObservableObject {
                          FlightMetric.accelParallel,
                          FlightMetric.accelPerp,
                          FlightMetric.accelTotal]
-
+    
+    @Published var isCutPublished: Bool = false
     @Published var chartableMetrics: [ChartableMetric] = []
     @Published var autoScaleEnabled: Bool {
         didSet {
@@ -165,9 +166,11 @@ class ChartViewProcessor: ObservableObject {
     func buildDataSetForNumericProperty(propertyData: [Double], label: String) -> LineChartDataSet {
             var values: [ChartDataEntry] = []
             
-            for i in 0..<track.xRange.count {
-                values.append(ChartDataEntry(x: Double(track.xRange[i]), y: Double(propertyData[i])))
+        let count = min(track.xRange.count, propertyData.count)
+        for i in 0..<count {
+            values.append(ChartDataEntry(x: Double(track.xRange[i]), y: Double(propertyData[i])))
         }
+
         
         let dataSet = LineChartDataSet(entries: values, label: label)
         
@@ -224,6 +227,7 @@ class ChartViewProcessor: ObservableObject {
 
         if originalTrack == nil {
             originalTrack = track.copy()
+            isCutPublished = true
         }
 
         let visibleMinX = lineChartView.lowestVisibleX
@@ -262,6 +266,7 @@ class ChartViewProcessor: ObservableObject {
         reloadTrack()
         updateAutoScaleAxis()
         lineChartView.notifyDataSetChanged()
+        isCutPublished = false
     }
     
     func shareTrack() {

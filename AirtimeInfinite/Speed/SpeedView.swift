@@ -5,6 +5,7 @@
 //  Created by Guillaume Vigneron on 27/06/2025.
 //  Copyright © 2025 Guillaume Vigneron. All rights reserved.
 //
+
 import SwiftUI
 import DGCharts
 
@@ -101,7 +102,6 @@ struct FastestDescentSpeedView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.top, 6)
 
-                    // New: Display local elevation and AGL if available
                     if let elevation = result.localGroundElevation {
                         HStack {
                             Text("Local Ground Elevation:")
@@ -120,11 +120,21 @@ struct FastestDescentSpeedView: View {
             }
             .padding()
             .offset(y: -60)
-            .onAppear {
-                Task {
-                    analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
+            .onChange(of: main.trackLoadedSuccessfully) { loaded in
+                print("trackLoadedSuccessfully changed to \(loaded)")
+                if loaded {
+                    Task {
+                        analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
+                    }
+                } else {
+                    analysisResult = nil
                 }
             }
+        }
+        // Added .task to load analysis when view appears
+        .task {
+            guard !main.track.trackData.isEmpty else { return }
+            analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
         }
     }
 }
