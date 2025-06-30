@@ -11,6 +11,7 @@ import SwiftUI
 struct ChartButtonsView: View {
     @Binding var buttonsVisible: Bool
     @Binding var showingMetricSelectionMenu: Bool
+    @Binding var showingHelpMenu: Bool
     @Binding var bottomViewMode: ContentView.BottomViewMode
     @Binding var isLandscape: Bool
     @EnvironmentObject var main: MainProcessor
@@ -23,8 +24,7 @@ struct ChartButtonsView: View {
     var body: some View {
         VStack(spacing: 12) {
             Button(action: {
-                let urlComponents = URLComponents(string: support_url)!
-                UIApplication.shared.open(urlComponents.url!)
+                showingHelpMenu = true
             }) {
                 Image(systemName: "questionmark.circle")
                     .resizable()

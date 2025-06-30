@@ -48,6 +48,7 @@
 		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
 		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
 		F0C7FC1A2E0326FD00ECB53D /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C7FC192E0326FD00ECB53D /* FlySightCore */; };
+		F0DB70ED2E125852003C604D /* ChartHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DB70EC2E125844003C604D /* ChartHelpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarViewProcessor.swift; sourceTree = "<group>"; };
 		F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedAnalysis.swift; sourceTree = "<group>"; };
 		F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
+		F0DB70EC2E125844003C604D /* ChartHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartHelpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		C10C53FB24AC5FF800FEF75A /* Chart */ = {
 			isa = PBXGroup;
 			children = (
+				F0DB70EC2E125844003C604D /* ChartHelpView.swift */,
 				C10C53FC24AC5FF800FEF75A /* ChartView.swift */,
 				C10C53FD24AC5FF800FEF75A /* ChartSettingsView.swift */,
 				C10C53FE24AC5FF800FEF75A /* ChartFrame.swift */,
@@ -360,6 +363,7 @@
 				C10C542424AC606400FEF75A /* Conversions.swift in Sources */,
 				C10C541124AC602800FEF75A /* DataPointView.swift in Sources */,
 				F0AB14EE2E0FDE830054E001 /* ChartButtonsView.swift in Sources */,
+				F0DB70ED2E125852003C604D /* ChartHelpView.swift in Sources */,
 				C10C540D24AC600900FEF75A /* UserDataPointSelection.swift in Sources */,
 				C1E60A5724AC5929008004AF /* AirtimeInfinite.xcdatamodeld in Sources */,
 				C1E60A5924AC5929008004AF /* ContentView.swift in Sources */,
@@ -518,7 +522,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -546,7 +550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";

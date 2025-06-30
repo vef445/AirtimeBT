@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var showChartToolbar = true
     @State var isShowingPicker = false
     @State var showingMetricSelectionMenu = false
+    @State var showingHelpMenu = false
     @State var orientation = UIDevice.current.orientation
     @State private var buttonsVisible = true
     @State private var showUnits = false
@@ -55,6 +56,10 @@ struct ContentView: View {
                 metricSelectionOverlay
                     .zIndex(1100)
                 
+                // Help page overlay on top of dimming
+                helpOverlay
+                    .zIndex(1100)
+
                 if geo.size.height > geo.size.width {
                     // Portrait: horizontally center buttons at bottom
                     VStack {
@@ -124,7 +129,7 @@ struct ContentView: View {
     
     private var dimBackground: some View {
         Color.gray
-            .opacity((showingMetricSelectionMenu || main.isLoading) ? 0.5 : 0.0)
+            .opacity((showingMetricSelectionMenu || showingHelpMenu || main.isLoading) ? 0.5 : 0.0)
             .animation(.linear, value: showingMetricSelectionMenu || main.isLoading)
     }
     
@@ -241,11 +246,25 @@ struct ContentView: View {
     }
     
     @ViewBuilder
+    
+    private var helpOverlay: some View {
+        if showingHelpMenu {
+            ChartHelpView(showingHelpMenu: $showingHelpMenu)
+                .frame(width: 300, height: min(UIScreen.main.bounds.height - 100, 650))
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(20)
+                .shadow(radius: 10)
+                .transition(.opacity)
+        }
+    }
+    
+    @ViewBuilder
     private func floatingToolbar(geo: GeometryProxy) -> some View {
         GeometryReader { geo in
             ChartButtonsView(
                 buttonsVisible: $buttonsVisible,
                 showingMetricSelectionMenu: $showingMetricSelectionMenu,
+                showingHelpMenu: $showingHelpMenu,
                 bottomViewMode: $bottomViewMode,
                 isLandscape: .constant(geo.size.width > geo.size.height)
             )
