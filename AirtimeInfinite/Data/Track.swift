@@ -209,7 +209,15 @@ class Track: ObservableObject {
         }
         
         exitIndex = exitIdx
+
+        // Adjust exitIndex to be 1 second earlier if possible
+        let desiredExitTime = _fullTrackData[exitIndex].secondsFromStart - 1.0 //remove 1sec as actual exit happened 1sec before reaching 10m/s
+        if let earlierIndex = _fullTrackData.lastIndex(where: { $0.secondsFromStart <= desiredExitTime }) {
+            exitIndex = earlierIndex
+        }
+
         let exitTime = _fullTrackData[exitIndex].secondsSinceEpoch
+
         
         for point in _fullTrackData {
             point.setSecondsFromExit(exitEpochTime: exitTime)
