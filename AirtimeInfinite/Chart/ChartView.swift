@@ -24,10 +24,16 @@ struct ChartView: UIViewRepresentable {
     }
 
     func updateUIView(_ view: LineChartView, context: Context) {
+        if let data = view.data,
+           let firstEntry = data.dataSets.first?.entryForIndex(0) {
+            view.xAxis.axisMinimum = firstEntry.x
+        }
+
         if let highlight = context.coordinator.lastHighlight {
             view.highlightValue(highlight, callDelegate: false)
         }
     }
+
 
     
     func makeCoordinator() -> Coordinator {
