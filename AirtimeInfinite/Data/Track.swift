@@ -249,13 +249,13 @@ class Track: ObservableObject {
         
         let highestVertSpeedTime = track[highestVertSpeedIndex].secondsFromStart
         
-        // 4) Calculate time window start (20 seconds before highest vertical speed)
-        let timeWindowStart = highestVertSpeedTime - 20
+        // 4) Calculate time window start (30 seconds before highest vertical speed)
+        let timeWindowStart = highestVertSpeedTime - 30
         
         
-        // 5) Filter altitude candidates to those within the last 20 seconds before highest vertical speed
+        // 5) Filter altitude candidates to those within the last 30 seconds before highest vertical speed
         let timeFilteredCandidates = track.enumerated().filter { (idx, point) in
-            idx >= lastAbove500Index &&
+            //idx >= lastAbove500Index &&
             idx <= lastAbove50Index &&
             point.secondsFromStart >= timeWindowStart &&
             point.secondsFromStart <= highestVertSpeedTime
@@ -281,7 +281,7 @@ class Track: ObservableObject {
         
         // 8) Filter candidates that are before targetTime and between lastAbove500Index and highestVertSpeedIndex
         let finalCandidates = track.enumerated().filter { (idx, point) in
-            idx >= lastAbove500Index &&
+            //idx >= lastAbove500Index &&
             idx < highestVertSpeedIndex &&
             point.secondsFromStart <= targetTime
         }
