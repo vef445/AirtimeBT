@@ -65,17 +65,29 @@ struct ChartSettingsView: View {
                             .frame(height: 1)
                             .padding(.horizontal)
                         
-                        // Bind toggle to local state
-                        Toggle(isOn: $main.autoCutTrack) {
-                            Text("Cut track automatically")
+                        HStack {
+                            Text("Cut track")
+                                .padding(.horizontal)
+                            Spacer()
+                            Picker("", selection: $main.autoCutTrackOption) {
+                                ForEach(MainProcessor.AutoCutTrackOption.allCases) { option in
+                                        Text(option.displayText).tag(option)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.trailing, -6)
                         }
-                        .toggleStyle(CheckmarkToggleStyle())
                         .padding(.horizontal)
                         .frame(height: 40)
+
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        
+                        .onChange(of: main.autoCutTrackOption) { newValue in
+                            main.fullyReloadTrack()
+                        }
+
                         Toggle(isOn: $main.useImperialUnits) {
                             Text("Imperial Units")
                         }
@@ -105,10 +117,6 @@ struct ChartSettingsView: View {
                         Divider()
                             .frame(height: 1)
                             .padding(.horizontal)
-                        // Reload track on change
-                        .onChange(of: main.autoCutTrack) { newValue in
-                            main.fullyReloadTrack()
-                        }
                     }
                 }
             }
@@ -146,5 +154,16 @@ struct CheckmarkToggleStyle: ToggleStyle {
         }
         .frame(height: 30.0)
         .padding(0)
+    }
+}
+
+extension MainProcessor.AutoCutTrackOption {
+    var displayText: String {
+        switch self {
+        case .jump:
+            return "Exit to Landing"
+        default:
+            return self.rawValue
+        }
     }
 }

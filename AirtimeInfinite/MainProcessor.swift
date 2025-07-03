@@ -32,9 +32,9 @@ class MainProcessor: ObservableObject {
     @Published var trackLoadError = false
     @Published var isLoading = false
     
-    @Published var autoCutTrack: Bool {
+    @Published var autoCutTrackOption: AutoCutTrackOption = .jump {
         didSet {
-            UserDefaults.standard.set(autoCutTrack, forKey: "autoCutTrack")
+            UserDefaults.standard.set(autoCutTrackOption.rawValue, forKey: "autoCutTrackOption")
         }
     }
     
@@ -58,9 +58,19 @@ class MainProcessor: ObservableObject {
         }
     }
     
+    enum AutoCutTrackOption: String, CaseIterable, Identifiable {
+        case never = "Never"
+        case jump = "Jump"
+        case swoop = "Swoop"
+        
+        var id: String { self.rawValue }
+    }
+    
     var anyCancellableHighlight: AnyCancellable? = nil
     var anyCancellableMeasure: AnyCancellable? = nil
     var anyCancellableChart: AnyCancellable? = nil
+    var anyCancellableChartOption: AnyCancellable? = nil
+
     
     /// Tracks the last connected Bluetooth peripheral UUID
     var lastConnectedPeripheralID: UUID? {
@@ -82,52 +92,50 @@ class MainProcessor: ObservableObject {
         return !track.trackData.isEmpty
     }
     
-    /// Initialize the main views with no data
     init() {
-        highlightedPoint = UserDataPointSelection()
-        selectedMeasurePoint = MeasurementPointSelection()
-        
-        mapViewProcessor = MapViewProcessor()
-        chartViewProcessor = ChartViewProcessor()
-        polarViewProcessor = PolarViewProcessor()
-        
-        track = Track()
-        
-        if UserDefaults.standard.object(forKey: "measurementUnits") != nil {
-            self.useImperialUnits = UserDefaults.standard.bool(forKey: "measurementUnits")
+        // Step 1: Get the autoCutTrackOption value from UserDefaults *before* initializing properties
+        let savedOption: AutoCutTrackOption
+        if let saved = UserDefaults.standard.string(forKey: "autoCutTrackOption"),
+           let option = AutoCutTrackOption(rawValue: saved) {
+            savedOption = option
         } else {
-            self.useImperialUnits = true
+            savedOption = .jump
         }
         
-        if UserDefaults.standard.object(forKey: "showAcceleration") != nil {
-            self.showAcceleration = UserDefaults.standard.bool(forKey: "showAcceleration")
-        } else {
-            self.showAcceleration = false
-        }
+        // Step 2: Initialize all properties that do not require 'self'
+        self.autoCutTrackOption = savedOption
+        self.useImperialUnits = UserDefaults.standard.bool(forKey: "measurementUnits")
+        self.showAcceleration = UserDefaults.standard.bool(forKey: "showAcceleration")
+        self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
         
-        if UserDefaults.standard.object(forKey: "useBluetooth") != nil {
-            self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
-        } else {
-            self.useBluetooth = false
-        }
+        self.highlightedPoint = UserDataPointSelection()
+        self.selectedMeasurePoint = MeasurementPointSelection()
         
-        if UserDefaults.standard.object(forKey: "autoCutTrack") != nil {
-            self.autoCutTrack = UserDefaults.standard.bool(forKey: "autoCutTrack")
-        } else {
-            self.autoCutTrack = true
-        }
+        self.mapViewProcessor = MapViewProcessor()
+        self.chartViewProcessor = ChartViewProcessor()
+        self.polarViewProcessor = PolarViewProcessor()
         
-        /// Allow for nested observable selection objects
-        anyCancellableHighlight = highlightedPoint.objectWillChange.sink { (_) in
-            self.objectWillChange.send()
+        self.track = Track()
+        
+        // Step 3: Now safely use self
+        self.chartViewProcessor.autoCutTrackOption = savedOption
+        
+        // Step 4: Setup cancellables
+        self.anyCancellableHighlight = highlightedPoint.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
         }
-        anyCancellableMeasure = selectedMeasurePoint.objectWillChange.sink { (_) in
-            self.objectWillChange.send()
+        self.anyCancellableMeasure = selectedMeasurePoint.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
         }
-        anyCancellableChart = chartViewProcessor.objectWillChange.sink { (_) in
-            self.objectWillChange.send()
+        self.anyCancellableChart = chartViewProcessor.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        self.anyCancellableChartOption = $autoCutTrackOption.sink { [weak self] newOption in
+            self?.chartViewProcessor.autoCutTrackOption = newOption
         }
     }
+
+
     
     // TODO: Reset Data View on reload, prevent issues with stale views
     /**
@@ -165,6 +173,9 @@ class MainProcessor: ObservableObject {
 
         await MainActor.run {
             self.trackURL = trackURL
+            
+            //Reset zoom lock status
+            self.chartViewProcessor.isCutPublished = false
 
             // Update processors
             self.chartViewProcessor.loadTrack(track: self.track)

@@ -30,27 +30,27 @@ class Track: ObservableObject {
         get {
             guard !_fullTrackData.isEmpty else { return [] }
 
-            if MainProcessor.instance.autoCutTrack {
+            switch MainProcessor.instance.autoCutTrackOption {
+            case .never:
+                return _fullTrackData
+
+            case .jump:
                 var workingTrack = _fullTrackData
 
-                // First: Cut before exit
+                // Cut before exit, like you had before
                 if exitIndex.isValidIndex(in: workingTrack) {
                     let exitTime = workingTrack[exitIndex].secondsFromStart
                     let cutStartTime = max(0, exitTime - 5)
-                    
-                    // Cut away all before cutStartTime
                     if let startIndex = workingTrack.firstIndex(where: { $0.secondsFromStart >= cutStartTime }) {
                         workingTrack = Array(workingTrack[startIndex...])
                     }
                 }
 
-                // Second: Calculate landing index on the cut track
-                let landingIndex = calculateLandingPointIndex(in: workingTrack)
-                if let landingIndex = landingIndex, landingIndex.isValidIndex(in: workingTrack) {
+                // Cut after landing + 2s
+                if let landingIndex = calculateLandingPointIndex(in: workingTrack),
+                   landingIndex.isValidIndex(in: workingTrack) {
                     let landingTime = workingTrack[landingIndex].secondsFromStart
-                    let cutEndTime = landingTime + 5
-
-                    // Cut away everything after cutEndTime
+                    let cutEndTime = landingTime + 2
                     if let endIndex = workingTrack.lastIndex(where: { $0.secondsFromStart <= cutEndTime }) {
                         workingTrack = Array(workingTrack[...endIndex])
                     }
@@ -58,8 +58,46 @@ class Track: ObservableObject {
 
                 return workingTrack
 
-            } else {
-                return _fullTrackData
+            case .swoop:  // if swoop start can not be found then fall back to cut on whole jump
+                var workingTrack = _fullTrackData
+
+                if let swoopStartIndex = calculateSwoopStartIndex(in: workingTrack),
+                   swoopStartIndex.isValidIndex(in: workingTrack) {
+                    let swoopStartTime = workingTrack[swoopStartIndex].secondsFromStart
+                    let cutStartTime = max(0, swoopStartTime - 5)  // 5 seconds before swoop start, but not negative
+                    if let startIndex = workingTrack.firstIndex(where: { $0.secondsFromStart >= cutStartTime }) {
+                        workingTrack = Array(workingTrack[startIndex...])
+                    }
+
+                    if let landingIndex = calculateLandingPointIndex(in: workingTrack),
+                       landingIndex.isValidIndex(in: workingTrack) {
+                        let landingTime = workingTrack[landingIndex].secondsFromStart
+                        let cutEndTime = landingTime + 2
+                        if let endIndex = workingTrack.lastIndex(where: { $0.secondsFromStart <= cutEndTime }) {
+                            workingTrack = Array(workingTrack[...endIndex])
+                        }
+                    }
+                } else {
+                    // swoopStart not found, fallback to jump logic:
+                    if exitIndex.isValidIndex(in: workingTrack) {
+                        let exitTime = workingTrack[exitIndex].secondsFromStart
+                        let cutStartTime = max(0, exitTime - 5)
+                        if let startIndex = workingTrack.firstIndex(where: { $0.secondsFromStart >= cutStartTime }) {
+                            workingTrack = Array(workingTrack[startIndex...])
+                        }
+                    }
+
+                    if let landingIndex = calculateLandingPointIndex(in: workingTrack),
+                       landingIndex.isValidIndex(in: workingTrack) {
+                        let landingTime = workingTrack[landingIndex].secondsFromStart
+                        let cutEndTime = landingTime + 2
+                        if let endIndex = workingTrack.lastIndex(where: { $0.secondsFromStart <= cutEndTime }) {
+                            workingTrack = Array(workingTrack[...endIndex])
+                        }
+                    }
+                }
+
+                return workingTrack
             }
         }
         set {
@@ -122,15 +160,37 @@ class Track: ObservableObject {
     }
     
     func calculateExitPointFromData() -> Int? {
-        let minTriggerDescentSpeed = 10.0  // speed in m/s at which we consider freefall started
+        let minTriggerDescentSpeed = 10.0  // m/s, freefall start speed
+        let checkStartOffset = 2.0          // seconds after exit to start check
+        let checkEndOffset = 3.0            // seconds after exit to end check
         
         for (index, point) in _fullTrackData.enumerated() {
             if point.velD >= minTriggerDescentSpeed {
-                return index
+                let exitTime = point.secondsFromStart
+                
+                guard
+                    let startIndex = _fullTrackData.firstIndex(where: { $0.secondsFromStart >= exitTime + checkStartOffset }),
+                    let endIndex = _fullTrackData.firstIndex(where: { $0.secondsFromStart >= exitTime + checkEndOffset }),
+                    endIndex.isValidIndex(in: _fullTrackData),
+                    startIndex.isValidIndex(in: _fullTrackData)
+                else {
+                    continue // Can't perform check, skip candidate
+                }
+                
+                let startVelD = _fullTrackData[startIndex].velD
+                let endVelD = _fullTrackData[endIndex].velD
+                
+                if endVelD > startVelD {
+                    // Vertical speed is increasing between exit+2s and exit+3s → valid exit
+                    return index
+                }
+                // else vertical speed not increasing → keep looking
             }
         }
+        
         return nil
     }
+
     
     /// Calculate landing point index on track that is already cut before exit point based on speed and altitude criteria
     func calculateLandingPointIndex(in track: [DataPoint]) -> Int? {
@@ -147,6 +207,101 @@ class Track: ObservableObject {
         return nil
     }
     
+    func calculateSwoopStartIndex(in track: [DataPoint]) -> Int? {
+        guard !track.isEmpty else {
+            print("fulltrackdata is empty")
+            return nil
+        }
+        
+        // 1) Find last index where elevation is above 500m
+        guard let lastAbove500Index = track.lastIndex(where: { $0.altitude > 500 }) else {
+            print("Never reached above 500m")
+            return nil
+        }
+        
+        // Calculate and print time from start for this point
+        guard !track.isEmpty else {
+            print("Track slice is empty")
+            return nil
+        }
+        
+        // 2) Find last index where elevation is above 50m (must be after lastAbove500Index)
+        guard let lastAbove50Index = Array(track.enumerated()).reversed().first(where: { (index, point) in
+            point.altitude > 50 && index >= lastAbove500Index
+        })?.offset else {
+            print("Never reached above 50m after 500m")
+            return nil
+        }
+        
+        // Define search range: from lastAbove500Index up to lastAbove50Index inclusive
+        let searchRange = lastAbove500Index...lastAbove50Index
+        
+        // 3) Find highest vertical speed index in the range
+        guard let highestVertSpeedIndexInRange = track[searchRange]
+            .enumerated()
+            .max(by: { $0.element.velD < $1.element.velD })?.offset else {
+            print("Highest vertical speed not found in elevation range")
+            return nil
+        }
+        
+        // Convert offset in slice to absolute index in full array
+        let highestVertSpeedIndex = highestVertSpeedIndexInRange + lastAbove500Index
+        
+        let highestVertSpeedTime = track[highestVertSpeedIndex].secondsFromStart
+        
+        // 4) Calculate time window start (20 seconds before highest vertical speed)
+        let timeWindowStart = highestVertSpeedTime - 20
+        
+        
+        // 5) Filter altitude candidates to those within the last 20 seconds before highest vertical speed
+        let timeFilteredCandidates = track.enumerated().filter { (idx, point) in
+            idx >= lastAbove500Index &&
+            idx <= lastAbove50Index &&
+            point.secondsFromStart >= timeWindowStart &&
+            point.secondsFromStart <= highestVertSpeedTime
+        }
+        
+        guard !timeFilteredCandidates.isEmpty else {
+            print("No candidates found in altitude and time range")
+            return nil
+        }
+        
+        // 6) Find lowest vertical speed index among filtered candidates
+        guard let lowestVertSpeedCandidate = timeFilteredCandidates.min(by: { $0.element.velD < $1.element.velD }) else {
+            print("Lowest vertical speed not found among candidates")
+            return nil
+        }
+        
+        let lowestVertSpeedIndex = lowestVertSpeedCandidate.offset
+        
+        let lowestVertSpeedTime = track[lowestVertSpeedIndex].secondsFromStart
+        
+        // 7) Define target time 3 seconds before lowest vertical speed point
+        let targetTime = lowestVertSpeedTime - 3
+        
+        // 8) Filter candidates that are before targetTime and between lastAbove500Index and highestVertSpeedIndex
+        let finalCandidates = track.enumerated().filter { (idx, point) in
+            idx >= lastAbove500Index &&
+            idx < highestVertSpeedIndex &&
+            point.secondsFromStart <= targetTime
+        }
+        
+        guard !finalCandidates.isEmpty else {
+            print("No final candidates found before target time")
+            return nil
+        }
+        
+        // 9) Choose candidate closest in time to targetTime
+        let swoopStartCandidate = finalCandidates.min(by: {
+            abs($0.element.secondsFromStart - targetTime) < abs($1.element.secondsFromStart - targetTime)
+        })
+        
+        print("Swoop start found")
+        return swoopStartCandidate?.offset
+    }
+
+
+
     /**
      Given raw array of track data, process for reading/display
      */

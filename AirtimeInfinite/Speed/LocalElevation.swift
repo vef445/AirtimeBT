@@ -32,6 +32,12 @@ func findFastestDescentPoint(in dataPoints: [DataPoint]) -> DataPoint? {
     return dataPoints.max(by: { $0.velD < $1.velD })
 }
 
+/// Finds the lowest altitude (hMSL) among data points.
+/// Returns nil if the array is empty.
+func findLowestAltitude(in dataPoints: [DataPoint]) -> Double? {
+    return dataPoints.min(by: { $0.hMSL < $1.hMSL })?.hMSL
+}
+
 /// Retrieves the ground elevation at the fastest descent point location,
 /// and calculates AGL for that point.
 /// Returns tuple (agl, groundElevation, DataPoint) or nil on failure.
@@ -41,12 +47,23 @@ func getFastestDescentAGL(data: [DataPoint]) async -> (agl: Double, groundElevat
         return nil
     }
 
-    if let groundElevation = await fetchGroundElevation(lat: fastestDescentPoint.lat,
-                                                        lon: fastestDescentPoint.lon) {
-        let agl = fastestDescentPoint.hMSL - groundElevation
-        return (agl, groundElevation, fastestDescentPoint)
-    } else {
-        print("Failed to retrieve ground elevation.")
-        return nil
+    var groundElevation: Double?
+
+    // Try fetching online elevation first
+    groundElevation = await fetchGroundElevation(lat: fastestDescentPoint.lat,
+                                                 lon: fastestDescentPoint.lon)
+
+    // Fallback to lowest measured altitude if no internet or API fails
+    if groundElevation == nil {
+        if let lowestAltitude = findLowestAltitude(in: data) {
+            print("Using lowest measured altitude as ground elevation fallback: \(lowestAltitude)")
+            groundElevation = lowestAltitude
+        } else {
+            print("Failed to retrieve ground elevation and no fallback available.")
+            return nil
+        }
     }
+
+    let agl = fastestDescentPoint.hMSL - (groundElevation ?? 0)
+    return (agl, groundElevation ?? 0, fastestDescentPoint)
 }

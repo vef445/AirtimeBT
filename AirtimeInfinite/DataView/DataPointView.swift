@@ -46,10 +46,10 @@ struct DataPointView: View {
     var body: some View {
             Group {
                 if isMultiRow {
-                    VStack {
+                    VStack(spacing: 1) {
                         DataPointRow(flightStats: multiRow1, showValues: $showValues)
                             .frame(height: 40)
-                        Divider().frame(height: 5)
+                        Divider()
                         DataPointRow(flightStats: multiRow2, showValues: $showValues)
                             .frame(height: 40)
                     }

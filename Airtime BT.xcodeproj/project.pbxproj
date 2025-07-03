@@ -522,7 +522,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -550,7 +550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";

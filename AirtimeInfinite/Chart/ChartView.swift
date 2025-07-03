@@ -29,11 +29,42 @@ struct ChartView: UIViewRepresentable {
             view.xAxis.axisMinimum = firstEntry.x
         }
 
+        // Remove all existing limit lines before re-adding
+        view.xAxis.removeAllLimitLines()
+
+        /*
+        // Add Swoop Start limit line
+        if let swoopStartIndex = main.track.calculateSwoopStartIndex(in: main.track.trackData),
+           swoopStartIndex >= 0,
+           swoopStartIndex < main.track.trackData.count {
+            let swoopStartPoint = main.track.trackData[swoopStartIndex]
+            let swoopStartX = swoopStartPoint.secondsFromStart
+
+            let limitLine = ChartLimitLine(limit: swoopStartX, label: "Swoop Start")
+            limitLine.lineColor = .systemRed
+            limitLine.lineWidth = 2
+            limitLine.lineDashLengths = [4, 2]
+            limitLine.labelPosition = .rightBottom
+            limitLine.valueFont = .systemFont(ofSize: 10)
+
+            view.xAxis.addLimitLine(limitLine)
+        }
+         */
+
+        // ✅ Re-add Measurement marker (your blue line)
+        if main.selectedMeasurePoint.isActive,
+               let measureX = main.selectedMeasurePoint.point?.secondsFromStart {
+                let measureLine = ChartLimitLine(limit: measureX, label: "")
+                measureLine.lineColor = .systemBlue
+                measureLine.lineWidth = 2
+                view.xAxis.addLimitLine(measureLine)
+            }
+
+        // Restore highlight if needed
         if let highlight = context.coordinator.lastHighlight {
             view.highlightValue(highlight, callDelegate: false)
         }
     }
-
 
     
     func makeCoordinator() -> Coordinator {

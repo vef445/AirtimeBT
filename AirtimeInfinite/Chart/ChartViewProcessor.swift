@@ -40,6 +40,7 @@ class ChartViewProcessor: ObservableObject {
                          FlightMetric.accelTotal]
     
     @Published var isCutPublished: Bool = false
+    @Published var autoCutTrackOption: MainProcessor.AutoCutTrackOption = .jump
     @Published var chartableMetrics: [ChartableMetric] = []
     @Published var autoScaleEnabled: Bool {
         didSet {
@@ -106,6 +107,7 @@ class ChartViewProcessor: ObservableObject {
     
     /// Clear highlights and resize to default screen
     func resetChart() {
+        
         lineChartView.highlightValues([])
         lineChartView.fitScreen()
         lineChartView.notifyDataSetChanged()
