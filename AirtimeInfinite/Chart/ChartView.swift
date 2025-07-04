@@ -158,10 +158,12 @@ struct ChartView: UIViewRepresentable {
         chartView.leftAxis.drawGridLinesEnabled = false
         chartView.xAxis.labelPosition = XAxis.LabelPosition.bottom
         chartView.legend.enabled = false
+        /*
         if let data = chartView.data,
            let firstEntry = data.dataSets.first?.entryForIndex(0) {
             chartView.xAxis.axisMinimum = firstEntry.x
         }
+         */
 
         main.chartViewProcessor.updateAutoScaleAxis()
     }

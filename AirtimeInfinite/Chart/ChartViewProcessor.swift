@@ -122,39 +122,81 @@ class ChartViewProcessor: ObservableObject {
     
     /// Load data from the track into the chartable metric
     func loadChartableMetrics() {
-        
+        let preference = MainProcessor.instance.unitPreference
+
+        // Altitude (meters native)
+        let altFactor = UnitsManager.conversionFactor(for: .altitude, preference: preference)
         chartableMetrics.first(where: { $0.attributes == .alt })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.altitude.metersToFeet : $0.altitude }
-        
+            track.trackData.map { $0.altitude * altFactor }
+
+        // Horizontal velocity (convert m/s to user unit)
         chartableMetrics.first(where: { $0.attributes == .hVel })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ?
-                $0.horizontalSpeed.metersPerSecondToMPH : $0.horizontalSpeed.metersPerSecondToKMH}
-        
+            track.trackData.map {
+                UnitsManager.convertedSpeed(fromMS: $0.horizontalSpeed, preference: preference)
+            }
+
+        // Vertical velocity (convert m/s to user unit)
         chartableMetrics.first(where: { $0.attributes == .vVel })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ?
-                $0.velD.metersPerSecondToMPH : $0.velD.metersPerSecondToKMH }
-        
+            track.trackData.map {
+                UnitsManager.convertedSpeed(fromMS: $0.velD, preference: preference)
+            }
+
+        // Total velocity (convert m/s to user unit)
         chartableMetrics.first(where: { $0.attributes == .tVel })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ?
-            $0.totalSpeed.metersPerSecondToMPH : $0.totalSpeed.metersPerSecondToKMH}
+            track.trackData.map {
+                UnitsManager.convertedSpeed(fromMS: $0.totalSpeed, preference: preference)
+            }
         
-        chartableMetrics.first(where: { $0.attributes == .dive })?.valueList =
+        // Dive angle (unitless), but clipped at landing time
+            if let diveMetric = chartableMetrics.first(where: { $0.attributes == .dive }) {
+                diveMetric.valueList = track.trackData
+                    .filter { dp in
+                        if let landingTime = track.landingTime {
+                            return dp.secondsFromStart <= landingTime
+                        }
+                        return true
+                    }
+                    .map { dp in
+                        dp.diveAngle
+                    }
+            }
+        
+        // Glide ratio (unitless), but clipped at landing time
+            if let diveMetric = chartableMetrics.first(where: { $0.attributes == .glide }) {
+                diveMetric.valueList = track.trackData
+                    .filter { dp in
+                        if let landingTime = track.landingTime {
+                            return dp.secondsFromStart <= landingTime
+                        }
+                        return true
+                    }
+                    .map { dp in
+                        dp.glideRatio
+                    }
+            }
+
+        // Dive angle and glide ratio - unitless, no conversion. Not used if we filter out value after landing as done above
+/*        chartableMetrics.first(where: { $0.attributes == .dive })?.valueList =
             track.trackData.map { $0.diveAngle }
-        
         chartableMetrics.first(where: { $0.attributes == .glide })?.valueList =
             track.trackData.map { $0.glideRatio }
-        
+*/
+        // Distance (meters native)
+        let distFactor = UnitsManager.conversionFactor(for: .distance, preference: preference)
         chartableMetrics.first(where: { $0.attributes == .hDist })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.distance2D.metersToFeet : $0.distance2D }
+            track.trackData.map { $0.distance2D * distFactor }
+
+        // Accelerations (meters native)
         chartableMetrics.first(where: { $0.attributes == .accelVertical })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelVert.metersToFeet : $0.accelVert }
+            track.trackData.map { $0.accelVert * altFactor }
         chartableMetrics.first(where: { $0.attributes == .accelParallel })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelParallel.metersToFeet : $0.accelParallel }
+            track.trackData.map { $0.accelParallel * altFactor }
         chartableMetrics.first(where: { $0.attributes == .accelPerp })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelPerp.metersToFeet : $0.accelPerp }
+            track.trackData.map { $0.accelPerp * altFactor }
         chartableMetrics.first(where: { $0.attributes == .accelTotal })?.valueList =
-            track.trackData.map { MainProcessor.instance.useImperialUnits ? $0.accelTotal.metersToFeet : $0.accelTotal }
+            track.trackData.map { $0.accelTotal * altFactor }
     }
+
     
     /**
      Builds a LineChartDataSet for a given set of y-axis data using the track object

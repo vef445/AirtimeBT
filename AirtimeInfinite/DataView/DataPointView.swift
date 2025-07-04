@@ -107,78 +107,74 @@ struct DataPointCell: View {
     @EnvironmentObject var main: MainProcessor
     @Binding var showValue: Bool
 
+    // Using UnitsManager to get the unit string
+    var unitString: String {
+        switch stat {
+        case .hVel, .vVel, .tVel:
+            return UnitsManager.retrieveUserUnit(for: .speed, preference: main.unitPreference)
+        case .alt:
+            return UnitsManager.retrieveUserUnit(for: .altitude, preference: main.unitPreference)
+        case .hDist, .accelVertical, .accelParallel, .accelPerp, .accelTotal:
+            return UnitsManager.retrieveUserUnit(for: .distance, preference: main.unitPreference)
+        case .time:
+            return "sec"
+        case .glide:
+            return "h/v"
+        case .dive:
+            return "deg"
+        }
+    }
+
+    // Conversion function that applies the proper factor
+    func convertValue(_ value: Double?, for stat: FlightMetric) -> Double? {
+        guard let val = value else { return nil }
+        switch stat {
+        case .hVel, .vVel, .tVel:
+            let factor = UnitsManager.conversionFactor(for: .speed, preference: main.unitPreference)
+            return val * factor
+        case .alt:
+            let factor = UnitsManager.conversionFactor(for: .altitude, preference: main.unitPreference)
+            return val * factor
+        case .hDist, .accelVertical, .accelParallel, .accelPerp, .accelTotal:
+            let factor = UnitsManager.conversionFactor(for: .distance, preference: main.unitPreference)
+            return val * factor
+        default:
+            return val
+        }
+    }
+
     var highlightedValue: Double? {
         switch stat {
         case .time: return main.highlightedPoint.point?.secondsFromExit
-        case .hVel: return main.useImperialUnits ?
-            main.highlightedPoint.point?.horizontalSpeed.metersPerSecondToMPH :
-            main.highlightedPoint.point?.horizontalSpeed.metersPerSecondToKMH
-        case .vVel: return main.useImperialUnits ?
-            main.highlightedPoint.point?.velD.metersPerSecondToMPH :
-            main.highlightedPoint.point?.velD.metersPerSecondToKMH
-        case .tVel: return main.useImperialUnits ?
-            main.highlightedPoint.point?.totalSpeed.metersPerSecondToMPH :
-            main.highlightedPoint.point?.totalSpeed.metersPerSecondToKMH
-        case .alt: return main.useImperialUnits ?
-            main.highlightedPoint.point?.altitude.metersToFeet :
-            main.highlightedPoint.point?.altitude
+        case .hVel: return convertValue(main.highlightedPoint.point?.horizontalSpeed.metersPerSecondToKMH, for: .hVel)
+        case .vVel: return convertValue(main.highlightedPoint.point?.velD.metersPerSecondToKMH, for: .vVel)
+        case .tVel: return convertValue(main.highlightedPoint.point?.totalSpeed.metersPerSecondToKMH, for: .tVel)
+        case .alt: return convertValue(main.highlightedPoint.point?.altitude, for: .alt)
         case .glide: return main.highlightedPoint.point?.glideRatio
         case .dive: return main.highlightedPoint.point?.diveAngle
-        case .hDist: return main.useImperialUnits ?
-            main.highlightedPoint.point?.distance2D.metersToFeet :
-            main.highlightedPoint.point?.distance2D
-        case .accelVertical: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelVert.metersToFeet :
-            main.highlightedPoint.point?.accelVert
-        case .accelParallel: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelParallel.metersToFeet :
-            main.highlightedPoint.point?.accelParallel
-        case .accelPerp: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelPerp.metersToFeet :
-            main.highlightedPoint.point?.accelPerp
-        case .accelTotal: return main.useImperialUnits ?
-            main.highlightedPoint.point?.accelTotal.metersToFeet :
-            main.highlightedPoint.point?.accelTotal
+        case .hDist: return convertValue(main.highlightedPoint.point?.distance2D, for: .hDist)
+        case .accelVertical: return convertValue(main.highlightedPoint.point?.accelVert, for: .accelVertical)
+        case .accelParallel: return convertValue(main.highlightedPoint.point?.accelParallel, for: .accelParallel)
+        case .accelPerp: return convertValue(main.highlightedPoint.point?.accelPerp, for: .accelPerp)
+        case .accelTotal: return convertValue(main.highlightedPoint.point?.accelTotal, for: .accelTotal)
         }
     }
 
     var measurementBaseValue: Double? {
         switch stat {
         case .time: return main.selectedMeasurePoint.point?.secondsFromExit
-        case .hVel: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.horizontalSpeed.metersPerSecondToMPH :
-            main.selectedMeasurePoint.point?.horizontalSpeed.metersPerSecondToKMH
-        case .vVel: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.velD.metersPerSecondToMPH :
-            main.selectedMeasurePoint.point?.velD.metersPerSecondToKMH
-        case .tVel: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.totalSpeed.metersPerSecondToMPH :
-            main.selectedMeasurePoint.point?.totalSpeed.metersPerSecondToKMH
-        case .alt: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.altitude.metersToFeet :
-            main.selectedMeasurePoint.point?.altitude
+        case .hVel: return convertValue(main.selectedMeasurePoint.point?.horizontalSpeed.metersPerSecondToKMH, for: .hVel)
+        case .vVel: return convertValue(main.selectedMeasurePoint.point?.velD.metersPerSecondToKMH, for: .vVel)
+        case .tVel: return convertValue(main.selectedMeasurePoint.point?.totalSpeed.metersPerSecondToKMH, for: .tVel)
+        case .alt: return convertValue(main.selectedMeasurePoint.point?.altitude, for: .alt)
         case .glide: return main.selectedMeasurePoint.point?.glideRatio
         case .dive: return main.selectedMeasurePoint.point?.diveAngle
-        case .hDist: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.distance2D.metersToFeet :
-            main.selectedMeasurePoint.point?.distance2D
-        case .accelVertical: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.accelVert.metersToFeet :
-            main.selectedMeasurePoint.point?.accelVert
-        case .accelParallel: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.accelParallel.metersToFeet :
-            main.selectedMeasurePoint.point?.accelParallel
-        case .accelPerp: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.accelPerp.metersToFeet :
-            main.selectedMeasurePoint.point?.accelPerp
-        case .accelTotal: return main.useImperialUnits ?
-            main.selectedMeasurePoint.point?.accelTotal.metersToFeet :
-            main.selectedMeasurePoint.point?.accelTotal
+        case .hDist: return convertValue(main.selectedMeasurePoint.point?.distance2D, for: .hDist)
+        case .accelVertical: return convertValue(main.selectedMeasurePoint.point?.accelVert, for: .accelVertical)
+        case .accelParallel: return convertValue(main.selectedMeasurePoint.point?.accelParallel, for: .accelParallel)
+        case .accelPerp: return convertValue(main.selectedMeasurePoint.point?.accelPerp, for: .accelPerp)
+        case .accelTotal: return convertValue(main.selectedMeasurePoint.point?.accelTotal, for: .accelTotal)
         }
-    }
-
-    var unitString: String {
-        main.useImperialUnits ? stat.imperialUnit : stat.metricUnit
     }
 
     var body: some View {
@@ -212,4 +208,3 @@ struct DataPointCell: View {
             }
         }
     }
-

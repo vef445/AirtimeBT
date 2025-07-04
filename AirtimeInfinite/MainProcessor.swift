@@ -24,6 +24,12 @@ class MainProcessor: ObservableObject {
     var polarViewProcessor: PolarViewProcessor
     
     var track: Track
+
+    // Custom units when unitPreference == .mix
+    var customAltitudeUnit: UnitLength = .meters
+    var customSpeedUnit: UnitSpeed = .kilometersPerHour
+    var customDistanceUnit: UnitLength = .meters
+
     
     @Published var highlightedPoint: UserDataPointSelection
     @Published var selectedMeasurePoint: MeasurementPointSelection
@@ -37,14 +43,14 @@ class MainProcessor: ObservableObject {
             UserDefaults.standard.set(autoCutTrackOption.rawValue, forKey: "autoCutTrackOption")
         }
     }
-    
-    @Published var isDragging = false
-
-    @Published var useImperialUnits: Bool {
+    @Published var unitPreference: UnitPreference {
         didSet {
-            UserDefaults.standard.set(useImperialUnits, forKey: "measurementUnits")
+            UserDefaults.standard.set(unitPreference.rawValue, forKey: "unitPreference")
         }
     }
+
+    
+    @Published var isDragging = false
     
     @Published var showAcceleration: Bool {
         didSet {
@@ -62,6 +68,13 @@ class MainProcessor: ObservableObject {
         case never = "Never"
         case jump = "Jump"
         case swoop = "Swoop"
+        
+        var id: String { self.rawValue }
+    }
+    enum UnitPreference: String, CaseIterable, Identifiable {
+        case metric = "Metric"
+        case imperial = "Imperial"
+        case mix = "Mix"
         
         var id: String { self.rawValue }
     }
@@ -101,10 +114,15 @@ class MainProcessor: ObservableObject {
         } else {
             savedOption = .jump
         }
+        if let savedPreference = UserDefaults.standard.string(forKey: "unitPreference"),
+           let pref = UnitPreference(rawValue: savedPreference) {
+            self.unitPreference = pref
+        } else {
+            self.unitPreference = .metric
+        }
         
         // Step 2: Initialize all properties that do not require 'self'
         self.autoCutTrackOption = savedOption
-        self.useImperialUnits = UserDefaults.standard.bool(forKey: "measurementUnits")
         self.showAcceleration = UserDefaults.standard.bool(forKey: "showAcceleration")
         self.useBluetooth = UserDefaults.standard.bool(forKey: "useBluetooth")
         
@@ -174,7 +192,7 @@ class MainProcessor: ObservableObject {
         await MainActor.run {
             self.trackURL = trackURL
             
-            //Reset zoom lock status
+            // Reset zoom lock status
             self.chartViewProcessor.isCutPublished = false
 
             // Update processors
@@ -185,7 +203,12 @@ class MainProcessor: ObservableObject {
             self.mapViewProcessor.loadTrack(track: self.track)
 
             let fullRange = 0.0...(self.track.trackData.last?.secondsFromStart ?? 0.0)
-            self.polarViewProcessor.loadTrack(track: self.track, visibleRange: fullRange, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
+            self.polarViewProcessor.loadTrack(
+                track: self.track,
+                visibleRange: fullRange,
+                unitPreference: self.unitPreference,
+                highlightedPoint: self.highlightedPoint.point
+            )
 
             if let exitPoint = self.track.exitDataPointInFilteredData() {
                 self.highlightedPoint.point = exitPoint
@@ -197,7 +220,27 @@ class MainProcessor: ObservableObject {
             self.isLoading = false
             self.trackLoadedSuccessfully = true
         }
+
     }
+    
+    ///Manage custom units
+    func setCustomUnits(altitude: UnitLength, speed: UnitSpeed, distance: UnitLength) {
+        // Save the custom units locally
+        self.customAltitudeUnit = altitude
+        self.customSpeedUnit = speed
+        self.customDistanceUnit = distance
+
+        // If unitPreference is mix, update internal units used for display/conversion accordingly
+        if self.unitPreference == .mix {
+            // For example, update units used in chart display or data conversion
+            // You could add methods or properties here that use these units
+            // This depends on how your rest of MainProcessor works
+        }
+        
+        // Reload track or views to reflect new unit settings
+        self.fullyReloadTrack()
+    }
+
     
     /// Reloads the currently loaded track file completely
     func fullyReloadTrack() {
@@ -214,9 +257,13 @@ class MainProcessor: ObservableObject {
 
     
     /// Call this whenever the visible X range changes (e.g. on zoom or pan)
-        func updateVisibleRange(_ range: ClosedRange<Double>) {
-            polarViewProcessor.loadTrack(track: self.track, visibleRange: range, useImperial: self.useImperialUnits, highlightedPoint: self.highlightedPoint.point)
-        }
+    func updateVisibleRange(_ range: ClosedRange<Double>) {
+        polarViewProcessor.loadTrack(track: self.track,
+                                     visibleRange: range,
+                                     unitPreference: self.unitPreference,
+                                     highlightedPoint: self.highlightedPoint.point)
+    }
+
     
     /// Calculates the fastest average speed over 3 seconds within the performance window
     func fastest3sSpeedInPerformanceWindow() async -> (

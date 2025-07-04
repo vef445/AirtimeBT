@@ -46,7 +46,7 @@ class Track: ObservableObject {
                     }
                 }
 
-                // Cut after landing + 2s
+                // Cut after landing
                 if let landingIndex = calculateLandingPointIndex(in: workingTrack),
                    landingIndex.isValidIndex(in: workingTrack) {
                     let landingTime = workingTrack[landingIndex].secondsFromStart
@@ -103,6 +103,15 @@ class Track: ObservableObject {
         set {
             _fullTrackData = newValue
         }
+    }
+
+    //Store landing time so it can be used to filter out some data
+    var landingTime: Double? {
+        guard let landingIndex = calculateLandingPointIndex(in: trackData),
+              landingIndex.isValidIndex(in: trackData) else {
+            return nil
+        }
+        return trackData[landingIndex].secondsFromStart
     }
 
     
@@ -295,8 +304,7 @@ class Track: ObservableObject {
         let swoopStartCandidate = finalCandidates.min(by: {
             abs($0.element.secondsFromStart - targetTime) < abs($1.element.secondsFromStart - targetTime)
         })
-        
-        print("Swoop start found")
+        //print("Swoop start found")
         return swoopStartCandidate?.offset
     }
 
@@ -459,9 +467,12 @@ class Track: ObservableObject {
     }
 }
 
+
 /// Helper extension
 extension Int {
     func isValidIndex<T>(in array: [T]) -> Bool {
         return self >= 0 && self < array.count
     }
 }
+
+

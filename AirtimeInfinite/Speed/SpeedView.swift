@@ -25,55 +25,59 @@ struct FastestDescentSpeedView: View {
         localGroundElevation: Double?,
         agl: Double?
     )? = nil
-
-    func formatAltitude(_ meters: Double) -> String {
-        if main.useImperialUnits {
-            let feet = meters * 3.28084
-            return String(format: "%.0f ft", feet)
-        } else {
-            return String(format: "%.0f m", meters)
-        }
+    
+    func formatAltitude(_ meters: Double, unitPreference: MainProcessor.UnitPreference) -> String {
+        let factor = UnitsManager.conversionFactor(for: .altitude, preference: unitPreference)
+        let unit = UnitsManager.retrieveUserUnit(for: .altitude, preference: unitPreference)
+        let convertedValue = meters * factor
+        
+        return String(format: "%.0f %@", convertedValue, unit)
     }
-
+    
+    
     var body: some View {
         ZStack {
             Color(.systemBackground)
                 .edgesIgnoringSafeArea(.all)
-
+            
             VStack(spacing: 10) {
                 Text("Speed Run Analysis")
                     .font(.headline)
                     .padding(.top, 6)
-
+                
                 if let result = analysisResult {
-                    let speedToShow = main.useImperialUnits ? result.maxAvgDescentSpeedmph : result.maxAvgDescentSpeedkmh
-                    let unitLabel = main.useImperialUnits ? "mph" : "km/h"
-
+                    let preference = main.unitPreference
+                    let speedUnit = UnitsManager.retrieveUserUnit(for: .speed, preference: preference)
+                    let speedFactor = UnitsManager.conversionFactor(for: .speed, preference: preference)
+                    
+                    // Assuming your result.maxAvgDescentSpeedkmh is always native km/h
+                    let speedToShow = result.maxAvgDescentSpeedkmh * speedFactor
+                    
                     Group {
                         HStack {
                             Text("Exit altitude:")
                             Spacer()
-                            Text(formatAltitude(result.performanceWindowStartAltitude))
+                            Text(formatAltitude(result.performanceWindowStartAltitude, unitPreference: main.unitPreference))
                         }
                         HStack {
                             Text("Validation window starts at:")
                             Spacer()
-                            Text(formatAltitude(result.validationWindowStartAltitude))
+                            Text(formatAltitude(result.validationWindowStartAltitude, unitPreference: main.unitPreference))
                         }
                         HStack {
                             Text("End scoring window at:")
                             Spacer()
-                            Text(formatAltitude(result.performanceWindowEndAltitude))
+                            Text(formatAltitude(result.performanceWindowEndAltitude, unitPreference: main.unitPreference))
                         }
                     }
                     .font(.subheadline)
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.leading)
-
-                    Text(String(format: "Speed Score: %.2f %@", speedToShow, unitLabel))
+                    
+                    Text(String(format: "Speed Score: %.2f %@", speedToShow, speedUnit))
                         .font(.system(size: 28, weight: .bold))
                         .padding(.top, 8)
-
+                    
                     VStack(spacing: 4) {
                         HStack {
                             Text("Average Speed Tracking Error:")
@@ -81,7 +85,7 @@ struct FastestDescentSpeedView: View {
                             Text(String(format: "%.2f m/s", result.averageSpeedAccuracy))
                         }
                         .font(.subheadline)
-
+                        
                         HStack {
                             Text("Max Speed Tracking Error:")
                             Spacer()
@@ -89,7 +93,7 @@ struct FastestDescentSpeedView: View {
                                 .foregroundColor(result.maxSpeedAccuracy > 3 ? .red : .primary)
                         }
                         .font(.subheadline)
-
+                        
                         if result.maxSpeedAccuracy > 3 {
                             Text("⚠️ Speed Tracking Error exceeds 3 m/s!")
                                 .font(.footnote)
@@ -101,17 +105,17 @@ struct FastestDescentSpeedView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.top, 6)
-
+                    
                     if let elevation = result.localGroundElevation {
                         HStack {
                             Text("Local Ground Elevation:")
                             Spacer()
-                            Text(formatAltitude(elevation))
+                            Text(formatAltitude(elevation, unitPreference: main.unitPreference))
                         }
                         .font(.subheadline)
                         .padding(.top, 6)
                     }
-
+                    
                 } else {
                     Text("Loading speed analysis...")
                         .font(.subheadline)
@@ -130,11 +134,11 @@ struct FastestDescentSpeedView: View {
                     analysisResult = nil
                 }
             }
-        }
-        // Added .task to load analysis when view appears
-        .task {
-            guard !main.track.trackData.isEmpty else { return }
-            analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
+            // Added .task to load analysis when view appears
+            .task {
+                guard !main.track.trackData.isEmpty else { return }
+                analysisResult = await SpeedAnalysis.fastestAverageDescentSpeedInPerformanceWindow(data: main.track.trackData)
+            }
         }
     }
 }

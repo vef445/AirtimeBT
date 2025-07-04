@@ -74,41 +74,43 @@ class PolarViewProcessor {
         ])
     }
 
-    func loadTrack(track: Track, visibleRange: ClosedRange<Double>, useImperial: Bool, highlightedPoint: DataPoint?) {
-        let filteredPoints = track.trackData.filter {
-            $0.secondsFromStart >= visibleRange.lowerBound && $0.secondsFromStart <= visibleRange.upperBound
-        }
+    func loadTrack(track: Track, visibleRange: ClosedRange<Double>, unitPreference: MainProcessor.UnitPreference, highlightedPoint: DataPoint?) {
+            let filteredPoints = track.trackData.filter {
+                $0.secondsFromStart >= visibleRange.lowerBound && $0.secondsFromStart <= visibleRange.upperBound
+            }
 
-        guard !filteredPoints.isEmpty else {
-            chartView.data = nil
-            return
-        }
+            guard !filteredPoints.isEmpty else {
+                chartView.data = nil
+                return
+            }
 
-        let lineEntries = filteredPoints.map { point -> ChartDataEntry in
-            let hSpeed = useImperial ? point.horizontalSpeed.metersPerSecondToMPH : point.horizontalSpeed.metersPerSecondToKMH
-            let vSpeed = useImperial ? point.velD.metersPerSecondToMPH : point.velD.metersPerSecondToKMH
-            return ChartDataEntry(x: hSpeed, y: vSpeed)
-        }
+            let factor = UnitsManager.conversionFactor(for: .speed, preference: unitPreference)
 
-        let lineDataSet = LineChartDataSet(entries: lineEntries, label: "")
-        lineDataSet.colors = [NSUIColor.purple]
-        lineDataSet.drawCirclesEnabled = false
-        lineDataSet.drawValuesEnabled = false
-        lineDataSet.lineWidth = 1.0
-        lineDataSet.axisDependency = .left
+            let lineEntries = filteredPoints.map { point -> ChartDataEntry in
+                let hSpeed = UnitsManager.convertedSpeed(fromMS: point.horizontalSpeed, preference: unitPreference)
+                let vSpeed = UnitsManager.convertedSpeed(fromMS: point.velD, preference: unitPreference)
+                return ChartDataEntry(x: hSpeed, y: vSpeed)
+            }
 
-        var markerEntries: [ChartDataEntry] = []
-        if let selectedPoint = highlightedPoint {
-            let hSpeed = useImperial ? selectedPoint.horizontalSpeed.metersPerSecondToMPH : selectedPoint.horizontalSpeed.metersPerSecondToKMH
-            let vSpeed = useImperial ? selectedPoint.velD.metersPerSecondToMPH : selectedPoint.velD.metersPerSecondToKMH
-            markerEntries.append(ChartDataEntry(x: hSpeed, y: vSpeed))
-        }
+            let lineDataSet = LineChartDataSet(entries: lineEntries, label: "")
+            lineDataSet.colors = [NSUIColor.purple]
+            lineDataSet.drawCirclesEnabled = false
+            lineDataSet.drawValuesEnabled = false
+            lineDataSet.lineWidth = 1.0
+            lineDataSet.axisDependency = .left
 
-        let markerDataSet = ScatterChartDataSet(entries: markerEntries, label: "")
-        markerDataSet.setColor(UIColor { $0.userInterfaceStyle == .dark ? .white : .black })
-        markerDataSet.setScatterShape(.circle)
-        markerDataSet.scatterShapeSize = 10
-        markerDataSet.drawValuesEnabled = false
+            var markerEntries: [ChartDataEntry] = []
+            if let selectedPoint = highlightedPoint {
+                let hSpeed = selectedPoint.horizontalSpeed * factor
+                let vSpeed = selectedPoint.velD * factor
+                markerEntries.append(ChartDataEntry(x: hSpeed, y: vSpeed))
+            }
+
+            let markerDataSet = ScatterChartDataSet(entries: markerEntries, label: "")
+            markerDataSet.setColor(UIColor { $0.userInterfaceStyle == .dark ? .white : .black })
+            markerDataSet.setScatterShape(.circle)
+            markerDataSet.scatterShapeSize = 10
+            markerDataSet.drawValuesEnabled = false
 
         // Reference lines (example slopes)
         let maxH = lineEntries.map { $0.x }.max() ?? 100

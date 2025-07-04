@@ -22,7 +22,7 @@ struct ChartHelpView: View {
                             Image(systemName: "gear")
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                            Text("Access settings and metrics.")
+                            Text("Access settings. Here you can choose: what information to display on the main chart, whether you want to scale automatically the chart, your preferred units, if the track should be cut and what to focus on (whole jump of swoop) and activate the bluetooth connection to your Flysight")
                         }
                         HStack(alignment: .top, spacing: 8) {
                             Image("ruler")

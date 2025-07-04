@@ -48,6 +48,7 @@
 		F0C563442E0332200048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563432E0332200048CB47 /* FlySightCore */; };
 		F0C563472E0332E60048CB47 /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C563462E0332E60048CB47 /* FlySightCore */; };
 		F0C7FC1A2E0326FD00ECB53D /* FlySightCore in Frameworks */ = {isa = PBXBuildFile; productRef = F0C7FC192E0326FD00ECB53D /* FlySightCore */; };
+		F0C8AD7C2E17AFAF006AC713 /* UnitsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C8AD7B2E17AF9C006AC713 /* UnitsManager.swift */; };
 		F0DB70ED2E125852003C604D /* ChartHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DB70EC2E125844003C604D /* ChartHelpView.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,7 @@
 		F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarViewProcessor.swift; sourceTree = "<group>"; };
 		F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedAnalysis.swift; sourceTree = "<group>"; };
 		F0C2C8BA2E0EA5020083E759 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
+		F0C8AD7B2E17AF9C006AC713 /* UnitsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitsManager.swift; sourceTree = "<group>"; };
 		F0DB70EC2E125844003C604D /* ChartHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartHelpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -223,6 +225,7 @@
 				C10C541724AC603A00FEF75A /* LoadingView.swift */,
 				C10C541924AC604F00FEF75A /* MainProcessor.swift */,
 				C1E60A5324AC5929008004AF /* SceneDelegate.swift */,
+				F0C8AD7B2E17AF9C006AC713 /* UnitsManager.swift */,
 				C10C543C24AC627000FEF75A /* LaunchScreen.storyboard */,
 				C1E60A5A24AC592A008004AF /* Assets.xcassets */,
 				C1E60A6224AC592A008004AF /* Info.plist */,
@@ -355,6 +358,7 @@
 				C10C542124AC605800FEF75A /* MapViewProcessor.swift in Sources */,
 				C10C541824AC603A00FEF75A /* LoadingView.swift in Sources */,
 				C10C542B24AC606B00FEF75A /* HPartition.swift in Sources */,
+				F0C8AD7C2E17AFAF006AC713 /* UnitsManager.swift in Sources */,
 				C10C540B24AC600900FEF75A /* Track.swift in Sources */,
 				C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */,
 				C10C541524AC603000FEF75A /* LoadFileButton.swift in Sources */,
@@ -522,7 +526,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.61;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -550,7 +554,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.61;
 				PRODUCT_BUNDLE_IDENTIFIER = com.vef445.AirtimeBT;
 				PRODUCT_NAME = "Airtime BT";
 				PROVISIONING_PROFILE_SPECIFIER = "";
