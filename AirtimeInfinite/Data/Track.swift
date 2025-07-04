@@ -25,6 +25,49 @@ class Track: ObservableObject {
     /// Backup for original uncut data (for restore)
     private var _originalFullTrackData: [DataPoint]? = nil
     
+    //Provide coordinates to weather service
+    func getCoordinatesAndTimes() -> (latitude: Double, longitude: Double, date: Date, dateString: String, timeString: String)? {
+        guard let lastPoint = _fullTrackData.last else {
+            return nil
+        }
+        
+        let lat = lastPoint.lat
+        let lon = lastPoint.lon
+        
+        let dateStringISO = lastPoint.time
+        
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = formatter.date(from: dateStringISO) else {
+            print("Failed to parse date string: \(dateStringISO)")
+            return nil
+        }
+        
+        let (dateString, timeString) = getLocalDateTimeStrings(from: date)
+        
+        return (latitude: lat, longitude: lon, date: date, dateString: dateString, timeString: timeString)
+    }
+
+    
+    func getLocalDateTimeStrings(from date: Date) -> (dateString: String, timeString: String) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = .current   // Use local timezone
+        dateFormatter.locale = Locale.current
+
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let dateString = dateFormatter.string(from: date)
+
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        let timeString = dateFormatter.string(from: date)
+
+        return (dateString, timeString)
+    }
+
+
+    
     /// Public filtered data: only from 5 seconds before exit until end
     var trackData: [DataPoint] {
         get {
@@ -295,8 +338,7 @@ class Track: ObservableObject {
         let swoopStartCandidate = finalCandidates.min(by: {
             abs($0.element.secondsFromStart - targetTime) < abs($1.element.secondsFromStart - targetTime)
         })
-        
-        print("Swoop start found")
+        //print("Swoop start found")
         return swoopStartCandidate?.offset
     }
 

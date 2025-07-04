@@ -10,15 +10,60 @@ import MapKit
 import SwiftUI
 
 /// Data handler for the Map view
-class MapViewProcessor {
+class MapViewProcessor: NSObject, MKMapViewDelegate {
     
     var mapView: MKMapView
+    var weatherAnnotations: [WeatherAnnotation] = []
+
     
-    init() {
+    override init() {
         mapView = MKMapView()
+        super.init()
+        mapView.delegate = self
     }
     
     static let measureTitle = "measure"
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is WeatherAnnotation {
+            let identifier = "WeatherAnnotation"
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+
+            if annotationView == nil {
+                annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                annotationView!.canShowCallout = true
+
+                // Example customization:
+                annotationView!.markerTintColor = .blue
+
+                // Add details as subtitle
+                if let weather = annotation as? WeatherAnnotation {
+                    let tempString = String(format: "%.1f°C", weather.temperature)
+                    let windString = String(format: "%.1f km/h %@", weather.windSpeed, windDirectionString(from: weather.windDirection))
+
+                    let label = UILabel()
+                    label.numberOfLines = 2
+                    label.text = "Temp: \(tempString)\nWind: \(windString)"
+                    annotationView!.detailCalloutAccessoryView = label
+                }
+            } else {
+                annotationView!.annotation = annotation
+            }
+
+            return annotationView
+        }
+
+        return nil
+    }
+
+    func windDirectionString(from degrees: Double) -> String {
+        let directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        let index = Int((degrees + 22.5) / 45.0) & 7
+        return directions[index]
+    }
+    
+    
     /**
     Processes and displays user-selected track data to the map
     
@@ -33,6 +78,9 @@ class MapViewProcessor {
         self.mapView.addOverlay(polyLine)
         
         self.setMapRegion(trackCoordinates: track.getCoordinatesList())
+        
+        //Fetch weather data
+        fetchWeatherData(for: track)
     }
     
     /**
@@ -96,5 +144,47 @@ class MapViewProcessor {
             longitudinalMeters: viewMeters)
         
         self.mapView.setRegion(viewRegion, animated: true)
+    }
+    
+    //Retrieve position on the map to display weather info
+    func upperLeftCoordinate(of mapView: MKMapView) -> CLLocationCoordinate2D {
+        let region = mapView.region
+        let center = region.center
+        let span = region.span
+        
+        // Upper-left means:
+        // latitude = center.latitude + half of latitude span
+        // longitude = center.longitude - half of longitude span
+        let lat = center.latitude + span.latitudeDelta / 2
+        let lon = center.longitude - span.longitudeDelta / 2
+        
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
+
+    
+    func fetchWeatherData(for track: Track) {
+        guard let point = track.getCoordinatesAndTimes() else {
+            print("No points available")
+            return
+        }
+        
+        let coord = upperLeftCoordinate(of: mapView)
+        let date = point.date
+        
+        WeatherDataProcessor.shared.fetchWeather(for: coord, at: date) { annotation in
+            DispatchQueue.main.async {
+                // Remove old weather annotations
+                self.mapView.removeAnnotations(self.weatherAnnotations)
+                self.weatherAnnotations.removeAll()
+                
+                if let annotation = annotation {
+                    self.weatherAnnotations.append(annotation)
+                    //print("Adding weather annotation at \(annotation.coordinate), temp: \(annotation.temperature)")
+                    self.mapView.addAnnotation(annotation)
+                } else {
+                    print("No weather data found for point at \(coord)")
+                }
+            }
+        }
     }
 }
