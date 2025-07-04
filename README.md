@@ -6,7 +6,11 @@ Airtime BT is based on the Airtime:Infinite app. Its main purpose is to allow sk
 
 ## Versions history
 
-[version 1.6] - pending release
+[version 1.61] - pending release
+- Customize your desired units to mix metric and imperial standards. Check the settings menu.
+- Improved chart rendering by filtering out dive angle and Glide ratio after landing.
+
+[version 1.6]
 - Autodetection of swoop start and possibility to cut the view automatically so only the swoop is displayed. This will fall back to cutting betwen exit and landing if no swoop can be identified.
 - Improvement in exit point detection to exclude false positives
 - UI bug fixes and improvements
