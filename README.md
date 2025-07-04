@@ -14,6 +14,8 @@ Airtime BT is based on the Airtime:Infinite app. Its main purpose is to allow sk
 [version 1.5]
 - Speed Run analysis, including performance and validation windows and tracking error calculations, as per competition standards
 - Autodetection of exit and landing points and cut of the track being displayed inside these points (can be deactivated in the settings)
+- Local elevation retrieved via open-elevation.com. If API calls fails (e.g. no internet connection), the lowest altitude recorded will be considered as ground level.
+- New Help pane to help the user understand the functionality behind each button.
 - UI bug fixes and improvements
 
 [version 1.4]
