@@ -84,8 +84,6 @@ class PolarViewProcessor {
                 return
             }
 
-            let factor = UnitsManager.conversionFactor(for: .speed, preference: unitPreference)
-
             let lineEntries = filteredPoints.map { point -> ChartDataEntry in
                 let hSpeed = UnitsManager.convertedSpeed(fromMS: point.horizontalSpeed, preference: unitPreference)
                 let vSpeed = UnitsManager.convertedSpeed(fromMS: point.velD, preference: unitPreference)
@@ -101,8 +99,8 @@ class PolarViewProcessor {
 
             var markerEntries: [ChartDataEntry] = []
             if let selectedPoint = highlightedPoint {
-                let hSpeed = selectedPoint.horizontalSpeed * factor
-                let vSpeed = selectedPoint.velD * factor
+                let hSpeed = UnitsManager.convertedSpeed(fromMS: selectedPoint.horizontalSpeed, preference: unitPreference)
+                let vSpeed = UnitsManager.convertedSpeed(fromMS: selectedPoint.velD, preference: unitPreference)
                 markerEntries.append(ChartDataEntry(x: hSpeed, y: vSpeed))
             }
 
