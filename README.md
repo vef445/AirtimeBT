@@ -6,7 +6,10 @@ Airtime BT is based on the Airtime:Infinite app. Its main purpose is to allow sk
 
 ## Versions history
 
-[version 1.61] - pending release
+[version 1.62] - pending release
+- Fix local elevation (ground altitude = 0) using lowest recorded altitude instead of online API.
+  
+[version 1.61]
 - Customize your desired units to mix metric and imperial standards. Check the settings menu.
 - Improved chart rendering by filtering out dive angle and Glide ratio after landing.
 
