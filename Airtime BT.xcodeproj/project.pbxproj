@@ -37,9 +37,11 @@
 		C1E60A5924AC5929008004AF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E60A5824AC5929008004AF /* ContentView.swift */; };
 		C1E60A5B24AC592A008004AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5A24AC592A008004AF /* Assets.xcassets */; };
 		C1E60A5E24AC592A008004AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */; };
+		F00F2C3D2E1AC16F005B8E2F /* WeatherDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00F2C3C2E1AC167005B8E2F /* WeatherDataProcessor.swift */; };
 		F02124BF2E104D6500D9F88A /* LocalElevation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02124BE2E104D5900D9F88A /* LocalElevation.swift */; };
 		F05968662E09DBB3002F68A0 /* TrackFileBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */; };
 		F09449E82E0D99A90021667E /* PolarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09449E72E0D99980021667E /* PolarView.swift */; };
+		F0A908862E1B0B9200803CA4 /* WeatherAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A908852E1B0B9100803CA4 /* WeatherAnnotation.swift */; };
 		F0AB14EE2E0FDE830054E001 /* ChartButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */; };
 		F0C2C8B62E0E753B0083E759 /* PolarViewProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */; };
 		F0C2C8B92E0E98790083E759 /* SpeedAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */; };
@@ -83,9 +85,11 @@
 		C1E60A5A24AC592A008004AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E60A5D24AC592A008004AF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C1E60A6224AC592A008004AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F00F2C3C2E1AC167005B8E2F /* WeatherDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataProcessor.swift; sourceTree = "<group>"; };
 		F02124BE2E104D5900D9F88A /* LocalElevation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalElevation.swift; sourceTree = "<group>"; };
 		F05968652E09DBA5002F68A0 /* TrackFileBluetooth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackFileBluetooth.swift; sourceTree = "<group>"; };
 		F09449E72E0D99980021667E /* PolarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarView.swift; sourceTree = "<group>"; };
+		F0A908852E1B0B9100803CA4 /* WeatherAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAnnotation.swift; sourceTree = "<group>"; };
 		F0AB14ED2E0FDE7E0054E001 /* ChartButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartButtonsView.swift; sourceTree = "<group>"; };
 		F0C2C8B52E0E75360083E759 /* PolarViewProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarViewProcessor.swift; sourceTree = "<group>"; };
 		F0C2C8B82E0E98750083E759 /* SpeedAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedAnalysis.swift; sourceTree = "<group>"; };
@@ -164,6 +168,8 @@
 		C10C541B24AC605800FEF75A /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				F0A908852E1B0B9100803CA4 /* WeatherAnnotation.swift */,
+				F00F2C3C2E1AC167005B8E2F /* WeatherDataProcessor.swift */,
 				C10C541C24AC605800FEF75A /* MapBoundryProcessor.swift */,
 				C10C541D24AC605800FEF75A /* MapView.swift */,
 				C10C541E24AC605800FEF75A /* MapViewProcessor.swift */,
@@ -363,6 +369,7 @@
 				C1E60A5224AC5929008004AF /* AppDelegate.swift in Sources */,
 				C10C541524AC603000FEF75A /* LoadFileButton.swift in Sources */,
 				C10C541F24AC605800FEF75A /* MapBoundryProcessor.swift in Sources */,
+				F00F2C3D2E1AC16F005B8E2F /* WeatherDataProcessor.swift in Sources */,
 				F0C2C8BB2E0EA5060083E759 /* SpeedView.swift in Sources */,
 				C10C542424AC606400FEF75A /* Conversions.swift in Sources */,
 				C10C541124AC602800FEF75A /* DataPointView.swift in Sources */,
@@ -376,6 +383,7 @@
 				C10C540124AC5FF800FEF75A /* ChartView.swift in Sources */,
 				F09449E82E0D99A90021667E /* PolarView.swift in Sources */,
 				C1E60A5424AC5929008004AF /* SceneDelegate.swift in Sources */,
+				F0A908862E1B0B9200803CA4 /* WeatherAnnotation.swift in Sources */,
 				C10C542024AC605800FEF75A /* MapView.swift in Sources */,
 				C10C540324AC5FF800FEF75A /* ChartFrame.swift in Sources */,
 				F0C2C8B92E0E98790083E759 /* SpeedAnalysis.swift in Sources */,

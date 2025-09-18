@@ -30,7 +30,6 @@ class MainProcessor: ObservableObject {
     var customSpeedUnit: UnitSpeed = .kilometersPerHour
     var customDistanceUnit: UnitLength = .meters
 
-    
     @Published var highlightedPoint: UserDataPointSelection
     @Published var selectedMeasurePoint: MeasurementPointSelection
     @Published var trackLoadedSuccessfully = false
@@ -253,8 +252,14 @@ class MainProcessor: ObservableObject {
             await self.loadTrack(trackURL: url)
         }
     }
-
-
+    /*
+    //Update the weather annotations
+    func updateWeatherAnnotations(with weatherAnnotations: [WeatherAnnotation]) {
+        let existingAnnotations = mapView.annotations.compactMap { $0 as? WeatherAnnotation }
+        mapView.removeAnnotations(existingAnnotations)
+        mapView.addAnnotations(weatherAnnotations)
+    }
+*/
     
     /// Call this whenever the visible X range changes (e.g. on zoom or pan)
     func updateVisibleRange(_ range: ClosedRange<Double>) {

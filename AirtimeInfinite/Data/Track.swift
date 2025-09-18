@@ -14,10 +14,13 @@ import CSV
 class Track: ObservableObject {
     
     private var cachedGroundElevation: Double? = nil
+    @Published var weatherFetchedForCurrentTrack: Bool = false
     
     enum TrackError: Error {
         case noReadableTrackfileData
     }
+    
+    var weatherData: WeatherAnnotation?
     
     /// Private full data storage
     private var _fullTrackData = [DataPoint]()
@@ -113,6 +116,31 @@ class Track: ObservableObject {
         }
         return trackData[landingIndex].secondsFromStart
     }
+    
+    //Store date time for weather API
+    var dateTime: Date? {
+        guard let timeString = _fullTrackData.last?.time else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: timeString)
+    }
+
+    //Call weather API
+    func fetchWeather() async {
+        guard let dateTime = self.dateTime,
+              let coordinate = self._fullTrackData.first?.coordinate else {
+            print("No datetime or coordinate for weather fetch")
+            return
+        }
+        do {
+            let weather = try await WeatherDataProcessor.shared.fetchWeather(for: coordinate, at: dateTime)
+            await MainActor.run {
+                self.weatherData = weather
+            }
+        } catch {
+            print("Failed to fetch weather: \(error)")
+        }
+    }
 
     
     /// All x values used in TrackData on Charts, cached to quickly update Map
@@ -159,6 +187,9 @@ class Track: ObservableObject {
         try await self.initialize(dataPoints: tempTrackData)
         
         self.xRange = self.trackData.map { $0.secondsFromStart }
+        
+        //Call Weather API
+        await fetchWeather()
     }
     
     /// Resets track data

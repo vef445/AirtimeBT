@@ -204,6 +204,10 @@ struct ContentView: View {
         switch bottomViewMode {
         case .map:
             MapView()
+                .environmentObject(main)
+                .onAppear {
+                    main.mapViewProcessor.loadTrack(track: main.track)
+                }
         case .polar:
             PolarView()
         case .fastestDescent:

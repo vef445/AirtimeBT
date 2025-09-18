@@ -80,3 +80,27 @@ class MapBoundryProcessor {
     }
     
 }
+
+extension MapBoundryProcessor {
+    /// Get a coordinate inset from the top-left corner of the loaded track bounds by a given distance in meters
+    func getInsetTopLeftCoordinate(insetMeters: CLLocationDistance = 1000) -> CLLocationCoordinate2D {
+        // Top-left corner of bounding box
+        let topLeftLat = maxLat
+        let topLeftLon = minLon
+        
+        // Convert insetMeters to degrees latitude (approximate)
+        let metersPerDegreeLat = 111_000.0
+        let latInsetDegrees = insetMeters / metersPerDegreeLat
+        
+        // Longitude depends on latitude
+        let metersPerDegreeLon = metersPerDegreeLat * cos(topLeftLat * .pi / 180)
+        let lonInsetDegrees = insetMeters / metersPerDegreeLon
+        
+        // Move coordinate inward by insetDegrees
+        let insetLat = topLeftLat - latInsetDegrees
+        let insetLon = topLeftLon + lonInsetDegrees
+        
+        return CLLocationCoordinate2D(latitude: insetLat, longitude: insetLon)
+    }
+}
+

@@ -128,7 +128,8 @@ struct ChartView: UIViewRepresentable {
             )
 
             if !trackCoordinates.isEmpty {
-                parent.main.mapViewProcessor.setMapRegion(trackCoordinates: trackCoordinates)
+                let date = parent.main.track.dateTime ?? Date()
+                parent.main.mapViewProcessor.setMapRegion(trackCoordinates: trackCoordinates, at: date)
             }
         }
         

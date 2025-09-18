@@ -24,6 +24,7 @@ struct MapView: UIViewRepresentable {
         
     }
 
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -53,9 +54,62 @@ struct MapView: UIViewRepresentable {
             return MKOverlayRenderer(overlay: overlay)
         }
         
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            print("Region did change in Coordinator")
+
+            // Update pendingWeatherCoordinate to inset top-left of visible map rect
+            if let insetCoordinate = parent.main.mapViewProcessor.getInsetTopLeftFromVisibleMapRect() {
+                parent.main.mapViewProcessor.pendingWeatherCoordinate = insetCoordinate
+            } else {
+                // fallback: center coordinate
+                parent.main.mapViewProcessor.pendingWeatherCoordinate = mapView.centerCoordinate
+            }
+
+            // Then try to fetch weather
+            //parent.main.mapViewProcessor.tryFetchWeatherIfNeeded()
+        }
+        
         /// Credit: https://www.hackingwithswift.com/books/ios-swiftui/customizing-mkmapview-annotations
         /// Place a dot on the user selected point
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if let weatherAnnotation = annotation as? WeatherAnnotation {
+                //print("Weather annotation coordinate: \(weatherAnnotation.coordinate.latitude), \(weatherAnnotation.coordinate.longitude)")
+                        //print("Map visible region center: \(mapView.region.center.latitude), \(mapView.region.center.longitude)")
+                let identifier = "weatherAnnotation"
+
+                var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+
+                if annotationView == nil {
+                    annotationView = MKAnnotationView(annotation: weatherAnnotation, reuseIdentifier: identifier)
+                    annotationView?.canShowCallout = true
+                    
+                    // Show thermometer icon
+                    annotationView?.image = UIImage(systemName: "thermometer")
+                    
+                    // Label showing temperature next to icon
+                    let tempLabel = UILabel()
+                    tempLabel.text = String(format: "%.1f°C", weatherAnnotation.temperature)
+                    tempLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+                    tempLabel.textColor = .red
+                    tempLabel.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+                    tempLabel.sizeToFit()
+                    tempLabel.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    annotationView?.addSubview(tempLabel)
+                    
+                    // Position label to the right of the icon, centered vertically
+                    NSLayoutConstraint.activate([
+                        tempLabel.leadingAnchor.constraint(equalTo: annotationView!.trailingAnchor, constant: 4),
+                        tempLabel.centerYAnchor.constraint(equalTo: annotationView!.centerYAnchor)
+                    ])
+                } else {
+                    annotationView?.annotation = weatherAnnotation
+                }
+
+                return annotationView
+            }
+            
+            // Existing circle icon for other annotations (e.g., DataPoint)
             let identifier = "selectedDataPoint"
 
             var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
@@ -63,12 +117,13 @@ struct MapView: UIViewRepresentable {
             if annotationView == nil {
                 annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView?.image = UIImage(systemName: "largecircle.fill.circle")
-
+                annotationView?.canShowCallout = false
             } else {
                 annotationView?.annotation = annotation
             }
 
             return annotationView
         }
+
     }
 }

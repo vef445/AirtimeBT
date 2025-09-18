@@ -50,8 +50,9 @@ func getFastestDescentAGL(data: [DataPoint]) async -> (agl: Double, groundElevat
     var groundElevation: Double?
 
     // Try fetching online elevation first
-    groundElevation = await fetchGroundElevation(lat: fastestDescentPoint.lat,
-                                                 lon: fastestDescentPoint.lon)
+    //groundElevation = await fetchGroundElevation(lat: fastestDescentPoint.lat,
+    //                                             lon: fastestDescentPoint.lon)
+    groundElevation = nil  //Avoid retrieving local elevation via API as this is too unprecise. Using lowest altitude instead
 
     // Fallback to lowest measured altitude if no internet or API fails
     if groundElevation == nil {
