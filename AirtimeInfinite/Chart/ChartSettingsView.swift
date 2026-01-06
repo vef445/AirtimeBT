@@ -111,7 +111,15 @@ struct ChartSettingsView: View {
                                             }
                                         } else {
                                             main.unitPreference = option
-                                            showUnitSubmenu = (option == .mix)
+                                            if option == .mix {
+                                                altitudeUnit = main.customAltitudeUnit
+                                                speedUnit = main.customSpeedUnit
+                                                distanceUnit = main.customDistanceUnit
+                                                showUnitSubmenu = true
+                                            } else {
+                                                showUnitSubmenu = false
+                                            }
+
                                             main.fullyReloadTrack()
                                         }
                                     }) {
@@ -245,6 +253,11 @@ struct ChartSettingsView: View {
                             main.fullyReloadTrack()
                         }
                         .padding()
+                    }
+                    .onAppear {
+                        altitudeUnit = main.customAltitudeUnit
+                        speedUnit = main.customSpeedUnit
+                        distanceUnit = main.customDistanceUnit
                     }
                     .frame(maxWidth: 350)
                     .background(Color(UIColor.systemBackground))

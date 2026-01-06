@@ -68,9 +68,11 @@ class MapViewProcessor {
               !track.weatherFetchedForCurrentTrack else {
             return
         }
+        _ = date   // silence unused variable warning
 
         // Calculate inset coordinate *after* the region has changed
         let coord = getInsetTopLeftFromVisibleMapRect(insetMeters: 1000) ?? mapView.centerCoordinate
+        _ = coord   // silence unused variable warning
 
         //fetchWeather(at: coord, date: date)
         track.weatherFetchedForCurrentTrack = true

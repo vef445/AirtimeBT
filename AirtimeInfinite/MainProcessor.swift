@@ -105,6 +105,27 @@ class MainProcessor: ObservableObject {
     }
     
     init() {
+        // --- Step 0: Load custom units first ---
+        let savedAltitudeSymbol = UserDefaults.standard.string(forKey: "customAltitudeUnit") ?? "m"
+        let savedSpeedSymbol = UserDefaults.standard.string(forKey: "customSpeedUnit") ?? "km/h"
+        let savedDistanceSymbol = UserDefaults.standard.string(forKey: "customDistanceUnit") ?? "m"
+
+        // Map saved strings back to UnitLength / UnitSpeed
+        switch savedAltitudeSymbol {
+        case "ft": self.customAltitudeUnit = .feet
+        default: self.customAltitudeUnit = .meters
+        }
+
+        switch savedSpeedSymbol {
+        case "mph": self.customSpeedUnit = .milesPerHour
+        default: self.customSpeedUnit = .kilometersPerHour
+        }
+
+        switch savedDistanceSymbol {
+        case "ft": self.customDistanceUnit = .feet
+        default: self.customDistanceUnit = .meters
+        }
+
         // Step 1: Get the autoCutTrackOption value from UserDefaults *before* initializing properties
         let savedOption: AutoCutTrackOption
         if let saved = UserDefaults.standard.string(forKey: "autoCutTrackOption"),
@@ -228,6 +249,11 @@ class MainProcessor: ObservableObject {
         self.customAltitudeUnit = altitude
         self.customSpeedUnit = speed
         self.customDistanceUnit = distance
+        
+        // Persist to UserDefaults so they survive app restarts
+        UserDefaults.standard.set(altitude.symbol, forKey: "customAltitudeUnit")
+        UserDefaults.standard.set(speed.symbol, forKey: "customSpeedUnit")
+        UserDefaults.standard.set(distance.symbol, forKey: "customDistanceUnit")
 
         // If unitPreference is mix, update internal units used for display/conversion accordingly
         if self.unitPreference == .mix {

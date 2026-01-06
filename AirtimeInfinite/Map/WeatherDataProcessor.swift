@@ -85,6 +85,7 @@ class WeatherDataProcessor {
                 }
                 
                 if let rawString = String(data: data, encoding: .utf8) {
+                    _ = rawString   // silence warning
                     // Uncomment to debug raw API response
                     // print("🌐 Raw API Response:\n\(rawString)")
                 }
@@ -177,6 +178,7 @@ extension WeatherDataProcessor {
         let (data, _) = try await URLSession.shared.data(from: url)
 
         if let rawString = String(data: data, encoding: .utf8) {
+            _ = rawString   // silence warning
             // Uncomment to debug raw API response
             // print("🌐 Raw API Response:\n\(rawString)")
         }

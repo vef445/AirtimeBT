@@ -111,11 +111,29 @@ struct DataPointCell: View {
     var unitString: String {
         switch stat {
         case .hVel, .vVel, .tVel:
-            return UnitsManager.retrieveUserUnit(for: .speed, preference: main.unitPreference)
+            return UnitsManager.retrieveUserUnit(
+                for: .speed,
+                preference: main.unitPreference,
+                customAltitudeUnit: main.customAltitudeUnit,
+                customSpeedUnit: main.customSpeedUnit,
+                customDistanceUnit: main.customDistanceUnit
+            )
         case .alt:
-            return UnitsManager.retrieveUserUnit(for: .altitude, preference: main.unitPreference)
+            return UnitsManager.retrieveUserUnit(
+                for: .altitude,
+                preference: main.unitPreference,
+                customAltitudeUnit: main.customAltitudeUnit,
+                customSpeedUnit: main.customSpeedUnit,
+                customDistanceUnit: main.customDistanceUnit
+            )
         case .hDist, .accelVertical, .accelParallel, .accelPerp, .accelTotal:
-            return UnitsManager.retrieveUserUnit(for: .distance, preference: main.unitPreference)
+            return UnitsManager.retrieveUserUnit(
+                for: .distance,
+                preference: main.unitPreference,
+                customAltitudeUnit: main.customAltitudeUnit,
+                customSpeedUnit: main.customSpeedUnit,
+                customDistanceUnit: main.customDistanceUnit
+            )
         case .time:
             return "sec"
         case .glide:
@@ -127,21 +145,43 @@ struct DataPointCell: View {
 
     // Conversion function that applies the proper factor
     func convertValue(_ value: Double?, for stat: FlightMetric) -> Double? {
-        guard let val = value else { return nil }
-        switch stat {
-        case .hVel, .vVel, .tVel:
-            let factor = UnitsManager.conversionFactor(for: .speed, preference: main.unitPreference)
-            return val * factor
-        case .alt:
-            let factor = UnitsManager.conversionFactor(for: .altitude, preference: main.unitPreference)
-            return val * factor
-        case .hDist, .accelVertical, .accelParallel, .accelPerp, .accelTotal:
-            let factor = UnitsManager.conversionFactor(for: .distance, preference: main.unitPreference)
-            return val * factor
-        default:
-            return val
+            guard let val = value else { return nil }
+            
+            switch stat {
+            case .hVel, .vVel, .tVel:
+                let factor = UnitsManager.conversionFactor(
+                    for: .speed,
+                    preference: main.unitPreference,
+                    customAltitudeUnit: main.customAltitudeUnit,
+                    customSpeedUnit: main.customSpeedUnit,
+                    customDistanceUnit: main.customDistanceUnit
+                )
+                return val * factor
+                
+            case .alt:
+                let factor = UnitsManager.conversionFactor(
+                    for: .altitude,
+                    preference: main.unitPreference,
+                    customAltitudeUnit: main.customAltitudeUnit,
+                    customSpeedUnit: main.customSpeedUnit,
+                    customDistanceUnit: main.customDistanceUnit
+                )
+                return val * factor
+                
+            case .hDist, .accelVertical, .accelParallel, .accelPerp, .accelTotal:
+                let factor = UnitsManager.conversionFactor(
+                    for: .distance,
+                    preference: main.unitPreference,
+                    customAltitudeUnit: main.customAltitudeUnit,
+                    customSpeedUnit: main.customSpeedUnit,
+                    customDistanceUnit: main.customDistanceUnit
+                )
+                return val * factor
+                
+            default:
+                return val
+            }
         }
-    }
 
     var highlightedValue: Double? {
         switch stat {
